@@ -42,8 +42,7 @@
 - [x] **T2.7 (Tabla Periódica e Isótopos):** Crear `src/core/model/periodicTable.ts` (118 elementos con valencias, colores CPK e isótopos), `PeriodicTableModal.tsx` y la lista dinámica de `recentElements` (top 5 usados/recientes) en `useCanvasStore.ts`.
 - [x] **T2.8 (Anillos Paramétricos 3 a 8):** Actualizar `geometry.ts` y `ElementToolbar.tsx` para soportar anillos de 3 a 8 lados ($R = L / (2 \sin(\pi/N))$), versiones con enlaces dobles (cicloalquenos y conjugados/aromáticos) y heterociclos (Piranosa y Furanosa).
 - [x] **T2.9 (Modal de Grupos Funcionales, Coenzimas y Biomoléculas):** Crear `src/core/model/templates.ts` y `FunctionalGroupsModal.tsx` con soporte para acoplar Grupos Funcionales (`-PO3H2`, `-OH`, `-COOH`, `-NH2`, `-SH`, `-COCH3`), Coenzimas (`-S-CoA`, Lipoamida) y Esqueletos Base completos (Glucopiranosa, Fructofuranosa, Piruvato, G3P), además de renderizado de cargas formales e isótopos en `AtomShape.tsx`.
-- [x] **T2.10 (Identidad Visual, Paleta y HomeView):** Configurar los tokens de color (`#1B2A4A`, `#00A896`, `#F77F00`), integrar `/logo.png` en `index.html` y `TopBar.tsx`, e implementar `src/ui/views/HomeView.tsx` con navegación entre el Menú Principal (Selector de Rutas: Sandbox, Glucólisis, Complejo PDH) y el `GameWorkspace`.
-- [ ] **T2.11 (Release Demo & CI/CD en GitHub Pages):** Configurar `base: '/SIMOLA/'` en `vite.config.ts`, ajustar rutas de assets públicos con `import.meta.env.BASE_URL`, crear workflow de despliegue automático en `.github/workflows/deploy.yml`, documentar `README.md` y subir el repositorio a `https://github.com/hndrkm/SIMOLA.git`.
+- [x] **T2.11 (Release Demo & CI/CD en GitHub Pages):** Configurar `base: '/SIMOLA/'` en `vite.config.ts`, ajustar rutas de assets públicos con `import.meta.env.BASE_URL`, crear workflow de despliegue automático en `.github/workflows/deploy.yml`, documentar `README.md` y subir el repositorio a `https://github.com/hndrkm/SIMOLA.git`.
 ### Etapa 3: Validador Local y Retroalimentación de Capa 1 (Módulo 4 - Parte A)
 - [ ] **T3.1:** Implementar `src/core/chemistry/localValidator.ts` (conteo de órdenes de enlace por átomo vs. valencia máxima permitida).
 - [ ] **T3.2:** Implementar algoritmo BFS en `localValidator.ts` para detectar islas desconectadas cuando `mustBeConnected === true`.
@@ -129,3 +128,21 @@
   - **Regla A3.4 de Ergonomía y Geometría:** Longitud canónica de enlace fijada en `60px`, imán magnético de 30° (`\pi/6`) y brote en zigzag a 120° (`2\pi/3`) en `src/core/model/geometry.ts`.
   - **Química Completa:** Tabla periódica con los 118 elementos y selector de isótopos clave, anillos paramétricos de 3 a 8 lados con dobles enlaces y heterociclos, y modal de grupos funcionales/coenzimas/biomoléculas con estamping directo.
 - **Resultado de Auditoría (Doc 06):** APROBADO (A1.1, A1.2, A2.1, A2.2, A2.3, A3.1, A3.2, A3.3, A3.4 validados, `tsc --noEmit` con 0 errores y sesión de verificación en navegador superada al 100%).
+
+#### [2026-10-18 / Etapa 2 - T2.11] - Demo Release & Despliegue en GitHub Pages (CI/CD)
+- **Tareas completadas:** T2.11.
+- **Archivos creados/modificados:**
+  - `vite.config.ts` (`base: '/SIMOLA/'`)
+  - `index.html` (ruta relativa `./logo.png`)
+  - `src/ui/views/HomeView.tsx` (`import.meta.env.BASE_URL`)
+  - `src/ui/hud/TopBar.tsx` (`import.meta.env.BASE_URL`)
+  - `src/vite-env.d.ts` (referencia de tipos para Vite client y variables de entorno)
+  - `.github/workflows/deploy.yml` (pipeline automático de GitHub Pages con `actions/deploy-pages@v4`)
+  - `README.md` (documentación pública completa con enlace a la Live Demo, características y guía de desarrollo)
+  - `.gitignore` (exclusión limpia de dependencias, logs y binarios compilados)
+  - `docs/05_TASK_HISTORY.md`
+- **Decisiones técnicas tomadas:**
+  - Configuración de `base: '/SIMOLA/'` para resolver de forma transparente assets estáticos en el subdirectorio de GitHub Pages sin romper la ejecución local.
+  - Generación de `src/vite-env.d.ts` para tipar con rigor TypeScript `import.meta.env.BASE_URL` sin necesidad de casts manuales ni desactivación de reglas de linter.
+  - Workflow de CI/CD seguro con permisos mínimos (`contents: read`, `pages: write`, `id-token: write`) y concurrencia `pages` con cancelación de ejecuciones obsoletas.
+- **Resultado de Auditoría (Doc 06):** APROBADO (`npm run build` genera `dist/` en 8.6s con 0 errores de tipado o compilación).

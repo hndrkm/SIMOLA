@@ -76,7 +76,7 @@ export const HomeView: React.FC = () => {
       <header className="px-6 lg:px-12 py-5 flex items-center justify-between border-b border-white/10 bg-[#1B2A4A]/60 backdrop-blur-md sticky top-0 z-30">
         <div className="flex items-center gap-3.5">
           <img
-            src="/logo.png"
+            src={`${import.meta.env.BASE_URL}logo.png`}
             alt="SIMOLA Logo"
             className="w-10 h-10 object-contain drop-shadow-md rounded-xl"
           />
@@ -124,7 +124,7 @@ export const HomeView: React.FC = () => {
         <div className="relative mb-6">
           <div className="w-28 h-28 rounded-3xl bg-gradient-to-b from-[#1B2A4A] to-[#0c1424] p-3 border-2 border-[#00A896]/40 shadow-2xl flex items-center justify-center glow-teal">
             <img
-              src="/logo.png"
+              src={`${import.meta.env.BASE_URL}logo.png`}
               alt="SIMOLA"
               className="w-full h-full object-contain filter drop-shadow-lg"
             />

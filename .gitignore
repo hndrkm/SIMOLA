@@ -1,21 +1,28 @@
-# 1. Quitar todo lo que se agregó al índice de Git (no borra tus archivos locales)
-git rm -r --cached .
+# Logs
+logs
+*.log
+npm-debug.log*
+yarn-debug.log*
+yarn-error.log*
+pnpm-debug.log*
 
-# 2. Asegurar que .gitignore exista en la raíz y tenga las carpetas bloqueadas
-cat << 'EOF' > .gitignore
-node_modules
-/node_modules
+# Dependencies
 node_modules/
 dist
-/dist
-dist/
-dist-ssr/
+dist-ssr
+
+# Local env files
 *.local
 .env
 .env.*
-*.log
-.DS_Store
-.idea/
+
+# Editor directories and files
 .vscode/*
 !.vscode/extensions.json
-EOF
+.idea
+.DS_Store
+*.suo
+*.ntvs*
+*.njsproj
+*.sln
+*.sw?

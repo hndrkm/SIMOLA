@@ -60,7 +60,7 @@ export const TopBar: React.FC = () => {
           >
             <ArrowLeft className="w-4 h-4 text-[#00A896] group-hover:-translate-x-0.5 transition-transform" />
             <img
-              src="/logo.png"
+              src={`${import.meta.env.BASE_URL}logo.png`}
               alt="SIMOLA Logo"
               className="w-7 h-7 object-contain drop-shadow"
             />
