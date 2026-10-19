@@ -1,0 +1,21 @@
+# 1. Quitar todo lo que se agregó al índice de Git (no borra tus archivos locales)
+git rm -r --cached .
+
+# 2. Asegurar que .gitignore exista en la raíz y tenga las carpetas bloqueadas
+cat << 'EOF' > .gitignore
+node_modules
+/node_modules
+node_modules/
+dist
+/dist
+dist/
+dist-ssr/
+*.local
+.env
+.env.*
+*.log
+.DS_Store
+.idea/
+.vscode/*
+!.vscode/extensions.json
+EOF
