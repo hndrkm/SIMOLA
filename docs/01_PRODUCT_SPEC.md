@@ -92,3 +92,40 @@ El lienzo (`MolecularCanvas`) opera bajo una herramienta activa (`activeTool`) c
 7. **Atajos de Teclado en Vivo (Hover Hotkeys):**
    - Con el cursor sobre un átomo (`hoveredAtomId`): teclas `C, H, O, N, P, S` lo transmutan al instante; `Delete`/`Backspace` lo borra en cascada.
    - Con el cursor sobre un enlace (`hoveredBondId`): teclas `1, 2, 3` cambian su orden al instante; `Delete`/`Backspace` lo borra.
+
+
+## 5. Diseño de Mundos y Misiones Progresivas (Etapa 5)
+
+El catálogo de misiones (`src/data/missions/progressionMissions.ts`) se organiza en 3 Mundos seleccionables desde `HomeView`:
+
+### Mundo 1: Entrenamiento Químico (Fundamentos)
+1. **Misión 1.1 - El Octeto y Enlaces Múltiples (Eteno):**
+   - *Tablero inicial:* Vacío.
+   - *Objetivo:* Construir Eteno ($\text{C}_2\text{H}_4$, SMILES: `C=C`). Enseña cómo el doble enlace satisface la valencia 4 del carbono.
+2. **Misión 1.2 - Isomería Constitucional (De Éter a Alcohol):**
+   - *Tablero inicial:* Dimetil Éter (`C-O-C`) pre-cargado y desbloqueado.
+   - *Objetivo:* Romper y reconectar enlaces para transformarlo en su isómero **Etanol** ($\text{C}_2\text{H}_6\text{O}$, SMILES: `CCO`).
+3. **Misión 1.3 - Grupos Bioquímicos de Alta Energía (Fosforilación Básica):**
+   - *Tablero inicial:* Cadena de 3 carbonos con un hidroxilo terminal (1-Propanol).
+   - *Objetivo:* Acoplar un grupo fosfato para formar un éster fosfórico (`CCCO[P](=O)(O)O`).
+
+### Mundo 2: Ruta de la Glucólisis (Fases Clave con Esqueleto Bloqueado)
+1. **Misión 2.1 - Paso 1: Hexoquinasa (Inversión de Energía):**
+   - *Contexto Enzimático:* La Hexoquinasa transfiere el grupo $\gamma$-fosfato del $\text{ATP}$ al Carbono 6 de la Glucosa para atraparla dentro de la célula.
+   - *Tablero inicial:* Esqueleto de $\alpha$-D-Glucopiranosa con el anillo piranósico bloqueado (`isLocked: true`) y el grupo $-\text{CH}_2\text{OH}$ del Carbono 6 libre para reaccionar.
+   - *Cofactor activo:* $\text{ATP} \to \text{ADP}$.
+   - *Objetivo:* Acoplar el grupo fosfato al oxígeno del Carbono 6 para formar **Glucosa-6-fosfato**.
+2. **Misión 2.2 - Paso 6: GAPDH (Oxidación y Enlace Acil-Fosfato):**
+   - *Contexto Enzimático:* La Gliceraldehído-3-fosfato deshidrogenasa oxida el aldehído del G3P utilizando $\text{NAD}^+$ e incorpora un fosfato inorgánico ($\text{P}_i$) creando un enlace anhídrido mixto de alta energía.
+   - *Tablero inicial:* Esqueleto de **Gliceraldehído-3-fosfato (G3P)** (`O=CC(O)COP(=O)(O)O`) con los carbonos 2 y 3 bloqueados.
+   - *Objetivo:* Incorporar el grupo fosfato en el Carbono 1 carbonílico para obtener **1,3-Bisfosfoglicerato (1,3-BPG)**.
+3. **Misión 2.3 - Paso 10: Piruvato Quinasa (Cosecha de ATP):**
+   - *Contexto Enzimático:* Transferencia del grupo fosfato desde el Fosfoenolpiruvato (PEP) al $\text{ADP}$ y tautomerización ceto-enol hacia **Piruvato**.
+   - *Tablero inicial:* Esqueleto de 3 carbonos del PEP.
+   - *Objetivo:* Desfosforilar el oxígeno central y formar el grupo cetona ($\text{C=O}$) en C2 junto al carboxilato en C1 para obtener **Piruvato** (`CC(=O)C(=O)O` o `CC(=O)C(=O)[O-]`).
+
+### Mundo 3: Complejo Piruvato Deshidrogenasa (El Puente Mitocondrial)
+1. **Misión 3.1 - Descarboxilación y Tioéster de Alta Energía (Acetil-CoA):**
+   - *Contexto Enzimático:* El complejo PDH (E1 + E2 + E3) libera el grupo carboxilo del Piruvato como $\text{CO}_2$ y acopla el fragmento acetilo restante (`CH3-C(=O)-`) al grupo tiol de la **Coenzima A (`-S-CoA`)**.
+   - *Tablero inicial:* Esqueleto de Piruvato (con el carbono carboxílico desbloqueado para que el jugador lo escinda) + cofactor `-S-CoA`.
+   - *Objetivo:* Eliminar el grupo carboxilo y formar el enlace tioéster del **Acetil-CoA** (`CC(=O)S...`).

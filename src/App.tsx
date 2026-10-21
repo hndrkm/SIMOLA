@@ -21,9 +21,17 @@ export const App: React.FC = () => {
   const addBond = useCanvasStore((state) => state.addBond);
   const graph = useCanvasStore((state) => state.graph);
 
-  // Precargar una molécula inicial didáctica (Etanol) en el primer render para demostración
+  const activeRoute = useGameStore((state) => state.activeRoute);
+  const currentMissionId = useGameStore((state) => state.currentMissionId);
+
+  // Precargar una molécula didáctica solo si se entra en sandbox sin misión activa y con lienzo vacío
   useEffect(() => {
-    if (Object.keys(graph.nodes).length === 0) {
+    if (
+      currentView === 'workspace' &&
+      !currentMissionId &&
+      activeRoute === 'sandbox' &&
+      Object.keys(graph.nodes).length === 0
+    ) {
       const centerX = Math.round(window.innerWidth / 2) || 500;
       const centerY = Math.round(window.innerHeight / 2) || 350;
 
@@ -37,7 +45,7 @@ export const App: React.FC = () => {
       addBond(c2, o1, 1);
       addBond(o1, h1, 1);
     }
-  }, []);
+  }, [currentView, currentMissionId, activeRoute]);
 
   // Escuchador global de atajos de teclado para flujo ergonómico de escritorio
   useEffect(() => {

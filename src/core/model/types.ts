@@ -40,7 +40,14 @@ export interface MolecularGraph {
 }
 
 export interface ValidationIssue {
-  code: 'VALENCE_EXCEEDED' | 'DISCONNECTED_GRAPH' | 'INVALID_CHEMISTRY' | 'FORMULA_MISMATCH' | 'MISSING_FUNCTIONAL_GROUP' | 'STRUCTURE_MISMATCH';
+  code:
+    | 'VALENCE_EXCEEDED'
+    | 'DISCONNECTED_GRAPH'
+    | 'INVALID_CHEMISTRY'
+    | 'FORMULA_MISMATCH'
+    | 'MISSING_FUNCTIONAL_GROUP'
+    | 'FORBIDDEN_SUBSTRUCTURE'
+    | 'STRUCTURE_MISMATCH';
   message: string;           // Explicación pedagógica para el estudiante
   affectedAtomIds: string[]; // IDs de nodos que deben iluminarse en el canvas
 }
@@ -59,27 +66,36 @@ export interface ValidationResult {
   passedMission: boolean;
   issues: ValidationIssue[];
   descriptors?: MolecularDescriptors;
+  detectedFunctionalGroups?: { name: string; count: number }[];
+  differentialDiagnosis?: string;
 }
 
 export interface SubstructureRequirement {
   name: string;   // Ej: "Grupo Hidroxilo (-OH)"
   smarts: string; // Ej: "[OX2H]"
   minCount: number;
+  description?: string;
+}
+
+export interface WinConditions {
+  targetFormula?: string;
+  targetCanonicalSmiles?: string;
+  acceptedSmiles?: string[];
+  requiredSubstructures?: SubstructureRequirement[];
+  forbiddenSubstructures?: SubstructureRequirement[];
+  expectedRingCount?: number;
+  mustBeConnected: boolean;
 }
 
 export interface MissionConfig {
   id: string;
   world: 1 | 2 | 3 | 4;
   title: string;
+  enzymeName?: string;
   objectiveDescription: string;
   pedagogicalHint: string;
+  biochemicalContext?: string;
   allowedElements: ElementSymbol[];
   initialGraph?: MolecularGraph;
-  winConditions: {
-    targetFormula?: string;
-    targetCanonicalSmiles?: string;
-    requiredSubstructures?: SubstructureRequirement[];
-    expectedRingCount?: number;
-    mustBeConnected: boolean;
-  };
+  winConditions: WinConditions;
 }

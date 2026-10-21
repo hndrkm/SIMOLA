@@ -155,3 +155,26 @@ export interface AtomNode {
   hasError?: boolean;
 }
 ```
+
+## 3. Orquestador de Evaluación de Misiones (`src/core/missions/missionEvaluator.ts`)
+
+La interfaz `MissionConfig.winConditions` soporta validación flexible bioquímica:
+```typescript
+export interface MissionWinConditions {
+  targetFormula?: string;
+  acceptedSmiles?: string[]; // Lista de SMILES canónicos válidos (ej. forma neutra y desprotonada)
+  requiredSubstructures?: SubstructureRequirement[]; // Patrones SMARTS obligatorios
+  forbiddenSubstructures?: SubstructureRequirement[]; // Ej: en PDH, no debe quedar el grupo carboxilo original
+  expectedRingCount?: number;
+  mustBeConnected: boolean;
+}
+```
+
+### Flujo de Diagnóstico Diferencial Educativo:
+1. Ejecuta `localValidator(graph)` (Capa 1). Si falla, corta y retorna los átomos con `hasError: true`.
+2. Ejecuta `rdkitValidator(graph)` (Capa 2).
+3. Evalúa `winConditions` en orden progresivo para dar pistas exactas si el jugador falla:
+   - **Check 1 (Subestructuras prohibidas):** ¿Olvidó quitar un grupo saliente (como el $\text{CO}_2$ en PDH o el fosfato en Piruvato Quinasa)?
+   - **Check 2 (Subestructuras requeridas SMARTS):** ¿Falta algún grupo funcional clave (ej. el enlace fosfoéster `[#6]-[OX2]-[PX4](=O)` o el tioéster `[#6](=O)-[SX2]`)?
+   - **Check 3 (Fórmula / Conteo de Anillos):** ¿Coincide el esqueleto general?
+   - **Check 4 (SMILES Exacto):** Si tiene la fórmula y los grupos funcionales correctos pero el SMILES no está en `acceptedSmiles`, el diagnóstico informa: *"¡Casi lo logras! Tienes los grupos funcionales correctos, pero están conectados en la posición equivocada (regioisómero incorrecto). Revisa el número del carbono donde actúa la enzima."*

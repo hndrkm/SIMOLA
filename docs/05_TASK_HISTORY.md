@@ -11,9 +11,9 @@
 | :--- | :--- | :--- | :--- | :--- |
 | **Etapa 1** | Modelo Interno y Store en Zustand | `[x] Completado` | `Exitoso (0 errores)` | `Aprobado (A1, A2)` |
 | **Etapa 2** | Editor Molecular 2D (React-Konva) | `[x] Completado` | `Exitoso (0 errores)` | `Aprobado (A1, A2, A3)` |
-| **Etapa 3** | Validador Local y Diagnóstico Capa 1 | `[ ] Pendiente` | `-` | `-` |
-| **Etapa 4** | Adaptador RDKit.js y Descriptores | `[ ] Pendiente` | `-` | `-` |
-| **Etapa 5** | Sistema de Misiones Progresivas | `[ ] Pendiente` | `-` | `-` |
+| **Etapa 3** | Validador Local y Diagnóstico Capa 1 | `[x] Completado` | `Exitoso (0 errores)` | `Aprobado (A1, A2, A3)` |
+| **Etapa 4** | Adaptador RDKit.js y Descriptores | `[x] Completado` | `Exitoso (0 errores)` | `Aprobado (A1, A2, A3, A4)` |
+| **Etapa 5** | Sistema de Misiones Progresivas | `[x] Completado` | `Exitoso (0 errores)` | `Aprobado (A1, A2, A3, A4)` |
 
 ---
 
@@ -44,19 +44,22 @@
 - [x] **T2.9 (Modal de Grupos Funcionales, Coenzimas y Biomoléculas):** Crear `src/core/model/templates.ts` y `FunctionalGroupsModal.tsx` con soporte para acoplar Grupos Funcionales (`-PO3H2`, `-OH`, `-COOH`, `-NH2`, `-SH`, `-COCH3`), Coenzimas (`-S-CoA`, Lipoamida) y Esqueletos Base completos (Glucopiranosa, Fructofuranosa, Piruvato, G3P), además de renderizado de cargas formales e isótopos en `AtomShape.tsx`.
 - [x] **T2.11 (Release Demo & CI/CD en GitHub Pages):** Configurar `base: '/SIMOLA/'` en `vite.config.ts`, ajustar rutas de assets públicos con `import.meta.env.BASE_URL`, crear workflow de despliegue automático en `.github/workflows/deploy.yml`, documentar `README.md` y subir el repositorio a `https://github.com/hndrkm/SIMOLA.git`.
 ### Etapa 3: Validador Local y Retroalimentación de Capa 1 (Módulo 4 - Parte A)
-- [ ] **T3.1:** Implementar `src/core/chemistry/localValidator.ts` (conteo de órdenes de enlace por átomo vs. valencia máxima permitida).
-- [ ] **T3.2:** Implementar algoritmo BFS en `localValidator.ts` para detectar islas desconectadas cuando `mustBeConnected === true`.
-- [ ] **T3.3:** Conectar el resultado de Capa 1 con `useCanvasStore` para encender `hasError: true` en los átomos infractores y mostrar el mensaje pedagógico.
+- [x] **T3.1:** Implementar `src/core/chemistry/localValidator.ts` (conteo de órdenes de enlace por átomo vs. valencia máxima permitida).
+- [x] **T3.2:** Implementar algoritmo BFS en `localValidator.ts` para detectar islas desconectadas cuando `mustBeConnected === true`.
+- [x] **T3.3:** Conectar el resultado de Capa 1 con `useCanvasStore` para encender `hasError: true` en los átomos infractores y mostrar el mensaje pedagógico.
 
 ### Etapa 4: Adaptador RDKit.js y Descriptores Químicos (Módulo 3 y Módulo 4 - Parte B)
-- [ ] **T4.1:** Implementar `src/core/chemistry/rdkitClient.ts` (carga asíncrona singleton del binario WebAssembly `.wasm`).
-- [ ] **T4.2:** Implementar `src/core/chemistry/graphToMol.ts` (traducción exacta del grafo a formato de columnas fijas CTAB MOL V2000 con inversión de eje Y).
-- [ ] **T4.3:** Implementar `src/core/chemistry/rdkitValidator.ts` (extracción de `canonicalSmiles`, fórmula molecular, conteo de anillos y evaluación de subestructuras SMARTS con liberación de memoria `mol.delete()`).
+- [x] **T4.1:** Implementar `src/core/chemistry/rdkitClient.ts` (carga asíncrona singleton del binario WebAssembly `.wasm`).
+- [x] **T4.2:** Implementar `src/core/chemistry/graphToMol.ts` (traducción exacta del grafo a formato de columnas fijas CTAB MOL V2000 con inversión de eje Y).
+- [x] **T4.3:** Implementar `src/core/chemistry/rdkitValidator.ts` (extracción de `canonicalSmiles`, fórmula molecular, conteo de anillos y evaluación de subestructuras SMARTS con liberación de memoria `mol.delete()`).
 
 ### Etapa 5: Sistema de Misiones Progresivas (Módulo 5)
-- [ ] **T5.1:** Implementar `src/core/missions/missionEvaluator.ts` unificando Capa 1 y Capa 2.
-- [ ] **T5.2:** Crear `src/data/missions/progressionMissions.ts` con las 5 misiones progresivas (Valencias, Enlaces Múltiples, Grupos Funcionales, Isómeros y Paso 1 de Glucólisis con esqueleto bloqueado).
-- [ ] **T5.3:** Implementar `src/store/useGameStore.ts` y `src/ui/modals/FeedbackModal.tsx` para gestionar la progresión entre niveles.
+- [x] **T5.1:** Implementar `src/core/missions/missionEvaluator.ts` unificando Capa 1 y Capa 2 con Diagnóstico Diferencial Educativo, soporte de `acceptedSmiles` y subestructuras requeridas/prohibidas vía SMARTS.
+- [x] **T5.2:** Crear `src/data/missions/progressionMissions.ts` con el catálogo de 7 misiones estructuradas en los 3 mundos:
+  - Mundo 1 (Entrenamiento Químico): `m1_ethene` (doble enlace), `m1_isomers` (éter a alcohol), `m1_phosphate` (éster de fosfato).
+  - Mundo 2 (Ruta de la Glucólisis): `m2_hexokinase` (Paso 1 - HK / G6P), `m2_gapdh` (Paso 6 - GAPDH / 1,3-BPG), `m2_pyruvate_kinase` (Paso 10 - PK / Piruvato).
+  - Mundo 3 (Complejo PDH): `m3_pdh_acetyl_coa` (Descarboxilación oxidativa y enlace tioéster C(=O)-S de Acetil-CoA).
+- [x] **T5.3:** Implementar `src/store/useGameStore.ts`, `src/ui/views/HomeView.tsx`, `src/ui/hud/TopBar.tsx` y `src/ui/modals/FeedbackModal.tsx` con carga sincronizada de `initialGraph`, persistencia en `localStorage`, HUD de misión con pista y reinicio de esqueleto, animación de victoria y transición "Siguiente Misión".
 
 ---
 
@@ -146,3 +149,60 @@
   - Generación de `src/vite-env.d.ts` para tipar con rigor TypeScript `import.meta.env.BASE_URL` sin necesidad de casts manuales ni desactivación de reglas de linter.
   - Workflow de CI/CD seguro con permisos mínimos (`contents: read`, `pages: write`, `id-token: write`) y concurrencia `pages` con cancelación de ejecuciones obsoletas.
 - **Resultado de Auditoría (Doc 06):** APROBADO (`npm run build` genera `dist/` en 8.6s con 0 errores de tipado o compilación).
+
+#### [2026-10-20 / Etapas 3 y 4] - Validador Local (Capa 1) y Adaptador RDKit.js WASM (Capa 2)
+- **Tareas completadas:** T3.1, T3.2, T3.3, T4.1, T4.2, T4.3.
+- **Archivos creados/modificados:**
+  - `src/core/chemistry/localValidator.ts` (Validador local de valencias con ajuste de carga formal y conectividad BFS).
+  - `src/core/chemistry/graphToMol.ts` (Generador estricto de CTAB MOL V2000 con coordenadas escaladas, `M  CHG`, `M  ISO` y `M  END`).
+  - `src/core/chemistry/rdkitClient.ts` (Cargador singleton asíncrono de `@rdkit/rdkit` con soporte para Vite dev, Vite prod y Node).
+  - `src/core/chemistry/functionalGroups.ts` (Diccionario de patrones SMARTS para alcoholes, aldehídos, cetonas, ácidos carboxílicos, ésteres, éteres, aminas, amidas, tioles, fosfatos, anillos aromáticos, alquenos y alquinos).
+  - `src/core/chemistry/rdkitValidator.ts` (Extracción de SMILES canónico, fórmula Hill con hidrógenos implícitos, conteo de anillos y subestructuras con protección de memoria `mol.delete()`).
+  - `src/core/chemistry/index.ts` (Barrel export del módulo químico).
+  - `src/core/model/types.ts` (Soporte para `detectedFunctionalGroups` en `ValidationResult`).
+  - `src/ui/modals/FeedbackModal.tsx` (Modal de diagnóstico con subíndices químicos, badges de grupos funcionales, copiado de SMILES/fórmula y alertas pedagógicas).
+  - `src/ui/hud/TopBar.tsx` (Conexión de botón "Verificar Reacción" con cortocircuito de Capa 1 y apertura de `FeedbackModal`).
+  - `public/RDKit_minimal.wasm` (Binario WebAssembly servido para frontend local y producción).
+  - `test_chemistry_suite.ts` (Suite de 27 pruebas unitarias de consola cubriendo C pentavalente, BFS, Etanol vs Dimetil Éter, Benceno y Grupo Fosfato).
+  - `package.json` (Script de test `"test": "tsx test_chemistry_suite.ts"`).
+  - `docs/05_TASK_HISTORY.md` y `docs/06_ARCHITECTURE_AUDIT.md`.
+- **Decisiones técnicas tomadas:**
+  - **Regla A4.1 (Cero Fugas de Memoria en WASM):** Uso estricto de bloques `try / finally` para destruir tanto instancias de `mol` como de `qmol` (`mol.delete()`, `qmol.delete()`).
+  - **Regla A4.2 (Formato Fijo CTAB):** Generación de bloques de conteos de 39 caracteres y bloques de átomos con coordenadas $F10.4$ y símbolos justificados, asegurando compatibilidad con el parser C++ de RDKit.
+  - **Regla A4.3 (Cortocircuito Pedagógico):** Si Capa 1 falla, los átomos infractores se marcan con `hasError: true` en `useCanvasStore` (brillando en rojo en el lienzo) y la evaluación se detiene sin sobrecargar RDKit.
+- **Resultado de Auditoría (Doc 06):** APROBADO (A1, A2, A3, A4 superados al 100%, `tsc --noEmit` con 0 errores, 27/27 pruebas unitarias pasadas, `npm run build` exitoso sin uso de navegador automatizado).
+
+#### [2026-10-20 / Etapa 5] - Sistema de Misiones Progresivas, Evaluador Educativo y Progresión de Juego
+- **Tareas completadas:** T5.1, T5.2, T5.3.
+- **Archivos creados/modificados:**
+  - `src/core/model/types.ts`: Ampliación de `WinConditions` (`acceptedSmiles`, `forbiddenSubstructures`), `ValidationIssue` (`FORBIDDEN_SUBSTRUCTURE`), `ValidationResult` (`differentialDiagnosis`) y `MissionConfig` (`enzymeName`, `biochemicalContext`).
+  - `src/core/missions/missionEvaluator.ts`: Orquestador de validación de misiones integrando Capa 1 y Capa 2 con Diagnóstico Diferencial de Isomería/Regioquímica y subestructuras requeridas/prohibidas.
+  - `src/core/missions/index.ts`: Export barrel de misiones.
+  - `src/data/missions/progressionMissions.ts`: Catálogo de 7 misiones en 3 Mundos (Entrenamiento, Glucólisis y Complejo PDH) con funciones de búsqueda y progresión secuencial.
+  - `src/data/missions/index.ts`: Export barrel de datos de misiones.
+  - `src/store/useGameStore.ts`: Gestión de rutas, `currentMissionId`, `completedMissionIds` con persistencia en `localStorage`, recarga atómica de `initialGraph` en `useCanvasStore`, control de pistas y transiciones.
+  - `src/ui/views/HomeView.tsx`: Tablero de los 3 mundos interactivo con estado de completitud (`✓`), medidor de progreso general (X/7) y lanzamiento directo de misiones o modo sandbox libre.
+  - `src/ui/hud/TopBar.tsx`: HUD contextual de misión con nombre de enzima, objetivo, botón de "Pista Enzimática" (`#F77F00`), botón de "Reiniciar Esqueleto", verificación reactiva y banner de ayuda.
+  - `src/ui/modals/FeedbackModal.tsx`: Modal con celebración visual animada, rol biológico de la enzima en la célula, descriptores RDKit, diagnóstico diferencial pedagógico y botón "Siguiente Misión →".
+  - `src/App.tsx`: Refinamiento en la carga condicional de moléculas de demostración para evitar sobrescritura de esquletos de misiones.
+  - `test_chemistry_suite.ts`: 19 nuevas pruebas unitarias (46 en total) verificando las 7 misiones, diagnóstico diferencial de isómeros, fosforilación y descarboxilación de Acetil-CoA.
+  - `docs/05_TASK_HISTORY.md` y `docs/06_ARCHITECTURE_AUDIT.md`.
+- **Decisiones técnicas tomadas:**
+  - **Diagnóstico Diferencial Pedagógico:** Si el jugador construye una molécula con la misma fórmula Hill que el objetivo pero con diferente conectividad o función química (ej. Dimetil éter en lugar de Etanol), el evaluador genera un mensaje específico de isomería constitucional sin confundir al estudiante con errores de valencia inexistentes.
+  - **Validación Bioquímica Flexible:** Soporte explícito de `acceptedSmiles` que permite verificar tanto formas neutras como ionizadas fisiológicas (ej. Piruvato neutro `CC(=O)C(=O)O` vs Piruvato aniónico `CC(=O)C(=O)[O-]`).
+  - **Esqueletos Protectores:** Bloqueo inmutable (`isLocked: true`) de los anillos y enlaces que no deben ser destruidos por el jugador (ej. Anillo piranósico en Hexoquinasa o fragmento de Coenzima A en PDH), canalizando la atención didáctica exclusivamente hacia el enlace de la reacción enzimática.
+- **Resultado de Auditoría (Doc 06):** APROBADO (A1, A2, A3, A4 superados al 100%, `tsc --noEmit` con 0 errores, 46/46 pruebas unitarias pasadas, `npm run build` exitoso con 0 advertencias críticas).
+
+### Hotfix UI v0.5.1 (Pre-entrega de Avance)
+- [x] **H1.1 (Scroll y Jerarquía en HomeView):** Habilitar scroll vertical (`overflow-y-auto` en `HomeView` y remoción de `overflow-hidden` en `body`), reordenando el layout para mostrar primero el Selector de Mundos/Misiones en la parte superior y la descripción del programa en la parte inferior.
+- [x] **H1.2 (Contraste del Logo Oficial):** Añadir un contenedor de fondo claro (`bg-slate-100/95` con padding, `rounded-xl` y `shadow-md`) detrás de `logo.png` en `HomeView` y `TopBar` para garantizar legibilidad de las letras oscuras del logo, además de ajustar las tarjetas a `bg-slate-800/90`.
+- [x] **H1.3 (Deploy Avance GH Pages):** Compilar (`npm run build`), hacer commit y subir a `main` para actualizar la demo en vivo.
+
+#### [2026-10-20 / Hotfix UI v0.5.1] - Corrección de Scroll, Inversión de Jerarquía y Contraste de Logo
+- **Tareas completadas:** H1.1, H1.2, H1.3.
+- **Archivos creados/modificados:**
+  - `index.html`: Remoción de `overflow-hidden` en la etiqueta `<body>` para permitir scroll nativo fluido en vistas de contenido.
+  - `src/ui/views/HomeView.tsx`: Habilitación de `h-screen overflow-y-auto`, inversión de la jerarquía visual situando el Selector de los 3 Mundos y Misiones en el primer plano superior (inmediatamente interactivo sin necesidad de scroll), contenedor de alto contraste (`bg-slate-100`) para el logo y tarjetas con fondo equilibrado `bg-slate-800/90`.
+  - `src/ui/hud/TopBar.tsx`: Envoltorio de badge claro (`bg-slate-100/95`) para el logo en la barra superior.
+  - `docs/05_TASK_HISTORY.md`: Actualización de tareas y registro en bitácora.
+- **Resultado de Verificación:** APROBADO (`tsc --noEmit` con 0 errores, `npm test` con 46/46 pruebas pasadas, `npm run build` exitoso y listo para despliegue en GitHub Pages).
