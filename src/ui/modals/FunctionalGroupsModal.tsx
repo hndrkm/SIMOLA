@@ -8,6 +8,8 @@ import {
   Search,
   MousePointerClick,
   Maximize2,
+  Activity,
+  BookOpen,
 } from 'lucide-react';
 import {
   TEMPLATES,
@@ -15,6 +17,7 @@ import {
   TemplateCategory,
 } from '../../core/model/templates';
 import { useCanvasStore } from '../../store/useCanvasStore';
+import { CatalystInspectorModal } from './CatalystInspectorModal';
 
 interface FunctionalGroupsModalProps {
   isOpen: boolean;
@@ -34,6 +37,7 @@ export const FunctionalGroupsModal: React.FC<FunctionalGroupsModalProps> = ({
   const [activeTab, setActiveTab] = useState<TemplateCategory>('functional_group');
   const [searchQuery, setSearchQuery] = useState('');
   const [selectedTemplate, setSelectedTemplate] = useState<MolecularTemplate>(TEMPLATES[0]);
+  const [inspectorTemplate, setInspectorTemplate] = useState<MolecularTemplate | null>(null);
 
   const tabs: Array<{ id: TemplateCategory; label: string; icon: React.ReactNode; count: number }> = [
     {
@@ -43,8 +47,14 @@ export const FunctionalGroupsModal: React.FC<FunctionalGroupsModalProps> = ({
       count: TEMPLATES.filter((t) => t.category === 'functional_group').length,
     },
     {
+      id: 'holoenzyme',
+      label: 'Holoenzimas (EC)',
+      icon: <Activity className="w-4 h-4 text-purple-400" />,
+      count: TEMPLATES.filter((t) => t.category === 'holoenzyme').length,
+    },
+    {
       id: 'coenzyme',
-      label: 'Coenzimas y Mediadores',
+      label: 'Coenzimas / Cofactores',
       icon: <Zap className="w-4 h-4 text-sky-400" />,
       count: TEMPLATES.filter((t) => t.category === 'coenzyme').length,
     },
@@ -55,6 +65,7 @@ export const FunctionalGroupsModal: React.FC<FunctionalGroupsModalProps> = ({
       count: TEMPLATES.filter((t) => t.category === 'base_skeleton').length,
     },
   ];
+
 
   const filteredTemplates = useMemo(() => {
     const query = searchQuery.trim().toLowerCase();
@@ -178,13 +189,16 @@ export const FunctionalGroupsModal: React.FC<FunctionalGroupsModalProps> = ({
                   key={template.id}
                   id={`template-card-${template.id}`}
                   onClick={() => setSelectedTemplate(template)}
+                  onDoubleClick={() => setInspectorTemplate(template)}
                   className={`p-3.5 rounded-2xl border transition-all cursor-pointer flex items-center justify-between gap-3 ${
                     isSelected
                       ? 'bg-sky-500/15 border-sky-400/70 shadow-lg shadow-sky-950/40 scale-[1.01]'
                       : 'bg-slate-800/40 border-slate-700/50 hover:bg-slate-800/70 hover:border-slate-600'
                   }`}
+                  title="Doble clic para inspeccionar formulación y mecanismo bioquímico"
                 >
                   <div className="flex items-center gap-3">
+
                     {/* Badge de Abreviatura Química */}
                     <div className="w-12 h-12 rounded-xl bg-slate-800 border border-slate-700 flex items-center justify-center font-bold text-xs font-mono text-sky-300 shadow-inner flex-shrink-0">
                       {template.abbreviation}
@@ -306,32 +320,48 @@ export const FunctionalGroupsModal: React.FC<FunctionalGroupsModalProps> = ({
                   • <strong>Clic en lienzo vacío:</strong> Estampa la estructura completa.<br />
                   • <strong>Clic sobre un átomo:</strong> Realiza un <em>Sprout</em> (acoplamiento covalente directo respetando valencias).
                 </div>
+
+                <div className="space-y-2 mt-3 pt-3 border-t border-slate-800">
+                  <button
+                    id="btn-use-template"
+                    onClick={() => handleActivateStampMode(selectedTemplate)}
+                    className="w-full py-2.5 px-4 rounded-xl font-extrabold text-xs bg-[#F77F00] hover:bg-[#ff941a] text-slate-950 shadow-lg shadow-[#F77F00]/30 flex items-center justify-center gap-2 transition-all active:scale-95 glow-amber"
+                  >
+                    <MousePointerClick className="w-4 h-4 text-slate-950 fill-current" />
+                    <span>Activar Herramienta de Plantilla</span>
+                  </button>
+
+                  <button
+                    id="btn-stamp-center"
+                    onClick={() => handleInsertCenter(selectedTemplate)}
+                    className="w-full py-2 px-4 rounded-xl font-bold text-xs bg-[#00A896] hover:bg-[#00c7b2] text-slate-950 shadow-md shadow-[#00A896]/20 transition-all flex items-center justify-center gap-1.5 active:scale-95 glow-teal"
+                  >
+                    <Maximize2 className="w-3.5 h-3.5" />
+                    <span>Estampar al Centro del Lienzo</span>
+                  </button>
+
+                  <button
+                    id="btn-inspect-template"
+                    onClick={() => setInspectorTemplate(selectedTemplate)}
+                    className="w-full py-2 px-4 rounded-xl font-semibold text-xs bg-slate-800 hover:bg-slate-700 text-slate-200 border border-slate-700 hover:border-slate-500 transition-all flex items-center justify-center gap-1.5 active:scale-95"
+                  >
+                    <BookOpen className="w-3.5 h-3.5 text-[#00A896]" />
+                    <span>🔬 Inspeccionar Mecanismo Bioquímico</span>
+                  </button>
+                </div>
               </div>
             )}
-
-            {/* Botones de Acción */}
-            <div className="flex flex-col gap-2 mt-4">
-              <button
-                id="btn-use-template"
-                onClick={() => handleActivateStampMode(selectedTemplate)}
-                className="w-full py-2.5 px-4 rounded-xl font-extrabold text-xs bg-[#F77F00] hover:bg-[#ff941a] text-slate-950 shadow-lg shadow-[#F77F00]/30 flex items-center justify-center gap-2 transition-all active:scale-95 glow-amber"
-              >
-                <MousePointerClick className="w-4 h-4 text-slate-950 fill-current" />
-                <span>Activar Herramienta de Plantilla</span>
-              </button>
-
-              <button
-                id="btn-stamp-center"
-                onClick={() => handleInsertCenter(selectedTemplate)}
-                className="w-full py-2 px-4 rounded-xl font-bold text-xs bg-[#00A896] hover:bg-[#00c7b2] text-slate-950 shadow-md shadow-[#00A896]/20 transition-all flex items-center justify-center gap-1.5 active:scale-95 glow-teal"
-              >
-                <Maximize2 className="w-3.5 h-3.5" />
-                <span>Estampar al Centro del Lienzo</span>
-              </button>
-            </div>
           </div>
         </div>
       </div>
+
+      {/* Modal Inspector Bioquímico */}
+      <CatalystInspectorModal
+        isOpen={!!inspectorTemplate}
+        onClose={() => setInspectorTemplate(null)}
+        template={inspectorTemplate}
+      />
     </div>
   );
 };
+

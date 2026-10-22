@@ -14,6 +14,7 @@
 | **Etapa 3** | Validador Local y Diagnóstico Capa 1 | `[x] Completado` | `Exitoso (0 errores)` | `Aprobado (A1, A2, A3)` |
 | **Etapa 4** | Adaptador RDKit.js y Descriptores | `[x] Completado` | `Exitoso (0 errores)` | `Aprobado (A1, A2, A3, A4)` |
 | **Etapa 5** | Sistema de Misiones Progresivas | `[x] Completado` | `Exitoso (0 errores)` | `Aprobado (A1, A2, A3, A4)` |
+| **Etapa 6** | Rigor Bioquímico, Reactor Catalítico, Haworth y Rutas Metabólicas | `[x] Completado` | `Exitoso (0 errores)` | `Aprobado (A1, A2, A3, A4)` |
 
 ---
 
@@ -198,11 +199,48 @@
 - [x] **H1.2 (Contraste del Logo Oficial):** Añadir un contenedor de fondo claro (`bg-slate-100/95` con padding, `rounded-xl` y `shadow-md`) detrás de `logo.png` en `HomeView` y `TopBar` para garantizar legibilidad de las letras oscuras del logo, además de ajustar las tarjetas a `bg-slate-800/90`.
 - [x] **H1.3 (Deploy Avance GH Pages):** Compilar (`npm run build`), hacer commit y subir a `main` para actualizar la demo en vivo.
 
-#### [2026-10-20 / Hotfix UI v0.5.1] - Corrección de Scroll, Inversión de Jerarquía y Contraste de Logo
-- **Tareas completadas:** H1.1, H1.2, H1.3.
+### Etapa 6: Rigor Bioquímico, Reactor Catalítico, Haworth y Rutas Metabólicas
+- [x] **T6.1 (Nomenclatura Bioquímica Formal):** Reemplazo integral de términos informales ("Mundos" → "Módulos Bioquímicos", "Modo Sandbox" → "Laboratorio de Síntesis y Modelado Estructural", "Horno / Mesa de Crafteo" → "⚡ Centro Activo / Reactor Catalítico", "Bandeja de Productos" → "Reservorio de Metabolitos y Balance Estequiométrico", "Pista" → "Fundamento Mecanístico (IUPAC / EC)", "Verificar" → "Evaluar Estructura y Estereoquímica").
+- [x] **T6.2 (Logo Horizontal y Panel Lateral Derecho de Misión):**
+  - Renderizado del logo horizontal (`h-10 w-auto` en `TopBar.tsx`, `h-20 w-auto` en `HomeView.tsx`) en placa clara (`bg-slate-100 px-4 py-1.5 rounded-xl`) eliminando textos redundantes.
+  - Implementación de `MissionSidebar.tsx` lateral derecho fijo (`w-88 bg-[#1B2A4A]/95 border-l border-slate-700`) con EC, $\Delta G^{\circ\prime}$, fundamento mecanístico desplegable, reservorio de metabolitos y reinicio de etapa.
+  - Limpieza obligatoria de estado (`clearCanvas()`, `currentMissionId = null`) al pasar al Laboratorio Libre y botón de reinicio de progreso académico en `HomeView.tsx`.
+- [x] **T6.3 (Hidrógenos Satélite "Medio Cuerpo" y Menú Contextual de Clic Derecho):**
+  - Cálculo dinámico de valencias en `AtomShape.tsx` mostrando hidrógenos implícitos como esferas satélite acopladas al borde ("medio cuerpo").
+  - Menú contextual flotante `AtomContextMenu.tsx` activado por `onContextMenu` para ajustar carga formal ($-2, -1, 0, +1, +2$ con etiquetas de ionización fisiológica $-\text{COO}^-$, $-\text{PO}_3^{2-}$, $-\text{NH}_3^+$) e isótopos ($^{12}\text{C}, ^{13}\text{C}, ^{14}\text{C}, ^{2}\text{H}, ^{32}\text{P}$, etc.).
+- [x] **T6.4 (Selector de Guías Angulares y Validador Espacial de Haworth):**
+  - Selector en `TopBar.tsx` de restricción angular ($30^\circ, 45^\circ, 90^\circ, 120^\circ$, Libre).
+  - Creación de `src/core/chemistry/spatialValidator.ts` que valida orientación espacial en proyecciones de Haworth (sector del oxígeno anular y orientación axial hacia arriba/abajo de sustituyentes según anómero $\alpha/\beta$ y serie $\text{D}/\text{L}$).
+- [x] **T6.5 (Bloques Catalíticos Dinámicos e Inspector Molecular):**
+  - Pestañas en `FunctionalGroupsModal.tsx` para Grupos Funcionales, Holoenzimas (con código EC), Coenzimas/Cofactores y Esqueletos Base.
+  - Modal `CatalystInspectorModal.tsx` activado por doble clic o botón de inspección con estructura, fórmula y mecanismo de acción catalítico.
+- [x] **T6.6 (Centro Activo / Reactor Catalítico):**
+  - Implementación de `CatalyticReactorModal.tsx` acoplando sustrato del lienzo, selección de holoenzima catalizadora con código EC y cofactores entrantes ($\text{ATP}$, $\text{NAD}^+ + \text{P}_i$, $\text{TPP}$, $\text{CoA-SH}$, etc.).
+  - Depósito de subproductos en el Reservorio de Metabolitos y carga del intermediario catalítico incompleto en el lienzo para su resolución por el usuario.
+- [x] **T6.7 (Módulos de Misiones de Alto Rigor Bioquímico):**
+  - **Módulo I (Estereoquímica y Haworth - 4 etapas):** Eteno ($sp^2$), ionización a pH 7.4 y marcaje $^{14}\text{C}$, ciclación hemiacetálica (piranosa y furanosa), $\alpha$-D-glucopiranosa con validación espacial.
+  - **Módulo II (Vía Glucolítica - 10 etapas completas):** Hexoquinasa, PGI, PFK-1, Aldolasa, TIM, GAPDH, PGK, PGM, Enolasa y Piruvato Quinasa con balance de ATP y NADH.
+  - **Módulo III (Complejo Multienzimático PDH - 5 etapas acopladas):** Secuencia completa de E1, E2 y E3 con acumulación secuencial de los tres productos clave del complejo: $\text{HCO}_3^-$ (Etapa 1), $\text{Acetil-CoA}$ (Etapa 3) y $\text{NADH} + \text{H}^+$ (Etapa 5).
+
+#### [2026-10-21 / Etapa 6] - Refactor Visual, Rigor Bioquímico, Reactor Catalítico y Validación Espacial de Haworth
+- **Tareas completadas:** T6.1, T6.2, T6.3, T6.4, T6.5, T6.6, T6.7.
 - **Archivos creados/modificados:**
-  - `index.html`: Remoción de `overflow-hidden` en la etiqueta `<body>` para permitir scroll nativo fluido en vistas de contenido.
-  - `src/ui/views/HomeView.tsx`: Habilitación de `h-screen overflow-y-auto`, inversión de la jerarquía visual situando el Selector de los 3 Mundos y Misiones en el primer plano superior (inmediatamente interactivo sin necesidad de scroll), contenedor de alto contraste (`bg-slate-100`) para el logo y tarjetas con fondo equilibrado `bg-slate-800/90`.
-  - `src/ui/hud/TopBar.tsx`: Envoltorio de badge claro (`bg-slate-100/95`) para el logo en la barra superior.
-  - `docs/05_TASK_HISTORY.md`: Actualización de tareas y registro en bitácora.
-- **Resultado de Verificación:** APROBADO (`tsc --noEmit` con 0 errores, `npm test` con 46/46 pruebas pasadas, `npm run build` exitoso y listo para despliegue en GitHub Pages).
+  - `src/core/model/types.ts`: Tipos `HaworthSubstituentRule`, `HaworthRingCheck`, `SpatialRules`, `CatalyticReactionConfig`, `MetaboliteItem`, ampliación de `MissionConfig` y `WinConditions`.
+  - `src/core/chemistry/spatialValidator.ts`: Validador de estereoespecificidad geométrica para proyecciones de Haworth.
+  - `src/core/missions/missionEvaluator.ts`: Integración de Diagnóstico 4 (Validación Espacial de Haworth).
+  - `src/core/model/templates.ts`: Definición de holoenzimas y cofactores con EC y mecanismos.
+  - `src/store/useCanvasStore.ts`: Restricciones angulares (`snapAngleDeg`), `contextMenuAtom`, `clearCanvas()`.
+  - `src/store/useGameStore.ts`: `metaboliteReservoir`, `addMetabolitesToReservoir`, `clearProgress()`, `startSandbox()` purificado.
+  - `src/ui/hud/MissionSidebar.tsx`: Panel lateral derecho fijo para misiones con balances y fundamentos.
+  - `src/ui/hud/TopBar.tsx`: Logo horizontal, selector angular, accesos al reactor catalítico y evaluación.
+  - `src/ui/views/HomeView.tsx`: Logo horizontal, los 3 módulos bioquímicos formales, reinicio total de sandbox y reset de progreso académico.
+  - `src/ui/canvas/AtomShape.tsx`: Hidrógenos satélites de "medio cuerpo" reactivos y menú contextual de clic derecho.
+  - `src/ui/canvas/AtomContextMenu.tsx`: Popover flotante para cargas formales e isótopos.
+  - `src/ui/canvas/MolecularCanvas.tsx`: Montaje de `AtomContextMenu`.
+  - `src/ui/modals/CatalyticReactorModal.tsx`: Modal del Centro Activo / Reactor Catalítico.
+  - `src/ui/modals/CatalystInspectorModal.tsx`: Modal inspector de enzimas y coenzimas.
+  - `src/ui/modals/FunctionalGroupsModal.tsx`: Pestañas enriquecidas con enzimas y cofactores.
+  - `src/data/missions/progressionMissions.ts`: Catálogo completo con las 19 misiones (4 en Módulo I, 10 en Módulo II y 5 en Módulo III).
+  - `src/App.tsx`: Integración del panel lateral derecho y limpieza de imports.
+  - `docs/05_TASK_HISTORY.md` y `docs/06_ARCHITECTURE_AUDIT.md`.
+- **Resultado de Verificación:** APROBADO (`tsc --noEmit` con 0 errores, `npm run build` exitoso generando bundle de producción en 14.8s).

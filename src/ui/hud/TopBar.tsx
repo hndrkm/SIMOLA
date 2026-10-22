@@ -5,10 +5,9 @@ import {
   X,
   Sparkles,
   ArrowLeft,
-  Flame,
   Loader2,
-  RotateCcw,
-  Lightbulb,
+  Zap,
+  Compass,
 } from 'lucide-react';
 import { useCanvasStore } from '../../store/useCanvasStore';
 import { useGameStore } from '../../store/useGameStore';
@@ -17,23 +16,24 @@ import { evaluateMission } from '../../core/missions/missionEvaluator';
 import { getNextMissionId } from '../../data/missions/progressionMissions';
 import { ValidationResult } from '../../core/model/types';
 import { FeedbackModal } from '../modals/FeedbackModal';
+import { CatalyticReactorModal } from '../modals/CatalyticReactorModal';
 
 export const TopBar: React.FC = () => {
   const graph = useCanvasStore((state) => state.graph);
   const setAtomErrors = useCanvasStore((state) => state.setAtomErrors);
   const clearErrors = useCanvasStore((state) => state.clearErrors);
+  const snapAngleDeg = useCanvasStore((state) => state.snapAngleDeg);
+  const setSnapAngleDeg = useCanvasStore((state) => state.setSnapAngleDeg);
 
   const activeRoute = useGameStore((state) => state.activeRoute);
   const currentMissionId = useGameStore((state) => state.currentMissionId);
   const getCurrentMission = useGameStore((state) => state.getCurrentMission);
   const loadNextMission = useGameStore((state) => state.loadNextMission);
-  const resetCurrentMission = useGameStore((state) => state.resetCurrentMission);
   const completeCurrentMission = useGameStore((state) => state.completeCurrentMission);
-  const isHintOpen = useGameStore((state) => state.isHintOpen);
-  const toggleHint = useGameStore((state) => state.toggleHint);
   const setView = useGameStore((state) => state.setView);
 
   const [showHelp, setShowHelp] = useState(false);
+  const [showReactorModal, setShowReactorModal] = useState(false);
   const [showFeedbackModal, setShowFeedbackModal] = useState(false);
   const [validationResult, setValidationResult] = useState<ValidationResult | null>(null);
   const [isVerifying, setIsVerifying] = useState(false);
@@ -54,7 +54,7 @@ export const TopBar: React.FC = () => {
         issues: [
           {
             code: 'INVALID_CHEMISTRY',
-            message: 'El lienzo está vacío. Coloca átomos y conéctalos con enlaces antes de verificar.',
+            message: 'El lienzo está vacío. Construye o ajusta la molécula antes de evaluar su estructura y estereoquímica.',
             affectedAtomIds: [],
           },
         ],
@@ -83,7 +83,7 @@ export const TopBar: React.FC = () => {
 
         setShowFeedbackModal(true);
       } else {
-        // MODO SANDBOX: Validación clásica de dos capas
+        // MODO LABORATORIO LIBRE: Validación de valencias y RDKit
         const localResult = validateLocalGraph(graph, {
           mustBeConnected: activeRoute !== 'sandbox',
         });
@@ -110,7 +110,7 @@ export const TopBar: React.FC = () => {
         setShowFeedbackModal(true);
       }
     } catch (error) {
-      console.error('Error durante la verificación:', error);
+      console.error('Error durante la evaluación química:', error);
       setValidationResult({
         isValid: false,
         passedLayer1: true,
@@ -131,39 +131,50 @@ export const TopBar: React.FC = () => {
 
   const getRouteLabel = () => {
     if (mission) {
-      return mission.enzymeName || mission.title;
+      return (
+        mission.moduleName ||
+        (mission.world === 1
+          ? 'Módulo I: Estereoquímica y Haworth'
+          : mission.world === 2
+          ? 'Módulo II: Vía Glucolítica'
+          : 'Módulo III: Complejo PDH')
+      );
     }
     switch (activeRoute) {
       case 'sandbox':
-        return 'Laboratorio Libre (Sandbox)';
+        return 'Laboratorio de Síntesis y Modelado Estructural';
       case 'training':
-        return 'Entrenamiento Químico';
+        return 'Módulo I: Estereoquímica y Proyecciones de Haworth';
       case 'glycolysis':
-        return 'Ruta de la Glucólisis';
+        return 'Módulo II: Vía Glucolítica de Embden-Meyerhof-Parnas';
       case 'pdh':
-        return 'Complejo PDH';
+        return 'Módulo III: Complejo Multienzimático Piruvato Deshidrogenasa';
       default:
-        return 'SIMOLA Sandbox';
+        return 'Laboratorio de Modelado';
     }
   };
 
   return (
     <>
-      <header className="absolute top-4 left-4 right-4 z-20 flex flex-col md:flex-row items-start md:items-center justify-between gap-3 select-none pointer-events-none">
+      <header
+        className={`absolute top-4 left-4 ${
+          currentMissionId ? 'right-92' : 'right-4'
+        } z-20 flex flex-wrap items-center justify-between gap-3 select-none pointer-events-none transition-all`}
+      >
         {/* Identidad de la Aplicación y Botón Menú Principal */}
         <div className="glass-panel px-3.5 py-2 rounded-2xl flex items-center gap-3 border border-white/15 shadow-xl pointer-events-auto bg-[#1B2A4A]/90 max-w-full">
           <button
             id="btn-return-home"
             onClick={() => setView('home')}
-            className="flex items-center gap-2 p-1.5 rounded-xl hover:bg-white/10 text-slate-300 hover:text-white transition-all text-xs font-semibold group shrink-0"
+            className="flex items-center gap-2 p-1 rounded-xl hover:bg-white/10 text-slate-300 hover:text-white transition-all text-xs font-semibold group shrink-0"
             title="Volver al Menú Principal (HomeView)"
           >
             <ArrowLeft className="w-4 h-4 text-[#00A896] group-hover:-translate-x-0.5 transition-transform" />
-            <div className="bg-slate-100/95 px-2 py-1 rounded-xl shadow-md border border-white/20 flex items-center justify-center">
+            <div className="bg-slate-100 px-3 py-1 rounded-xl shadow-md border border-white/20 flex items-center justify-center">
               <img
                 src={`${import.meta.env.BASE_URL}logo.png`}
-                alt="SIMOLA Logo"
-                className="w-6 h-6 object-contain"
+                alt="SIMOLA"
+                className="h-10 w-auto object-contain"
               />
             </div>
           </button>
@@ -172,58 +183,51 @@ export const TopBar: React.FC = () => {
 
           <div className="flex flex-col min-w-0">
             <div className="flex items-center gap-2">
-              <span className="font-extrabold text-sm tracking-tight text-white shrink-0">
-                SIMOLA
-              </span>
               <span className="px-2 py-0.5 text-[10px] font-mono bg-[#00A896]/20 text-[#00c7b2] border border-[#00A896]/40 rounded-full font-bold truncate">
                 {getRouteLabel()}
               </span>
             </div>
             {mission ? (
-              <span className="text-[10px] text-amber-200/90 font-medium truncate max-w-[280px] sm:max-w-md">
-                {mission.objectiveDescription}
+              <span className="text-[10px] text-amber-200/90 font-medium truncate max-w-[200px] sm:max-w-xs">
+                {mission.title}
               </span>
             ) : (
               <span className="text-[10px] text-slate-400 font-medium">
-                Pizarra Molecular y Metabólica Libre
+                Laboratorio de Síntesis y Modelado Estructural
               </span>
             )}
           </div>
         </div>
 
-        {/* Acciones de Misión y Controles Principales */}
-        <div className="flex items-center gap-2.5 pointer-events-auto self-end md:self-center">
-          {/* BOTÓN PISTA ENZIMÁTICA (Phosphate Amber #F77F00) cuando hay misión activa */}
-          {mission && (
-            <button
-              id="btn-mission-hint"
-              onClick={() => toggleHint()}
-              className={`flex items-center gap-1.5 px-3 py-2 rounded-2xl text-xs font-bold transition-all border shadow-md active:scale-95 ${
-                isHintOpen
-                  ? 'bg-[#F77F00] text-slate-950 border-[#ff941a] glow-amber'
-                  : 'bg-[#F77F00]/15 hover:bg-[#F77F00]/25 text-[#ff941a] border-[#F77F00]/40'
-              }`}
-              title="Ver pista pedagógica de la reacción"
-            >
-              <Lightbulb className="w-4 h-4 fill-current" />
-              <span className="hidden sm:inline">Pista Enzimática</span>
-            </button>
-          )}
+        {/* Centro: Selector de Guías Angulares (30°, 45°, 90°, 120°, Libre) */}
+        <div className="glass-panel px-2.5 py-1.5 rounded-2xl flex items-center gap-1 border border-white/15 bg-[#1B2A4A]/90 shadow-xl pointer-events-auto">
+          <span className="text-[10px] font-bold text-slate-400 uppercase tracking-wider mr-1 hidden sm:flex items-center gap-1">
+            <Compass className="w-3.5 h-3.5 text-[#00A896]" />
+            Guías:
+          </span>
+          {([30, 45, 90, 120, null] as const).map((deg) => {
+            const isSelected = snapAngleDeg === deg;
+            return (
+              <button
+                key={deg === null ? 'free' : `${deg}deg`}
+                onClick={() => setSnapAngleDeg(deg)}
+                className={`px-2 py-1 rounded-xl text-[10px] font-mono font-bold transition-all border ${
+                  isSelected
+                    ? 'bg-[#00A896] text-slate-950 border-[#00c7b2] shadow-sm'
+                    : 'bg-slate-900/70 text-slate-300 border-white/5 hover:border-white/20 hover:bg-slate-800'
+                }`}
+                title={deg === null ? 'Movimiento y trazo libre' : `Restricción angular cada ${deg}°`}
+              >
+                {deg === null ? 'Libre' : `${deg}°`}
+              </button>
+            );
+          })}
+        </div>
 
-          {/* BOTÓN REINICIAR ESQUELETO (cuando hay misión activa) */}
-          {mission && (
-            <button
-              id="btn-reset-mission"
-              onClick={resetCurrentMission}
-              className="glass-panel p-2.5 rounded-2xl text-slate-300 hover:text-white hover:bg-white/10 transition-all border border-white/15 shadow-lg bg-[#1B2A4A]/85 active:scale-95"
-              title="Reiniciar al esqueleto inicial de la misión"
-            >
-              <RotateCcw className="w-4 h-4 text-slate-300" />
-            </button>
-          )}
-
+        {/* Acciones de Catálisis y Evaluación */}
+        <div className="flex items-center gap-2 pointer-events-auto self-end md:self-center">
           {/* Contador de Átomos y Enlaces */}
-          <div className="glass-panel px-3 py-2 rounded-2xl hidden lg:flex items-center gap-2.5 border border-white/15 text-xs bg-[#1B2A4A]/85">
+          <div className="glass-panel px-3 py-2 rounded-2xl hidden xl:flex items-center gap-2.5 border border-white/15 text-xs bg-[#1B2A4A]/85">
             <div className="flex items-center gap-1.5 text-slate-300">
               <span className="w-2 h-2 rounded-full bg-[#00A896]" />
               <span>
@@ -248,7 +252,18 @@ export const TopBar: React.FC = () => {
             <HelpCircle className="w-4 h-4 text-slate-300" />
           </button>
 
-          {/* Botón de Verificar Reacción (Vibrant Catalytic Teal #00A896) */}
+          {/* Botón Centro Activo / Reactor Catalítico */}
+          <button
+            id="btn-catalytic-reactor"
+            onClick={() => setShowReactorModal(true)}
+            className="flex items-center gap-1.5 px-3.5 py-2.5 rounded-2xl bg-[#F77F00] hover:bg-[#ff941a] text-slate-950 font-black text-xs transition-all shadow-lg shadow-[#F77F00]/25 glow-amber active:scale-95"
+            title="Abrir Centro Activo / Reactor Catalítico para acoplar holoenzimas y cofactores"
+          >
+            <Zap className="w-4 h-4 fill-current" />
+            <span className="hidden sm:inline">⚡ Reactor Catalítico</span>
+          </button>
+
+          {/* Botón Evaluar Estructura y Estereoquímica */}
           <button
             id="btn-verify-structure"
             onClick={handleVerify}
@@ -258,49 +273,28 @@ export const TopBar: React.FC = () => {
                 ? 'bg-slate-700 text-slate-400 cursor-wait'
                 : 'bg-[#00A896] hover:bg-[#00c7b2] text-slate-950 glow-teal hover:scale-[1.02] active:scale-95'
             } font-black text-xs transition-all shadow-lg shadow-[#00A896]/30`}
-            title="Verificar reacción contra las condiciones de victoria de la enzima"
+            title="Evaluar estructura y estereoquímica contra los criterios bioquímicos"
           >
             {isVerifying ? (
               <>
                 <Loader2 className="w-4 h-4 animate-spin text-[#00A896]" />
-                <span>Analizando...</span>
+                <span>Evaluando...</span>
               </>
             ) : (
               <>
                 <CheckCircle2 className="w-4 h-4 text-slate-950 fill-current" />
-                <span>Verificar Reacción</span>
+                <span>Evaluar Estructura</span>
               </>
             )}
           </button>
         </div>
       </header>
 
-      {/* BANNER DESPLEGABLE DE PISTA ENZIMÁTICA */}
-      {isHintOpen && mission && (
-        <div className="absolute top-20 left-4 right-4 md:left-1/2 md:-translate-x-1/2 md:max-w-xl z-20 pointer-events-auto animate-fadeIn">
-          <div className="glass-panel p-4 rounded-3xl bg-[#1B2A4A]/95 border-2 border-[#F77F00]/50 shadow-2xl text-slate-100 flex items-start gap-3">
-            <div className="p-2 rounded-2xl bg-[#F77F00]/20 text-[#ff941a] shrink-0 border border-[#F77F00]/30">
-              <Flame className="w-5 h-5" />
-            </div>
-            <div className="space-y-1 flex-1">
-              <div className="flex items-center justify-between">
-                <span className="text-xs font-black uppercase tracking-wider text-[#ff941a]">
-                  Pista Enzimática — {mission.enzymeName || mission.title}
-                </span>
-                <button
-                  onClick={() => toggleHint(false)}
-                  className="p-1 rounded-lg text-slate-400 hover:text-white hover:bg-white/10"
-                >
-                  <X className="w-4 h-4" />
-                </button>
-              </div>
-              <p className="text-xs text-slate-200 leading-relaxed font-medium">
-                {mission.pedagogicalHint}
-              </p>
-            </div>
-          </div>
-        </div>
-      )}
+      {/* Modal del Centro Activo / Reactor Catalítico */}
+      <CatalyticReactorModal
+        isOpen={showReactorModal}
+        onClose={() => setShowReactorModal(false)}
+      />
 
       {/* Modal de Diagnóstico Bioquímico (FeedbackModal) */}
       <FeedbackModal
@@ -309,14 +303,14 @@ export const TopBar: React.FC = () => {
         result={validationResult}
         moduleName={getRouteLabel()}
         mission={mission}
-        onNextMission={handleNextMissionWrapper(loadNextMission)}
+        onNextMission={() => loadNextMission()}
         hasNextMission={hasNextMission}
       />
 
       {/* Modal de Ayuda y Atajos de Teclado */}
       {showHelp && (
         <div className="fixed inset-0 z-50 flex items-center justify-center p-4 bg-slate-950/80 backdrop-blur-sm animate-fadeIn">
-          <div className="glass-panel w-full max-w-md rounded-3xl p-6 border border-white/20 shadow-2xl relative bg-[#1B2A4A]/95">
+          <div className="glass-panel w-full max-w-md rounded-3xl p-6 border border-white/20 shadow-2xl relative bg-[#1B2A4A]/98 text-slate-100">
             <button
               onClick={() => setShowHelp(false)}
               className="absolute top-4 right-4 p-2 text-slate-400 hover:text-white hover:bg-white/10 rounded-xl transition-all"
@@ -329,27 +323,25 @@ export const TopBar: React.FC = () => {
                 <Sparkles className="w-5 h-5" />
               </div>
               <div>
-                <h3 className="text-base font-bold text-white">Controles Asistidos SIMOLA</h3>
-                <p className="text-xs text-slate-400">Guía de interacción molecular ergonómica</p>
+                <h3 className="text-base font-bold text-white">Guía y Controles SIMOLA</h3>
+                <p className="text-xs text-slate-400">Modelado molecular y simulación metabólica</p>
               </div>
             </div>
 
             <div className="space-y-3 text-xs text-slate-300">
               <div className="bg-slate-900/60 p-3 rounded-2xl border border-white/10 space-y-2">
-                <p className="font-semibold text-[#00c7b2]">Mecánicas del Editor:</p>
-                <ul className="space-y-1 list-disc list-inside text-slate-300">
-                  <li><strong>Colocar Átomo:</strong> Clic en el lienzo para añadir el elemento activo. Clic sobre un átomo para transmutarlo.</li>
-                  <li><strong>Crear Enlaces:</strong> En modo enlace, arrastra de un átomo a otro con la línea guía magnética.</li>
-                  <li><strong>Ciclar Enlaces:</strong> Clic en cualquier enlace alterna entre simple, doble y triple.</li>
-                  <li><strong>Anillos y Fusión:</strong> Elige un anillo (3 a 8 lados); haz clic en vacío para estamparlo o sobre un enlace para fusionarlo.</li>
-                  <li><strong>Plantillas y Sprout:</strong> Clic en un átomo con una plantilla activa para acoplarla directamente.</li>
-                  <li><strong>Carga Formal (+ / −):</strong> Pasa el ratón sobre cualquier átomo para subir o bajar su carga formal.</li>
+                <p className="font-semibold text-[#00c7b2]">Mecánicas del Modelado:</p>
+                <ul className="space-y-1 list-disc list-inside text-slate-300 text-[11px]">
+                  <li><strong>Clic Derecho en Átomo:</strong> Abre el menú contextual de Carga Formal (-2 a +2) y Marcaje Isotópico.</li>
+                  <li><strong>Hidrógenos Satélite:</strong> Se calculan según la valencia y disminuyen automáticamente al conectar enlaces.</li>
+                  <li><strong>Guías Angulares:</strong> Selecciona 30°, 45°, 90° (Haworth axial) o Libre en la barra superior.</li>
+                  <li><strong>⚡ Reactor Catalítico:</strong> Configura sustrato, enzima y cofactores para avanzar etapas metabólicas.</li>
+                  <li><strong>Librería Química:</strong> Explora grupos funcionales, holoenzimas con código EC y cofactores con doble clic.</li>
                 </ul>
               </div>
 
               <div className="bg-slate-900/60 p-3 rounded-2xl border border-white/10">
-                <p className="font-semibold text-[#ff941a] mb-2 flex items-center gap-1.5">
-                  <Flame className="w-3.5 h-3.5 text-[#F77F00]" />
+                <p className="font-semibold text-[#ff941a] mb-2 flex items-center gap-1.5 text-[11px]">
                   Atajos de Teclado:
                 </p>
                 <div className="grid grid-cols-2 gap-2 text-[11px] font-mono">
@@ -359,8 +351,6 @@ export const TopBar: React.FC = () => {
                   <div className="flex justify-between items-center"><span className="text-slate-400">Borrador:</span> <kbd className="bg-slate-800 px-1.5 py-0.5 rounded border border-slate-700">E</kbd></div>
                   <div className="flex justify-between items-center"><span className="text-slate-400">Deshacer:</span> <kbd className="bg-slate-800 px-1.5 py-0.5 rounded border border-slate-700">Ctrl+Z</kbd></div>
                   <div className="flex justify-between items-center"><span className="text-slate-400">Rehacer:</span> <kbd className="bg-slate-800 px-1.5 py-0.5 rounded border border-slate-700">Ctrl+Y</kbd></div>
-                  <div className="flex justify-between items-center"><span className="text-slate-400">Enlaces 1/2/3:</span> <kbd className="bg-slate-800 px-1.5 py-0.5 rounded border border-slate-700">1, 2, 3</kbd></div>
-                  <div className="flex justify-between items-center"><span className="text-slate-400">Elementos:</span> <kbd className="bg-slate-800 px-1.5 py-0.5 rounded border border-slate-700">C, H, O...</kbd></div>
                 </div>
               </div>
             </div>
@@ -379,9 +369,3 @@ export const TopBar: React.FC = () => {
     </>
   );
 };
-
-function handleNextMissionWrapper(loadNextMission: () => boolean) {
-  return () => {
-    loadNextMission();
-  };
-}

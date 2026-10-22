@@ -10,6 +10,8 @@ import { graphToMol } from '../chemistry/graphToMol';
 import { getRDKit, Mol } from '../chemistry/rdkitClient';
 import { extractMolecularFormula } from '../chemistry/rdkitValidator';
 import { BIOCHEMICAL_FUNCTIONAL_GROUPS } from '../chemistry/functionalGroups';
+import { validateSpatialHaworth } from '../chemistry/spatialValidator';
+
 
 /**
  * Orquestador principal de evaluación de misiones (Etapa 5 - T5.1).
@@ -277,7 +279,19 @@ export async function evaluateMission(
       }
     }
 
+    // DIAGNÓSTICO DIFERENCIAL 4: Reglas de Estereoquímica Espacial (Proyecciones de Haworth)
+    if (wc.spatialRules?.haworth) {
+      const spatialResult = validateSpatialHaworth(graph, wc.spatialRules.haworth);
+      if (!spatialResult.isValid) {
+        issues.push(...spatialResult.issues);
+        if (!differentialDiagnosis && spatialResult.issues.length > 0) {
+          differentialDiagnosis = spatialResult.issues[0].message;
+        }
+      }
+    }
+
     const passedMission = issues.length === 0;
+
 
     return {
       isValid: passedMission,

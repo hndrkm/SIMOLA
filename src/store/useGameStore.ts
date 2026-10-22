@@ -5,7 +5,7 @@ import {
   getMissionsByWorld,
 } from '../data/missions/progressionMissions';
 import { useCanvasStore } from './useCanvasStore';
-import { MissionConfig } from '../core/model/types';
+import { MissionConfig, MetaboliteItem } from '../core/model/types';
 
 export type GameView = 'home' | 'workspace';
 export type MetabolicRouteId = 'sandbox' | 'training' | 'glycolysis' | 'pdh';
@@ -37,6 +37,7 @@ interface GameState {
   attempts: Record<string, number>;
   activeCofactors: string[];
   isHintOpen: boolean;
+  metaboliteReservoir: MetaboliteItem[];
 
   // Acciones de Navegación y Rutas
   setView: (view: GameView) => void;
@@ -50,6 +51,11 @@ interface GameState {
   toggleHint: (open?: boolean) => void;
   getCurrentMission: () => MissionConfig | undefined;
   isMissionCompleted: (missionId: string) => boolean;
+  addMetabolitesToReservoir: (
+    items: Array<{ name: string; formula?: string; stoichiometry?: string }>,
+    sourceMissionTitle?: string
+  ) => void;
+  clearProgress: () => void;
 }
 
 export const useGameStore = create<GameState>((set, get) => ({
@@ -60,8 +66,10 @@ export const useGameStore = create<GameState>((set, get) => ({
   attempts: {},
   activeCofactors: ['ATP', 'ADP', 'NAD+', 'NADH', 'Pi'],
   isHintOpen: false,
+  metaboliteReservoir: [],
 
   setView: (view) => set({ currentView: view }),
+
 
   loadMission: (missionId: string) => {
     const mission = getMissionById(missionId);
@@ -152,8 +160,8 @@ export const useGameStore = create<GameState>((set, get) => ({
   },
 
   startSandbox: () => {
-    useCanvasStore.getState().clearGraph();
-    useCanvasStore.getState().clearErrors();
+    // Al entrar al Laboratorio de Síntesis y Modelado, limpieza obligatoria total
+    useCanvasStore.getState().clearCanvas();
     set({
       currentView: 'workspace',
       activeRoute: 'sandbox',
@@ -182,4 +190,39 @@ export const useGameStore = create<GameState>((set, get) => ({
   isMissionCompleted: (missionId: string) => {
     return get().completedMissionIds.includes(missionId);
   },
+
+  addMetabolitesToReservoir: (items, sourceMissionTitle) => {
+    const currentList = [...get().metaboliteReservoir];
+    for (const item of items) {
+      const existing = currentList.find((m) => m.name === item.name);
+      if (existing) {
+        existing.count += 1;
+        if (item.stoichiometry) existing.stoichiometry = item.stoichiometry;
+      } else {
+        currentList.push({
+          id: `metab_${Date.now()}_${Math.random().toString(36).substring(2, 6)}`,
+          name: item.name,
+          formula: item.formula,
+          count: 1,
+          stoichiometry: item.stoichiometry,
+          sourceMissionTitle,
+        });
+      }
+    }
+    set({ metaboliteReservoir: currentList });
+  },
+
+  clearProgress: () => {
+    try {
+      localStorage.removeItem(STORAGE_KEY);
+    } catch {
+      // Ignorar errores de sandbox
+    }
+    set({
+      completedMissionIds: [],
+      attempts: {},
+      metaboliteReservoir: [],
+    });
+  },
 }));
+

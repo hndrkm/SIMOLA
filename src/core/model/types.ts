@@ -70,6 +70,24 @@ export interface ValidationResult {
   differentialDiagnosis?: string;
 }
 
+export interface HaworthSubstituentRule {
+  carbonIndex: 1 | 2 | 3 | 4 | 5;
+  direction: 'up' | 'down';
+  name: string;
+}
+
+export interface HaworthRingCheck {
+  ringType: 'pyranose' | 'furanose';
+  anomer: 'alpha' | 'beta';
+  series: 'D' | 'L';
+  expectedOxygenSector?: 'top-right' | 'top';
+  substituents: HaworthSubstituentRule[];
+}
+
+export interface SpatialRules {
+  haworth?: HaworthRingCheck;
+}
+
 export interface SubstructureRequirement {
   name: string;   // Ej: "Grupo Hidroxilo (-OH)"
   smarts: string; // Ej: "[OX2H]"
@@ -85,17 +103,49 @@ export interface WinConditions {
   forbiddenSubstructures?: SubstructureRequirement[];
   expectedRingCount?: number;
   mustBeConnected: boolean;
+  spatialRules?: SpatialRules;
+}
+
+export interface CatalyticReactionConfig {
+  expectedEnzymeId: string;
+  enzymeName: string;
+  ecNumber: string;
+  expectedCofactors: string[];
+  substrateName: string;
+  releasedByproducts: Array<{
+    name: string;
+    formula?: string;
+    stoichiometry?: string;
+  }>;
+  intermediateGraph: MolecularGraph;
+  explanation: string;
+}
+
+export interface MetaboliteItem {
+  id: string;
+  name: string;
+  formula?: string;
+  count: number;
+  stoichiometry?: string;
+  sourceMissionTitle?: string;
 }
 
 export interface MissionConfig {
   id: string;
   world: 1 | 2 | 3 | 4;
+  moduleName?: string;
   title: string;
   enzymeName?: string;
+  ecNumber?: string;
+  deltaG?: string;
+  stepNumber?: number;
+  totalSteps?: number;
   objectiveDescription: string;
   pedagogicalHint: string;
   biochemicalContext?: string;
   allowedElements: ElementSymbol[];
   initialGraph?: MolecularGraph;
+  catalyticReaction?: CatalyticReactionConfig;
   winConditions: WinConditions;
 }
+

@@ -39,3 +39,4 @@
 | **Etapa 3** | APROBADO | APROBADO | APROBADO | N/A | Exitoso (0 errores) | APROBADO |
 | **Etapa 4** | APROBADO | APROBADO | APROBADO | APROBADO | Exitoso (0 errores) | APROBADO |
 | **Etapa 5** | APROBADO | APROBADO | APROBADO | APROBADO | Exitoso (0 errores) | APROBADO |
+| **Etapa 6** | APROBADO | APROBADO | APROBADO | APROBADO | Exitoso (0 errores) | APROBADO |

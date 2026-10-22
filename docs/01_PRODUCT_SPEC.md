@@ -53,6 +53,30 @@ La aplicación inicia en `HomeView` antes de entrar al `GameWorkspace`:
      - **Heterociclos Bioquímicos:** Anillo de **Piranosa** ($n=6$ con 1 átomo de `O`) y **Furanosa** ($n=5$ con 1 átomo de `O`).
    - Todos los anillos de 3 a 8 lados funcionan con las 3 mecánicas KingDraw: **Estampado en vacío**, **Brote desde un átomo** y **Fusión compartiendo un enlace existente**.
 
+## 2. Arquitectura Revisada del Espacio de Juego (`GameWorkspace`)
+
+1. **Barra Superior (`TopBar.tsx`):**
+   - Extremo izquierdo: Logo horizontal (`logo.png`) dentro de cápsula clara (`h-10 w-auto object-contain`) SIN texto redundante al lado, más botón `"← Menú Principal"`.
+   - Centro: Selector de Imán Angular (`30°`, `45°`, `90°`, `120°`, `Libre`) para facilitar el dibujo de estructuras simples, cadenas a 120° o enlaces axiales verticales de Haworth a 90°.
+   - Extremo derecho: Botón **"🔥 Horno Enzimático (Transformar)"** (en `#F77F00`) y botón **"✓ Verificar Estructura"** (en `#00A896`).
+
+2. **Panel Lateral Derecho de Misión (`src/ui/hud/MissionSidebar.tsx`):**
+   - Separado completamente de la barra superior. Se oculta automáticamente en el Modo Sandbox Libre (limpiando el lienzo al entrar al Sandbox).
+   - Muestra: Título del Mundo y Misión, Indicador de Paso (ej. `Paso 2 de 5`), Descripción completa sin cortes con scroll propio, Acordeón desplegable de **Pista Enzimática**, Bandeja de **Productos/Derivados Acumulados** (para rutas multicapa como Glucólisis y PDH) y botón **"Reiniciar Misión"**.
+
+3. **Átomos con Satélites de Hidrógeno y Menú Contextual (Clic Derecho):**
+   - Cada átomo en el lienzo muestra visualmente sus **hidrógenos implícitos como esferas satélite acopladas (medio cuerpo)** que se reducen automáticamente a medida que el jugador le conecta nuevos enlaces (`H_visibles = max(0, Valencia - OrdenDeEnlaces + CargaAjustada)`).
+   - **Clic Derecho sobre un Átomo:** Abre un Popover flotante para modificar **Carga Formal (`-2, -1, 0, +1, +2`)** e **Isótopo (`12C, 13C, 14C, 2H, 32P`)**.
+   - **Doble Clic sobre una Enzima o Cofactor en el lienzo/inventario:** Abre un modal inspector con su fórmula química desglosada y rol catalítico.
+
+4. **El "Horno Enzimático / Mesa de Crafteo" (`src/ui/modals/BiochemicalFurnaceModal.tsx`):**
+   - Funciona como un horno/mesa de crafteo estilo Minecraft para pasos metabólicos:
+     - **Slot Sustrato:** Toma la molécula actual dibujada en el lienzo.
+     - **Slot Catalizador (Enzima):** El jugador selecciona la enzima correcta del nivel (ej. *Hexoquinasa*, *E1 Piruvato Deshidrogenasa*).
+     - **Slots de Cofactores (Entrada):** El jugador coloca los mediadores necesarios (ej. `ATP`, `NAD+`, `CoA-SH`, `Lipoamida`, `TPP`).
+   - **Resultado del Crafteo ("Pre-Producto Incompleto" + Derivados):**
+     - Si la receta enzimática es válida, el Horno genera los **Derivados Secundarios** (ej. `ADP`, `NADH`, `HCO3-`) guardándolos en la bandeja de la misión, y coloca en el lienzo la **estructura pre-transformada pero incompleta** (por ejemplo, el anillo abierto o el grupo funcional recién liberado a medio conectar) para que el jugador remate los enlaces finales en la pizarra y presione "Verificar".
+
 ## 3. Máquina de Estados de Interacción Unificada (Base + KingDraw + Pizarra)
 El lienzo (`MolecularCanvas`) opera bajo una herramienta activa (`activeTool`) combinando manipulación directa y dibujo asistido:
 
@@ -92,40 +116,47 @@ El lienzo (`MolecularCanvas`) opera bajo una herramienta activa (`activeTool`) c
 7. **Atajos de Teclado en Vivo (Hover Hotkeys):**
    - Con el cursor sobre un átomo (`hoveredAtomId`): teclas `C, H, O, N, P, S` lo transmutan al instante; `Delete`/`Backspace` lo borra en cascada.
    - Con el cursor sobre un enlace (`hoveredBondId`): teclas `1, 2, 3` cambian su orden al instante; `Delete`/`Backspace` lo borra.
+## 4. El "Centro Activo / Reactor Catalítico" (`src/ui/modals/CatalyticReactorModal.tsx`)
+Sustituye cualquier referencia informal a "horno" o "crafteo" por terminología enzimológica formal:
+- **Concepto:** Simula el acoplamiento en el **bolsillo catalítico de una enzima (Complejo $\text{E}\cdot\text{S}$)**.
+- **Parámetros de Reacción:**
+  1. **Sustrato ($S$):** Estructura molecular actual presente en el lienzo.
+  2. **Holoenzima / Subunidad Catalítica ($E$):** Selección de la enzima específica con su clasificación internacional **EC** (ej. *Hexoquinasa — EC 2.7.1.1*).
+  3. **Cofactores, Coenzimas y Cosustratos:** Selección de especies donadoras/aceptoras de grupos o electrones ($\text{Mg}^{2+}$, $\text{ATP}^{4-}$, $\text{NAD}^+$, $\text{FAD}$, $\text{TPP}$, $\text{Lipoamida}$, $\text{CoA-SH}$, $\text{P}_i$).
+- **Resolución del Estado de Transición ($\text{E}\cdot\text{I} \to P$):**
+  - Al ejecutar la catálisis, el reactor transfiere los **subproductos metabólicos liberados** ($\text{ADP}$, $\text{NADH} + \text{H}^+$, $\text{HCO}_3^-$, $\text{H}_2\text{O}$) al **Reservorio de Metabolitos** en el panel derecho, y despliega en el lienzo el **Intermediario Catalítico incompleto** para que el estudiante complete el ataque nucleofílico, el cierre de enlaces o el reordenamiento electrónico final antes de evaluar la estructura.
 
+---
 
-## 5. Diseño de Mundos y Misiones Progresivas (Etapa 5)
+## 5. Catálogo de Misiones con Rigor Bioquímico (`progressionMissions.ts`)
 
-El catálogo de misiones (`src/data/missions/progressionMissions.ts`) se organiza en 3 Mundos seleccionables desde `HomeView`:
+### Módulo I: Estereoquímica, Estados Iónicos y Proyecciones de Haworth
+1. **Práctica 1.1 — Hibridación $sp^2$ y Saturación de Valencias (Eteno):**
+   - *Rigor Científico:* Estudio de la tetravalencia del carbono ($\text{Z}=6$), formación de enlaces $\sigma$ y $\pi$, y reducción estequiométrica de hidrógenos implícitos al incrementar la insaturación.
+2. **Práctica 1.2 — Ionización Fisiológica ($\text{pH } 7.4$) y Marcaje Isotópico ($^{14}\text{C}$):**
+   - *Rigor Científico:* A pH fisiológico, los ácidos carboxílicos ($\text{p}K_a \approx 2-4$) existen predominantemente como aniones **carboxilato ($-\text{COO}^-$)** desprotonados, mientras que las aminas primarias ($\text{p}K_a \approx 9-10$) se encuentran protonadas como cationes **alquilamonio ($-\text{NH}_3^+$)**. Incluye marcaje con radioisótopo $^{14}\text{C}$ para trazado metabólico.
+3. **Práctica 1.3 — Ciclación Hemiacetálica: Heterociclos de Piranosa y Furanosa:**
+   - *Rigor Científico:* Formación de anillos heterocíclicos de 6 miembros (oxano / **piranosa**, derivado del pirano) y 5 miembros (oxolano / **furanosa**, derivado del furano) mediante el ataque nucleofílico intramolecular de un grupo hidroxilo sobre un carbonilo aldehídico o cetónico.
+4. **Práctica 1.4 — Conformación Espacial: Proyección de Haworth de la $\alpha$-D-Glucopiranosa:**
+   - *Rigor Científico:* Representación estereoquímica en perspectiva plana. En la serie **D**, el grupo exocíclico $-\text{CH}_2\text{OH}$ ($\text{C6}$) se proyecta por encima del plano del anillo ($\Delta y < 0$). En el anómero **$\alpha$**, el hidroxilo hemiacetálico del carbono anomérico ($\text{C1}$) se sitúa en posición *trans* respecto a $\text{C6}$ (hacia abajo, $\Delta y > 0$), mientras que $\text{C2-OH}$ apunta abajo, $\text{C3-OH}$ arriba y $\text{C4-OH}$ abajo.
 
-### Mundo 1: Entrenamiento Químico (Fundamentos)
-1. **Misión 1.1 - El Octeto y Enlaces Múltiples (Eteno):**
-   - *Tablero inicial:* Vacío.
-   - *Objetivo:* Construir Eteno ($\text{C}_2\text{H}_4$, SMILES: `C=C`). Enseña cómo el doble enlace satisface la valencia 4 del carbono.
-2. **Misión 1.2 - Isomería Constitucional (De Éter a Alcohol):**
-   - *Tablero inicial:* Dimetil Éter (`C-O-C`) pre-cargado y desbloqueado.
-   - *Objetivo:* Romper y reconectar enlaces para transformarlo en su isómero **Etanol** ($\text{C}_2\text{H}_6\text{O}$, SMILES: `CCO`).
-3. **Misión 1.3 - Grupos Bioquímicos de Alta Energía (Fosforilación Básica):**
-   - *Tablero inicial:* Cadena de 3 carbonos con un hidroxilo terminal (1-Propanol).
-   - *Objetivo:* Acoplar un grupo fosfato para formar un éster fosfórico (`CCCO[P](=O)(O)O`).
+### Módulo II: Vía de Embden-Meyerhof-Parnas (Los 10 Pasos de la Glucólisis)
+Cada etapa incluye su número **EC**, variación de energía libre estándar ($\Delta G^{\circ\prime}$) y mecanismo químico:
+1. **Paso 1 — Hexoquinasa (EC 2.7.1.1):** Transferencia de grupo fosforilo desde $\text{ATP-Mg}^{2+}$ al hidroxilo primario en $\text{C6}$ de la $\alpha$-D-glucopiranosa para formar **glucosa-6-fosfato (G6P)** ($\Delta G^{\circ\prime} = -16.7\text{ kJ/mol}$).
+2. **Paso 2 — Fosfoglucosa Isomerasa (EC 5.3.1.9):** Isomerización aldosa-cetosa vía intermediario *cis*-enediolato, abriendo el anillo piranósico de G6P y ciclando hacia el anillo furanósico de **fructosa-6-fosfato (F6P)**.
+3. **Paso 3 — Fosfofructoquinasa-1 / PFK-1 (EC 2.7.1.11):** Segunda fosforilación dependiente de $\text{ATP}$ sobre el $\text{C1-OH}$ de F6P para sintetizar **fructosa-1,6-bisfosfato (F1,6BP)** (principal punto de control alostérico de la vía).
+4. **Paso 4 — Fructosa-bisfosfato Aldolasa (EC 4.1.2.13):** Condensación aldólica inversa (ruptura de enlace $\text{C3}-\text{C4}$) que escinde la hexosa F1,6BP en dos triosas fosfato: **dihidroxiacetona fosfato (DHAP, cetosa)** y **gliceraldehído-3-fosfato (G3P, aldosa)**.
+5. **Paso 5 — Triosa Fosfato Isomerasa / TIM (EC 5.3.1.1):** Interconversión rápida entre la cetosa DHAP y la aldosa **G3P**, convergiendo ambas moléculas de 3 carbonos en la fase de beneficio energético.
+6. **Paso 6 — Gliceraldehído-3-fosfato Deshidrogenasa / GAPDH (EC 1.2.1.12):** Oxidación del grupo aldehído en $\text{C1}$ mediante un residuo de cisteína catalítica (intermediario tiohemiacetal y tioéster), acoplada a la reducción de $\text{NAD}^+ \to \text{NADH} + \text{H}^+$ y ataque de ortofosfato inorgánico ($\text{P}_i$) para formar el anhídrido mixto de alta energía **1,3-bisfosfoglicerato (1,3-BPG)**.
+7. **Paso 7 — Fosfoglicerato Quinasa (EC 2.7.2.3):** Primera **fosforilación a nivel de sustrato**: transferencia del grupo acil-fosfato desde $\text{C1}$ del 1,3-BPG hacia el $\text{ADP}$ para sintetizar $\text{ATP}$ y **3-fosfoglicerato (3-PG)**.
+8. **Paso 8 — Fosfoglicerato Mutasa (EC 5.4.2.11):** Reordenamiento intramolecular del grupo funcional fosfato desde la posición $\text{C3}$ hacia $\text{C2}$ (vía intermediario 2,3-BPG) formando **2-fosfoglicerato (2-PG)**.
+9. **Paso 9 — Enolasa (EC 4.2.1.11):** Deshidratación catalítica ($\beta$-eliminación de una molécula de $\text{H}_2\text{O}$) del 2-PG para generar el doble enlace enólico y elevar el potencial de transferencia de grupo en el **fosfoenolpiruvato (PEP)**.
+10. **Paso 10 — Piruvato Quinasa (EC 2.7.1.40):** Segunda **fosforilación a nivel de sustrato**: transferencia del grupo fosforilo desde el PEP al $\text{ADP}$ generando $\text{ATP}$ y enolpiruvato, el cual tautomeriza espontáneamente hacia la forma ceto más estable: **piruvato** ($\Delta G^{\circ\prime} = -31.4\text{ kJ/mol}$).
 
-### Mundo 2: Ruta de la Glucólisis (Fases Clave con Esqueleto Bloqueado)
-1. **Misión 2.1 - Paso 1: Hexoquinasa (Inversión de Energía):**
-   - *Contexto Enzimático:* La Hexoquinasa transfiere el grupo $\gamma$-fosfato del $\text{ATP}$ al Carbono 6 de la Glucosa para atraparla dentro de la célula.
-   - *Tablero inicial:* Esqueleto de $\alpha$-D-Glucopiranosa con el anillo piranósico bloqueado (`isLocked: true`) y el grupo $-\text{CH}_2\text{OH}$ del Carbono 6 libre para reaccionar.
-   - *Cofactor activo:* $\text{ATP} \to \text{ADP}$.
-   - *Objetivo:* Acoplar el grupo fosfato al oxígeno del Carbono 6 para formar **Glucosa-6-fosfato**.
-2. **Misión 2.2 - Paso 6: GAPDH (Oxidación y Enlace Acil-Fosfato):**
-   - *Contexto Enzimático:* La Gliceraldehído-3-fosfato deshidrogenasa oxida el aldehído del G3P utilizando $\text{NAD}^+$ e incorpora un fosfato inorgánico ($\text{P}_i$) creando un enlace anhídrido mixto de alta energía.
-   - *Tablero inicial:* Esqueleto de **Gliceraldehído-3-fosfato (G3P)** (`O=CC(O)COP(=O)(O)O`) con los carbonos 2 y 3 bloqueados.
-   - *Objetivo:* Incorporar el grupo fosfato en el Carbono 1 carbonílico para obtener **1,3-Bisfosfoglicerato (1,3-BPG)**.
-3. **Misión 2.3 - Paso 10: Piruvato Quinasa (Cosecha de ATP):**
-   - *Contexto Enzimático:* Transferencia del grupo fosfato desde el Fosfoenolpiruvato (PEP) al $\text{ADP}$ y tautomerización ceto-enol hacia **Piruvato**.
-   - *Tablero inicial:* Esqueleto de 3 carbonos del PEP.
-   - *Objetivo:* Desfosforilar el oxígeno central y formar el grupo cetona ($\text{C=O}$) en C2 junto al carboxilato en C1 para obtener **Piruvato** (`CC(=O)C(=O)O` o `CC(=O)C(=O)[O-]`).
-
-### Mundo 3: Complejo Piruvato Deshidrogenasa (El Puente Mitocondrial)
-1. **Misión 3.1 - Descarboxilación y Tioéster de Alta Energía (Acetil-CoA):**
-   - *Contexto Enzimático:* El complejo PDH (E1 + E2 + E3) libera el grupo carboxilo del Piruvato como $\text{CO}_2$ y acopla el fragmento acetilo restante (`CH3-C(=O)-`) al grupo tiol de la **Coenzima A (`-S-CoA`)**.
-   - *Tablero inicial:* Esqueleto de Piruvato (con el carbono carboxílico desbloqueado para que el jugador lo escinda) + cofactor `-S-CoA`.
-   - *Objetivo:* Eliminar el grupo carboxilo y formar el enlace tioéster del **Acetil-CoA** (`CC(=O)S...`).
+### Módulo III: Complejo Multienzimático Piruvato Deshidrogenasa (PDH)
+Un único escenario acoplado de **5 etapas catalíticas secuenciales** con conservación de productos en el Reservorio de Metabolitos:
+- **Etapa 1 — Descarboxilación en E1 (Piruvato Deshidrogenasa, EC 1.2.4.1):** El carbanión del anillo tiazolio del **pirofosfato de tiamina ($\text{TPP}$)** realiza un ataque nucleofílico sobre el carbono carbonílico ($\text{C2}$) del piruvato, liberando el grupo carboxilo ($\text{C1}$) como **$\text{CO}_2 / \text{HCO}_3^-$** (primer producto final reservado) y formando el intermediario covalente **hidroxietil-TPP**.
+- **Etapa 2 — Oxidación y Transferencia al Brazo de Lipoamida (E1 $\to$ E2):** El grupo hidroxietilo se oxida a grupo acetilo mientras reduce el puente disulfuro ($-\text{S}-\text{S}-$) del grupo prostético **lipoamida** unido a la lisina de E2, generando el tioéster **acetil-dihidrolipoamida** y regenerando el $\text{TPP}$ libre.
+- **Etapa 3 — Transesterificación en E2 (Dihidrolipoil Transacetilasa, EC 2.3.1.12):** El grupo tiol libre ($-\text{SH}$) de la **Coenzima A ($\text{CoA-SH}$)** ataca el carbono carbonílico de la acetil-dihidrolipoamida, liberando **$\text{Acetil-CoA}$** (segundo gran producto final reservado, con enlace tioéster de alta energía) y dejando el brazo prostético como **dihidrolipoamida reducida ($-\text{SH} / -\text{SH}$)**.
+- **Etapa 4 — Reoxidación del Puente Disulfuro en E3 (Dihidrolipoil Deshidrogenasa, EC 1.8.1.4):** La enzima E3 oxida los dos grupos tiol de la dihidrolipoamida de vuelta a su forma activa oxidada (disulfuro cíclico), transfiriendo los dos átomos de hidrógeno a su cofactor prostético flavínico para formar **$\text{FADH}_2$**.
+- **Etapa 5 — Transferencia Electrónica Final a $\text{NAD}^+$ (E3):** El $\text{FADH}_2$ unido a E3 transfiere un ion hidruro ($:\text{H}^-$) al cofactor móvil **$\text{NAD}^+$** y libera un protón al medio, generando **$\text{NADH} + \text{H}^+$** (tercer producto final reservado) y dejando al complejo multienzimático regenerado para un nuevo ciclo catalítico.

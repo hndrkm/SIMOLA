@@ -3,7 +3,9 @@ import { MolecularCanvas } from './ui/canvas/MolecularCanvas';
 import { ElementToolbar } from './ui/hud/ElementToolbar';
 import { CanvasControls } from './ui/hud/CanvasControls';
 import { TopBar } from './ui/hud/TopBar';
+import { MissionSidebar } from './ui/hud/MissionSidebar';
 import { HomeView } from './ui/views/HomeView';
+
 import { useCanvasStore } from './store/useCanvasStore';
 import { useGameStore } from './store/useGameStore';
 import { ElementSymbol } from './core/model/types';
@@ -17,35 +19,8 @@ export const App: React.FC = () => {
   const undo = useCanvasStore((state) => state.undo);
   const redo = useCanvasStore((state) => state.redo);
   const resetView = useCanvasStore((state) => state.resetView);
-  const addAtom = useCanvasStore((state) => state.addAtom);
-  const addBond = useCanvasStore((state) => state.addBond);
-  const graph = useCanvasStore((state) => state.graph);
-
-  const activeRoute = useGameStore((state) => state.activeRoute);
   const currentMissionId = useGameStore((state) => state.currentMissionId);
 
-  // Precargar una molécula didáctica solo si se entra en sandbox sin misión activa y con lienzo vacío
-  useEffect(() => {
-    if (
-      currentView === 'workspace' &&
-      !currentMissionId &&
-      activeRoute === 'sandbox' &&
-      Object.keys(graph.nodes).length === 0
-    ) {
-      const centerX = Math.round(window.innerWidth / 2) || 500;
-      const centerY = Math.round(window.innerHeight / 2) || 350;
-
-      // C1 - C2 - O - H
-      const c1 = addAtom('C', centerX - 100, centerY);
-      const c2 = addAtom('C', centerX, centerY);
-      const o1 = addAtom('O', centerX + 80, centerY - 45);
-      const h1 = addAtom('H', centerX + 150, centerY - 25);
-
-      addBond(c1, c2, 1);
-      addBond(c2, o1, 1);
-      addBond(o1, h1, 1);
-    }
-  }, [currentView, currentMissionId, activeRoute]);
 
   // Escuchador global de atajos de teclado para flujo ergonómico de escritorio
   useEffect(() => {
@@ -122,9 +97,11 @@ export const App: React.FC = () => {
       <TopBar />
       <ElementToolbar />
       <MolecularCanvas />
+      {currentMissionId && <MissionSidebar />}
       <CanvasControls />
     </main>
   );
 };
+
 
 export default App;

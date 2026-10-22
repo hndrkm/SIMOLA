@@ -81,3 +81,13 @@ RDKit requiere formato CTAB V2000 con columnas de ancho fijo.
    - `${idxA.padStart(3, ' ')}${idxB.padStart(3, ' ')}${order.padStart(3, ' ')}  0  0  0  0`.
 6. Cerrar el bloque con `M  END`.
 7. Importante en memoria de WebAssembly: todo objeto `mol` o `qmol` instanciado con `RDKit.get_mol()` o `RDKit.get_qmol()` **debe liberarse** llamando a `mol.delete()` dentro de un bloque `finally` tras extraer los descriptores.
+
+## 4. Validador Geométrico de Orientación y Proyecciones de Haworth (`src/core/chemistry/spatialValidator.ts`)
+
+Dado que `RDKit.js` en 2D evalúa conectividad topológica pero ignora si el estudiante dibujó un grupo $-OH$ apuntando hacia arriba o hacia abajo en una proyección plana de Haworth, `spatialValidator.ts` evalúa reglas de nomenclatura espacial cuando la misión lo requiere (`spatialRules` en `MissionConfig`):
+1. **Selector de Guías Angulares (`snapAngleDeg: 30 | 45 | 90 | 120 | null`):**
+   - En `geometry.ts`, el imán al colocar enlaces o mover átomos respeta el ángulo elegido por el jugador en la barra superior (`90°` permite trazar enlaces verticales exactos arriba/abajo para anillos de Haworth; `120°` y `30°` para esqueletos IUPAC; `45°` para proyecciones intermedias).
+2. **Verificación de Proyección de Haworth (Anillos Piranósicos y Furanósicos):**
+   - **Orientación del Oxígeno Heterocíclico:** Verifica la posición angular del átomo `O` dentro del ciclo respecto al centroide del anillo $(C_x, C_y)$ (en Furanosa debe estar en el sector superior; en Piranosa en el sector superior-derecho).
+   - **Orientación Axial de Sustituyentes ($\alpha$ vs. $\beta$ y D vs. L):** Para cada carbono del anillo que tenga un grupo sustituyente ($-\text{OH}$ o $-\text{CH}_2\text{OH}$), evalúa el signo de $\Delta y = y_{\text{sustituyente}} - y_{\text{carbono}}$ y comprueba que el ángulo del enlace esté próximo a la vertical ($90^\circ \pm 25^\circ$):
+     - En $\alpha$-D-Glucopiranosa: $\text{C1-OH}$ abajo ($\Delta y > 0$), $\text{C2-OH}$ abajo, $\text{C3-OH}$ arriba ($\Delta y < 0$), $\text{C4-OH}$ abajo, y el grupo $\text{C6}$ ($-\text{CH}_2\text{OH}$) en $\text{C5}$ apuntando hacia **arriba** ($\Delta y < 0$).

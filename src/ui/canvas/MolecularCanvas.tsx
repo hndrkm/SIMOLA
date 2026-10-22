@@ -4,6 +4,8 @@ import Konva from 'konva';
 import { useCanvasStore } from '../../store/useCanvasStore';
 import { AtomShape } from './AtomShape';
 import { BondShape } from './BondShape';
+import { AtomContextMenu } from './AtomContextMenu';
+
 
 export const MolecularCanvas: React.FC = () => {
   const containerRef = useRef<HTMLDivElement>(null);
@@ -222,6 +224,10 @@ export const MolecularCanvas: React.FC = () => {
           ))}
         </Layer>
       </Stage>
+
+      {/* Popover Menú Contextual de Clic Derecho */}
+      <AtomContextMenu />
     </div>
   );
 };
+

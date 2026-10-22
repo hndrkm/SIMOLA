@@ -31,6 +31,7 @@ interface CanvasState {
   activeBondOrder: BondOrder;
   activeRingPreset: RingPreset | null;
   activeTemplate: MolecularTemplate | null;
+  snapAngleDeg: 30 | 45 | 90 | 120 | null;
 
   // Navegación del Lienzo (Zoom y Paneo)
   stageScale: number;
@@ -41,6 +42,7 @@ interface CanvasState {
   cursorPosition: { x: number; y: number } | null;
   hoveredAtomId: string | null;
   hoveredBondId: string | null;
+  contextMenuAtom: { atomId: string; clientX: number; clientY: number } | null;
 
   // Historial de Estados (Undo / Redo)
   past: MolecularGraph[];
@@ -54,6 +56,9 @@ interface CanvasState {
   setActiveBondOrder: (order: BondOrder) => void;
   setActiveRingPreset: (preset: RingPreset | null) => void;
   setActiveTemplate: (template: MolecularTemplate | null) => void;
+  setSnapAngleDeg: (deg: 30 | 45 | 90 | 120 | null) => void;
+  setContextMenuAtom: (data: { atomId: string; clientX: number; clientY: number } | null) => void;
+
 
   // Acciones de Navegación del Lienzo
   setStageScale: (scale: number) => void;
@@ -95,6 +100,8 @@ interface CanvasState {
   // Gestión Global del Grafo
   setGraph: (graph: MolecularGraph) => void;
   clearGraph: () => void;
+  clearCanvas: () => void;
+
 
   // Historial
   undo: () => void;
@@ -148,6 +155,7 @@ export const useCanvasStore = create<CanvasState>((set, get) => ({
   activeBondOrder: 1,
   activeRingPreset: null,
   activeTemplate: null,
+  snapAngleDeg: 30,
 
   stageScale: 1,
   stagePosition: { x: 0, y: 0 },
@@ -156,6 +164,7 @@ export const useCanvasStore = create<CanvasState>((set, get) => ({
   cursorPosition: null,
   hoveredAtomId: null,
   hoveredBondId: null,
+  contextMenuAtom: null,
 
   past: [],
   future: [],
@@ -168,6 +177,10 @@ export const useCanvasStore = create<CanvasState>((set, get) => ({
       cursorPosition: null,
     });
   },
+
+  setSnapAngleDeg: (snapAngleDeg) => set({ snapAngleDeg }),
+  setContextMenuAtom: (contextMenuAtom) => set({ contextMenuAtom }),
+
 
   setActiveElement: (element, isotope) => {
     const { recentElements } = get();
@@ -239,12 +252,48 @@ export const useCanvasStore = create<CanvasState>((set, get) => ({
     });
   },
 
-  updateCursorPosition: (pos) => set({ cursorPosition: pos }),
+  updateCursorPosition: (pos) => {
+    if (!pos) {
+      set({ cursorPosition: null });
+      return;
+    }
+    const { pendingBondSourceId, graph, snapAngleDeg } = get();
+    if (pendingBondSourceId && snapAngleDeg !== null) {
+      const sourceAtom = graph.nodes[pendingBondSourceId];
+      if (sourceAtom) {
+        const dx = pos.x - sourceAtom.x;
+        const dy = pos.y - sourceAtom.y;
+        const dist = Math.hypot(dx, dy);
+        if (dist > 8) {
+          const angle = Math.atan2(dy, dx);
+          const step = (snapAngleDeg * Math.PI) / 180;
+          const snappedAngle = Math.round(angle / step) * step;
+          set({
+            cursorPosition: {
+              x: Math.round(sourceAtom.x + dist * Math.cos(snappedAngle)),
+              y: Math.round(sourceAtom.y + dist * Math.sin(snappedAngle)),
+            },
+          });
+          return;
+        }
+      }
+    }
+    set({ cursorPosition: pos });
+  },
 
   finishPendingBond: (targetId) => {
-    const { pendingBondSourceId, activeBondOrder } = get();
+    const { pendingBondSourceId, activeBondOrder, activeElement, cursorPosition, graph } = get();
     if (pendingBondSourceId && targetId && pendingBondSourceId !== targetId) {
       get().addBond(pendingBondSourceId, targetId, activeBondOrder);
+    } else if (pendingBondSourceId && !targetId && cursorPosition) {
+      const sourceAtom = graph.nodes[pendingBondSourceId];
+      if (sourceAtom) {
+        const dist = Math.hypot(cursorPosition.x - sourceAtom.x, cursorPosition.y - sourceAtom.y);
+        if (dist >= 35) {
+          const newAtomId = get().addAtom(activeElement, cursorPosition.x, cursorPosition.y);
+          get().addBond(pendingBondSourceId, newAtomId, activeBondOrder);
+        }
+      }
     }
     // Limpieza garantizada del estado temporal (Auditoría A3.3)
     set({
@@ -252,6 +301,7 @@ export const useCanvasStore = create<CanvasState>((set, get) => ({
       cursorPosition: null,
     });
   },
+
 
   cancelPendingBond: () => {
     // Limpieza de eventos temporales (Auditoría A3.3)
@@ -843,6 +893,20 @@ export const useCanvasStore = create<CanvasState>((set, get) => ({
       future: [],
     });
   },
+
+  clearCanvas: () => {
+    const { graph, past } = get();
+    set({
+      graph: { nodes: {}, edges: {} },
+      past: [...past.slice(-(MAX_HISTORY_STEPS - 1)), cloneGraph(graph)],
+      future: [],
+      pendingBondSourceId: null,
+      cursorPosition: null,
+      contextMenuAtom: null,
+    });
+    get().clearErrors();
+  },
+
 
   undo: () => {
     const { past, future, graph } = get();

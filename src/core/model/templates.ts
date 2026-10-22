@@ -1,7 +1,7 @@
 import { BondOrder, ElementSymbol, MolecularGraph } from './types';
 import { getMaxValence } from './constants';
 
-export type TemplateCategory = 'functional_group' | 'coenzyme' | 'base_skeleton';
+export type TemplateCategory = 'functional_group' | 'holoenzyme' | 'coenzyme' | 'base_skeleton';
 
 export interface TemplateAtom {
   tempId: string;
@@ -25,9 +25,13 @@ export interface MolecularTemplate {
   description: string;
   biochemicalRole: string;
   attachmentAtomTempId: string; // Átomo que se une al hacer Sprout
+  ecNumber?: string;
+  catalyticMechanism?: string;
+  molecularFormula?: string;
   atoms: TemplateAtom[];
   bonds: TemplateBond[];
 }
+
 
 export const TEMPLATES: MolecularTemplate[] = [
   // ==========================================
@@ -248,6 +252,268 @@ export const TEMPLATES: MolecularTemplate[] = [
       { sourceTempId: 'P2', targetTempId: 'O2_neg2', order: 1 },
     ],
   },
+  {
+    id: 'co_atp',
+    name: 'Adenosín Trifosfato (ATP)',
+    abbreviation: 'ATP⁴⁻',
+    category: 'coenzyme',
+    molecularFormula: 'C10H16N5O13P3',
+    description: 'Moneda energética universal de la célula con 2 enlaces anhídrido fosfórico de alto potencial de transferencia',
+    biochemicalRole: 'Dona grupos fosforilo en quinasas (ΔG°\' hidrólisis = -30.5 kJ/mol) e impulsa procesos biosintéticos',
+    catalyticMechanism: 'Ataque nucleofílico del hidroxilo del sustrato sobre el fósforo gamma del complejo Mg²⁺-ATP',
+    attachmentAtomTempId: 'P_gamma',
+    atoms: [
+      { tempId: 'P_gamma', element: 'P', x: 0, y: 0, formalCharge: 0 },
+      { tempId: 'O_gamma_dbl', element: 'O', x: 0, y: -45, formalCharge: 0 },
+      { tempId: 'O_gamma_neg1', element: 'O', x: 40, y: 20, formalCharge: -1 },
+      { tempId: 'O_gamma_neg2', element: 'O', x: -40, y: 20, formalCharge: -1 },
+      { tempId: 'O_beta_brg', element: 'O', x: -45, y: -25, formalCharge: 0 },
+      { tempId: 'P_beta', element: 'P', x: -90, y: -25, formalCharge: 0 },
+    ],
+    bonds: [
+      { sourceTempId: 'P_gamma', targetTempId: 'O_gamma_dbl', order: 2 },
+      { sourceTempId: 'P_gamma', targetTempId: 'O_gamma_neg1', order: 1 },
+      { sourceTempId: 'P_gamma', targetTempId: 'O_gamma_neg2', order: 1 },
+      { sourceTempId: 'P_gamma', targetTempId: 'O_beta_brg', order: 1 },
+      { sourceTempId: 'O_beta_brg', targetTempId: 'P_beta', order: 1 },
+    ],
+  },
+  {
+    id: 'co_nad',
+    name: 'Nicotinamida Adenina Dinucleótido (NAD⁺)',
+    abbreviation: 'NAD⁺',
+    category: 'coenzyme',
+    molecularFormula: 'C21H27N7O14P2',
+    description: 'Coenzima móvil aceptora de electrones en deshidrogenasas celulares',
+    biochemicalRole: 'Aceptor soluble de ion hidruro (:H⁻) en la oxidación de carbohidratos, lípidos y ciclo de Krebs',
+    catalyticMechanism: 'Acepta 2 electrones y 1 protón en la posición C4 del anillo de piridina aromático',
+    attachmentAtomTempId: 'N_pyr',
+    atoms: [
+      { tempId: 'N_pyr', element: 'N', x: 0, y: -45, formalCharge: 1 },
+      { tempId: 'C2', element: 'C', x: 40, y: -22, formalCharge: 0 },
+      { tempId: 'C3', element: 'C', x: 40, y: 22, formalCharge: 0 },
+      { tempId: 'C4', element: 'C', x: 0, y: 45, formalCharge: 0 },
+      { tempId: 'C5', element: 'C', x: -40, y: 22, formalCharge: 0 },
+      { tempId: 'C6', element: 'C', x: -40, y: -22, formalCharge: 0 },
+      { tempId: 'C_amide', element: 'C', x: 80, y: 45, formalCharge: 0 },
+      { tempId: 'O_amide', element: 'O', x: 120, y: 25, formalCharge: 0 },
+      { tempId: 'N_amide', element: 'N', x: 80, y: 90, formalCharge: 0 },
+    ],
+    bonds: [
+      { sourceTempId: 'N_pyr', targetTempId: 'C2', order: 1 },
+      { sourceTempId: 'C2', targetTempId: 'C3', order: 2 },
+      { sourceTempId: 'C3', targetTempId: 'C4', order: 1 },
+      { sourceTempId: 'C4', targetTempId: 'C5', order: 2 },
+      { sourceTempId: 'C5', targetTempId: 'C6', order: 1 },
+      { sourceTempId: 'C6', targetTempId: 'N_pyr', order: 2 },
+      { sourceTempId: 'C3', targetTempId: 'C_amide', order: 1 },
+      { sourceTempId: 'C_amide', targetTempId: 'O_amide', order: 2 },
+      { sourceTempId: 'C_amide', targetTempId: 'N_amide', order: 1 },
+    ],
+  },
+  {
+    id: 'co_tpp',
+    name: 'Pirofosfato de Tiamina (TPP)',
+    abbreviation: 'TPP',
+    category: 'coenzyme',
+    molecularFormula: 'C12H19N4O7P2S',
+    description: 'Forma activa de la vitamina B1 con anillo tiazolio formador de carbaniones',
+    biochemicalRole: 'Descarboxilación de alfa-cetoácidos y escisión de enlaces adyacentes a carbonilos',
+    catalyticMechanism: 'El C2 del anillo tiazolio se desprotona formando un iluro carbaniónico nucleófilo',
+    attachmentAtomTempId: 'C_ylide',
+    atoms: [
+      { tempId: 'C_ylide', element: 'C', x: 0, y: -30, formalCharge: 0 },
+      { tempId: 'N_plus', element: 'N', x: -35, y: -5, formalCharge: 1 },
+      { tempId: 'C4', element: 'C', x: -22, y: 35, formalCharge: 0 },
+      { tempId: 'C5', element: 'C', x: 22, y: 35, formalCharge: 0 },
+      { tempId: 'S_thia', element: 'S', x: 35, y: -5, formalCharge: 0 },
+    ],
+    bonds: [
+      { sourceTempId: 'C_ylide', targetTempId: 'N_plus', order: 1 },
+      { sourceTempId: 'N_plus', targetTempId: 'C4', order: 1 },
+      { sourceTempId: 'C4', targetTempId: 'C5', order: 2 },
+      { sourceTempId: 'C5', targetTempId: 'S_thia', order: 1 },
+      { sourceTempId: 'S_thia', targetTempId: 'C_ylide', order: 1 },
+    ],
+  },
+  {
+    id: 'co_coash',
+    name: 'Coenzima A libre (CoA-SH)',
+    abbreviation: 'CoA-SH',
+    category: 'coenzyme',
+    description: 'Transportador tiólico de grupos acilo y activador metabólico en ciclo de Krebs y PDH',
+    biochemicalRole: 'Formación de enlaces tioéster de alta energía (-S-CO-R) para catabolismo y anabolismo',
+    catalyticMechanism: 'Ataque nucleofílico del tiolato (-S⁻) sobre carbonilos electrofílicos',
+    attachmentAtomTempId: 'S_thiol',
+    atoms: [
+      { tempId: 'S_thiol', element: 'S', x: 0, y: 0, formalCharge: 0 },
+      { tempId: 'C1', element: 'C', x: 45, y: -20, formalCharge: 0 },
+      { tempId: 'C2', element: 'C', x: 90, y: 5, formalCharge: 0 },
+      { tempId: 'N_am', element: 'N', x: 135, y: -15, formalCharge: 0 },
+    ],
+    bonds: [
+      { sourceTempId: 'S_thiol', targetTempId: 'C1', order: 1 },
+      { sourceTempId: 'C1', targetTempId: 'C2', order: 1 },
+      { sourceTempId: 'C2', targetTempId: 'N_am', order: 1 },
+    ],
+  },
+  {
+    id: 'co_pi',
+    name: 'Ortofosfato Inorgánico (Pi)',
+    abbreviation: 'HPO₄²⁻',
+    category: 'coenzyme',
+    description: 'Fosfato inorgánico en solución a pH 7.4',
+    biochemicalRole: 'Cosustrato de fosforilación oxidativa en GAPDH y síntesis de ATP en glucólisis',
+    attachmentAtomTempId: 'P',
+    atoms: [
+      { tempId: 'P', element: 'P', x: 0, y: 0, formalCharge: 0 },
+      { tempId: 'O_dbl', element: 'O', x: 0, y: -45, formalCharge: 0 },
+      { tempId: 'O_neg1', element: 'O', x: 42, y: 22, formalCharge: -1 },
+      { tempId: 'O_neg2', element: 'O', x: -42, y: 22, formalCharge: -1 },
+    ],
+    bonds: [
+      { sourceTempId: 'P', targetTempId: 'O_dbl', order: 2 },
+      { sourceTempId: 'P', targetTempId: 'O_neg1', order: 1 },
+      { sourceTempId: 'P', targetTempId: 'O_neg2', order: 1 },
+    ],
+  },
+
+  // ==========================================
+  // 3. HOLOENZIMAS CON CÓDIGO EC
+  // ==========================================
+  {
+    id: 'enz_hexokinase',
+    name: 'Hexoquinasa',
+    abbreviation: 'HK (EC 2.7.1.1)',
+    category: 'holoenzyme',
+    ecNumber: 'EC 2.7.1.1',
+    description: 'Fosfotransferasa dependiente de Mg²⁺/ATP que cataliza el paso 1 marcapasos de la glucólisis',
+    biochemicalRole: 'Fosforilación irreversible de hexosas en C6 atrapando la glucosa intracelularmente (ΔG°\' = -16.7 kJ/mol)',
+    catalyticMechanism: 'Ajuste inducido (induced fit) que excluye el agua del centro activo; Asp205 desprotona el C6-OH facilitando el ataque nucleófilo sobre el ATP',
+    attachmentAtomTempId: 'C_active',
+    atoms: [
+      { tempId: 'C_active', element: 'C', x: 0, y: 0, formalCharge: 0 },
+      { tempId: 'O_cat', element: 'O', x: 0, y: -40, formalCharge: 0 },
+      { tempId: 'N_his', element: 'N', x: 40, y: 20, formalCharge: 0 },
+    ],
+    bonds: [
+      { sourceTempId: 'C_active', targetTempId: 'O_cat', order: 2 },
+      { sourceTempId: 'C_active', targetTempId: 'N_his', order: 1 },
+    ],
+  },
+  {
+    id: 'enz_pgi',
+    name: 'Fosfoglucosa Isomerasa',
+    abbreviation: 'PGI (EC 5.3.1.9)',
+    category: 'holoenzyme',
+    ecNumber: 'EC 5.3.1.9',
+    description: 'Isomerasa aldosa-cetosa que interconvierte Glucosa-6-P y Fructosa-6-P',
+    biochemicalRole: 'Apertura del anillo piranósico, catálisis ácida/básica vía cis-enediolato y cierre furanósico',
+    catalyticMechanism: 'His388 cataliza la apertura del anillo de G6P; Glu357 transfiere un protón entre C1 y C2 a través de un intermediario cis-enediolato',
+    attachmentAtomTempId: 'C_active',
+    atoms: [
+      { tempId: 'C_active', element: 'C', x: 0, y: 0, formalCharge: 0 },
+      { tempId: 'O_glu', element: 'O', x: 35, y: -30, formalCharge: -1 },
+    ],
+    bonds: [
+      { sourceTempId: 'C_active', targetTempId: 'O_glu', order: 1 },
+    ],
+  },
+  {
+    id: 'enz_pfk1',
+    name: 'Fosfofructoquinasa-1',
+    abbreviation: 'PFK-1 (EC 2.7.1.11)',
+    category: 'holoenzyme',
+    ecNumber: 'EC 2.7.1.11',
+    description: 'Principal punto de control marcapasos alostérico de la glucólisis regulado por ATP, AMP y Fructosa-2,6-BP',
+    biochemicalRole: 'Fosforila C1-OH de Fructosa-6-P consumiendo 1 ATP para dar Fructosa-1,6-bisfosfato (ΔG°\' = -14.2 kJ/mol)',
+    catalyticMechanism: 'Transferencia de fosforilo de ATP coordinado con Mg²⁺ hacia el C1 de la fructosa-6-P',
+    attachmentAtomTempId: 'C_active',
+    atoms: [
+      { tempId: 'C_active', element: 'C', x: 0, y: 0, formalCharge: 0 },
+      { tempId: 'O_active', element: 'O', x: 0, y: -40, formalCharge: 0 },
+    ],
+    bonds: [
+      { sourceTempId: 'C_active', targetTempId: 'O_active', order: 2 },
+    ],
+  },
+  {
+    id: 'enz_aldolase',
+    name: 'Fructosa-Bisfosfato Aldolasa',
+    abbreviation: 'Aldolasa (EC 4.1.2.13)',
+    category: 'holoenzyme',
+    ecNumber: 'EC 4.1.2.13',
+    description: 'Liasa que escinde la hexosa F1,6BP en dos triosas fosfato (DHAP y G3P)',
+    biochemicalRole: 'Condensación aldólica inversa rompiendo el enlace C3-C4 de la fructosa-1,6-bisfosfato',
+    catalyticMechanism: 'Formación de base de Schiff covalente entre Lys229 y el carbonilo de C2 (Aldolasa clase I animal)',
+    attachmentAtomTempId: 'C_active',
+    atoms: [
+      { tempId: 'C_active', element: 'C', x: 0, y: 0, formalCharge: 0 },
+      { tempId: 'N_schiff', element: 'N', x: 45, y: 0, formalCharge: 0 },
+    ],
+    bonds: [
+      { sourceTempId: 'C_active', targetTempId: 'N_schiff', order: 2 },
+    ],
+  },
+  {
+    id: 'enz_gapdh',
+    name: 'Gliceraldehído-3-Fosfato Deshidrogenasa',
+    abbreviation: 'GAPDH (EC 1.2.1.12)',
+    category: 'holoenzyme',
+    ecNumber: 'EC 1.2.1.12',
+    description: 'Oxidorreductasa con cisteína catalítica que acopla oxidación a fosforilación con Pi',
+    biochemicalRole: 'Oxida el aldehído de G3P a 1,3-bisfosfoglicerato reduciendo NAD⁺ a NADH sin gasto de ATP',
+    catalyticMechanism: 'Ataque nucleofílico de Cys149 formando tiohemiacetal, oxidación de hidruro hacia NAD⁺ y fosforolisis por Pi',
+    attachmentAtomTempId: 'S_cys',
+    atoms: [
+      { tempId: 'S_cys', element: 'S', x: 0, y: 0, formalCharge: 0 },
+      { tempId: 'C_cat', element: 'C', x: 45, y: -20, formalCharge: 0 },
+      { tempId: 'N_his', element: 'N', x: 45, y: 35, formalCharge: 0 },
+    ],
+    bonds: [
+      { sourceTempId: 'S_cys', targetTempId: 'C_cat', order: 1 },
+      { sourceTempId: 'C_cat', targetTempId: 'N_his', order: 1 },
+    ],
+  },
+  {
+    id: 'enz_pyruvate_kinase',
+    name: 'Piruvato Quinasa',
+    abbreviation: 'PK (EC 2.7.1.40)',
+    category: 'holoenzyme',
+    ecNumber: 'EC 2.7.1.40',
+    description: 'Fosfotransferasa que ejecuta la segunda fosforilación a nivel de sustrato produciendo ATP y Piruvato',
+    biochemicalRole: 'Transferencia de fosforilo desde fosfoenolpiruvato (PEP) a ADP (ΔG°\' = -31.4 kJ/mol)',
+    catalyticMechanism: 'Coordinación con K⁺ y Mg²⁺ en el centro activo facilitando el ataque del beta-fosfato de ADP sobre el PEP',
+    attachmentAtomTempId: 'C_active',
+    atoms: [
+      { tempId: 'C_active', element: 'C', x: 0, y: 0, formalCharge: 0 },
+      { tempId: 'O_cat', element: 'O', x: 0, y: -40, formalCharge: 0 },
+    ],
+    bonds: [
+      { sourceTempId: 'C_active', targetTempId: 'O_cat', order: 2 },
+    ],
+  },
+  {
+    id: 'enz_pdh_complex',
+    name: 'Complejo Multienzimático PDH (E1+E2+E3)',
+    abbreviation: 'Complejo PDH (EC 1.2.4.1)',
+    category: 'holoenzyme',
+    ecNumber: 'EC 1.2.4.1 / EC 2.3.1.12 / EC 1.8.1.4',
+    description: 'Complejo mitocondrial gigante de 3 enzimas y 5 cofactores que descarboxila oxidativamente el piruvato',
+    biochemicalRole: 'Puente metabólico irreversible entre glucólisis y Ciclo de Krebs produciendo Acetil-CoA, CO₂ y NADH',
+    catalyticMechanism: 'Descarboxilación en E1 (TPP), transacetilación en E2 (Lipoamida, CoA-SH) y reoxidación en E3 (FAD, NAD⁺)',
+    attachmentAtomTempId: 'C_e1',
+    atoms: [
+      { tempId: 'C_e1', element: 'C', x: -40, y: 0, formalCharge: 0 },
+      { tempId: 'S_e2', element: 'S', x: 0, y: 0, formalCharge: 0 },
+      { tempId: 'N_e3', element: 'N', x: 40, y: 0, formalCharge: 0 },
+    ],
+    bonds: [
+      { sourceTempId: 'C_e1', targetTempId: 'S_e2', order: 1 },
+      { sourceTempId: 'S_e2', targetTempId: 'N_e3', order: 1 },
+    ],
+  },
+
 
   // ==========================================
   // 3. ESTRUCTURAS BASE
