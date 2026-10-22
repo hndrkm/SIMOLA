@@ -157,9 +157,7 @@ export const TopBar: React.FC = () => {
   return (
     <>
       <header
-        className={`absolute top-4 left-4 ${
-          currentMissionId ? 'right-92' : 'right-4'
-        } z-20 flex flex-wrap items-center justify-between gap-3 select-none pointer-events-none transition-all`}
+        className="absolute top-4 left-4 right-4 z-20 flex flex-wrap items-center justify-between gap-3 select-none pointer-events-none transition-all"
       >
         {/* Identidad de la Aplicación y Botón Menú Principal */}
         <div className="glass-panel px-3.5 py-2 rounded-2xl flex items-center gap-3 border border-white/15 shadow-xl pointer-events-auto bg-[#1B2A4A]/90 max-w-full">

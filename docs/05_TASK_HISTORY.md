@@ -243,4 +243,21 @@
   - `src/data/missions/progressionMissions.ts`: Catálogo completo con las 19 misiones (4 en Módulo I, 10 en Módulo II y 5 en Módulo III).
   - `src/App.tsx`: Integración del panel lateral derecho y limpieza de imports.
   - `docs/05_TASK_HISTORY.md` y `docs/06_ARCHITECTURE_AUDIT.md`.
-- **Resultado de Verificación:** APROBADO (`tsc --noEmit` con 0 errores, `npm run build` exitoso generando bundle de producción en 14.8s).
+- **Resultado de Verificación:** APROBADO (`tsc --noEmit` con 0 errores, `npm run build` exitoso generando bundle de producción en 14.8s).
+
+### Hotfix UI v0.6.1 (Panel de Misión Flotante Colapsable)
+- [x] **H2.1 (Respeto de Barra Superior):** Reubicación de `MissionSidebar.tsx` debajo de `TopBar.tsx` mediante posicionamiento flotante `fixed top-20 right-4 z-30`, eliminando superposiciones con los botones del header.
+- [x] **H2.2 (Drawer Flotante Colapsable):**
+  - Implementación de estado `isExpanded` en `MissionSidebar.tsx`.
+  - Modo contraído (pill flotante elegante `fixed top-20 right-4 z-30` con indicador `🔬 Etapa X/Y — Ver Misión`).
+  - Modo expandido (tarjeta flotante con ancho acotado `w-80 sm:w-96 max-w-[90vw]`, altura máxima `max-h-[calc(100vh-6.5rem)]` y botón de cierre/colapso con un clic).
+- [x] **H2.3 (Deploy GH Pages):** Verificación con `tsc --noEmit` y `npm run build` con 0 errores.
+
+#### [2026-10-22 / Hotfix UI v0.6.1] - Panel de Misión Flotante Colapsable
+- **Tareas completadas:** H2.1, H2.2, H2.3.
+- **Archivos creados/modificados:**
+  - `src/ui/hud/MissionSidebar.tsx`: Conversión a tarjeta flotante colapsable con modos contraído y expandido, ubicada en `top-20 right-4`.
+  - `src/ui/hud/TopBar.tsx`: Ajuste del ancho del header a `right-4` uniforme para evitar deformaciones.
+  - `docs/05_TASK_HISTORY.md`: Registro del hotfix.
+- **Resultado de Verificación:** APROBADO (`tsc --noEmit` con 0 errores, `npm run build` exitoso en 4.15s).
+
