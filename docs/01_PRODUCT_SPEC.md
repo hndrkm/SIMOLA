@@ -160,3 +160,51 @@ Un único escenario acoplado de **5 etapas catalíticas secuenciales** con conse
 - **Etapa 3 — Transesterificación en E2 (Dihidrolipoil Transacetilasa, EC 2.3.1.12):** El grupo tiol libre ($-\text{SH}$) de la **Coenzima A ($\text{CoA-SH}$)** ataca el carbono carbonílico de la acetil-dihidrolipoamida, liberando **$\text{Acetil-CoA}$** (segundo gran producto final reservado, con enlace tioéster de alta energía) y dejando el brazo prostético como **dihidrolipoamida reducida ($-\text{SH} / -\text{SH}$)**.
 - **Etapa 4 — Reoxidación del Puente Disulfuro en E3 (Dihidrolipoil Deshidrogenasa, EC 1.8.1.4):** La enzima E3 oxida los dos grupos tiol de la dihidrolipoamida de vuelta a su forma activa oxidada (disulfuro cíclico), transfiriendo los dos átomos de hidrógeno a su cofactor prostético flavínico para formar **$\text{FADH}_2$**.
 - **Etapa 5 — Transferencia Electrónica Final a $\text{NAD}^+$ (E3):** El $\text{FADH}_2$ unido a E3 transfiere un ion hidruro ($:\text{H}^-$) al cofactor móvil **$\text{NAD}^+$** y libera un protón al medio, generando **$\text{NADH} + \text{H}^+$** (tercer producto final reservado) y dejando al complejo multienzimático regenerado para un nuevo ciclo catalítico.
+Propuesta de Cambios y Corrección de Errores — Módulo II (Glucólisis)
+Hola, estuve probando a fondo los 10 niveles de la Glucólisis y revisando cómo interactúan los estudiantes con la pizarra. Para que el juego no se trabe por errores de validación y para que el alumno realmente aprenda haciendo (y no solo viendo cómo el reactor hace todo el trabajo), necesitamos aplicar estos ajustes divididos en Mejoras Generales y Correcciones por Nivel:
+PARTE 1: 5 Ajustes Generales en la Mecánica de la Pizarra
+Permitir seleccionar enlaces con la herramienta select (Fase de Predicción):
+Queremos que antes de abrir el Reactor Catalítico, el jugador tenga que hacer clic sobre el átomo o el enlace exacto donde actúa la enzima. Ahora mismo la herramienta de selección solo deja tocar átomos, pero para los Pasos 2, 4, 5 y 9 necesitamos que también deje hacer clic sobre un enlace específico. Si toca el lugar equivocado, que salga un mensajito de pista antes de dejarlo usar el reactor.
+Cambiar el ciclo de enlaces a solo Simple <-> Doble (1 <-> 2):
+En las rutas metabólicas nunca usamos enlaces triples. Cuando el alumno hace clic en un enlace doble para volverlo simple (como en el Paso 10), el juego primero lo sube a triple (3) y eso confunde mucho. Por favor haz que al hacer clic en un enlace solo alterne entre simple (1) y doble (2), dejando el triple solo si alguien lo elige manualmente en la barra de la izquierda.
+Unificar el bloque prefabricado de Fosfato (-PO3²⁻):
+Para que el estudiante trabaje en la pizarra, en los pasos de fosforilación (Pasos 1, 3, 6 y 8) el reactor ya no debe entregar el fosfato pegado. El reactor debe dejar listo el oxígeno en el carbono correspondiente (parpadeando en color ámbar #F77F00) para que el alumno saque el bloque de Fosfato de la librería y solo conecte el fósforo (P) a ese oxígeno. Asegúrate de que el bloque de fosfato siempre venga completo (un P con un =O doble y dos -O⁻ con carga negativa) para que no falten oxígenos al validar.
+Detectar errores comunes como estructuras en RDKit (y no como fallos de valencia):
+Como la pizarra rellena automáticamente los hidrógenos cuando dejamos un enlace simple, RDKit no detecta "radicales inestables", sino que los ve como alcoholes o alcanos válidos. Por eso, en lugar de esperar un error de valencia, por favor agrega una revisión de "errores comunes" (usando SMILES/SMARTS) en el modal de diagnóstico para mostrarle al alumno exactamente en qué se equivocó (por ejemplo, si dejó un alcohol en vez de un aldehído, o si puso el fosfato en otro carbono).
+Interruptor de "Empuje Termodinámico" en el Reactor (para reacciones con Delta G positivo):
+En los pasos donde el $\Delta G$ es positivo (Pasos 2, 4, 5, 6, 8 y 9), queremos que dentro del Reactor Catalítico aparezca un pequeño botón o switch que diga "Acoplar consumo celular de productos (Principio de Le Chatelier)" para que el alumno entienda por qué la reacción avanza en la célula antes de darle a transformar.
+PARTE 2: Correcciones de las Moléculas Paso por Paso (Módulo II)
+En el código actual, las moléculas iniciales (initialGraph) de casi todos los niveles están incompletas (les faltan carbonos del anillo, no tienen los grupos -OH o tienen el fósforo pegado directo al carbono sin oxígeno puente). Aquí te detallo qué corregir en cada paso:
+Paso 1 (Hexoquinasa):Molécula inicial:
+Al anillo de la glucosa le faltan los 4 grupos -OH en los carbonos c1, c2, c3 y c4. Agrégalos para que se vea la glucosa completa y el alumno tenga que elegir el oxígeno o6 antes de abrir el reactor.
+Después del reactor: No dibujes el fosfato; deja la glucosa igual pero con el oxígeno o6 parpadeando para que el jugador estampe el fosfato y lo una.
+Paso 2 (Fosfoglucosa Isomerasa):
+Molécula inicial: Ahora mismo hay una cadena rara de 4 carbonos. Reemplázala por la Glucosa-6-Fosfato completa (anillo de 6 lados con sus 6 carbonos, sus -OH y su fosfato completo en c6).
+Objetivo y Reactor: El alumno selecciona el enlace entre c1 y el oxígeno del anillo. El reactor le devuelve la cadena abierta o el anillo furanósico de 5 lados listo para cerrar entre el -OH de c5 y el c2 (cuidando que c2 no quede con 5 enlaces).
+Validación (acceptedSmiles): Agrega estas opciones para que no rebote la Fructosa-6-fosfato bien dibujada: 'O=P([O-])([O-])OCC1OC(O)(CO)C(O)C1O', 'O=P([O-])([O-])OCC1OC(CO)C(O)C1O' y 'O=P(O)(O)OCC1OC(CO)C(O)C1O'.
+Paso 3 (PFK-1 — ¡Aquí estaba el bloqueo principal!):
+Molécula inicial: Reemplaza los 3 carbonos sueltos actuales por la Fructosa-6-fosfato completa del paso anterior (anillo de 5 lados con 4 carbonos adentro y los 2 brazos c1 y c6 afuera, sumando los 6 carbonos).
+Después del reactor: El alumno selecciona el oxígeno o1 (del brazo libre c1), usa el reactor con PFK-1 y ATP, y luego estampa manualmente el segundo fosfato en o1.
+Validación (acceptedSmiles): En el código actual los SMILES tenían los dos fosfatos pegados al mismo carbono por error. Reemplázalos/agrégalos por estos donde están en extremos opuestos: 'O=P([O-])([O-])OCC1OC(O)(COP(=O)([O-])[O-])C(O)C1O', 'O=P(O)(O)OCC1OC(O)(COP(=O)(O)O)C(O)C1O', 'O=P([O-])([O-])OCC1OC(COP(=O)([O-])[O-])C(O)C1O' y 'O=P(O)(O)OCC1OC(COP(=O)(O)O)C(O)C1O'.
+Paso 4 (Aldolasa):
+Molécula inicial: Ahora mismo solo aparecen 2 carbonos (c3-c4). Pon la Fructosa-1,6-bisfosfato completa que armamos en el Paso 3.
+Después del reactor: El alumno selecciona el enlace c3-c4. El reactor guarda la DHAP en la bandeja lateral y deja en pizarra el Gliceraldehído-3-fosfato (con su fosfato completo con 3 oxígenos en p3), pero dejando el enlace c1-o1 como simple (order: 1) parpadeando para que el alumno lo suba a doble enlace (C=O).
+Paso 5 (Triosa Fosfato Isomerasa):
+Molécula inicial: Que el alumno cargue la DHAP desde la bandeja lateral (o que aparezca completa en pizarra corrigiendo el enlace c3-p3 actual para que tenga su oxígeno puente c3-o3-p3 y los 3 oxígenos del fósforo).
+Después del reactor: El alumno selecciona el doble enlace C2=O. El reactor deja el enlace c1-o1 simple parpadeando (y c2-o2 simple) para que el alumno convierta c1-o1 en doble enlace (1 -> 2) y forme el G3P. Si por error sube el de c2, mostrarle que volvió a formar DHAP.
+Paso 6 (GAPDH):
+Molécula inicial: Al G3P inicial agrégale el -OH que le falta en c2, el oxígeno puente en c3 y los oxígenos del fosfato p3.
+Después del reactor: El alumno selecciona c1 y mete NAD+ y Pi al reactor. El reactor deja en c1 el doble enlace =O más un oxígeno puente simple (o_brg1) parpadeando, para que el alumno estampe un grupo fosfato de la librería y una el P a ese oxígeno puente.
+Paso 7 (Fosfoglicerato Quinasa):
+Molécula inicial: Pon el 1,3-Bisfosfoglicerato completo del paso anterior (agrégale el -OH en c2, el oxígeno puente en c3 y los oxígenos de ambos fósforos p1 y p3).
+Después del reactor: El alumno selecciona el fosfato de c1 y usa ADP en el reactor. El reactor quita el fosfato de c1 y deja el oxígeno o1_neg con carga 0 (protonado -OH) parpadeando, para que el estudiante le haga Clic Derecho y le ponga Carga Formal -1 (formando el carboxilato a pH 7.4).
+Paso 8 (Fosfoglicerato Mutasa):
+Molécula inicial: Reemplaza los 3 carbonos desnudos actuales por el 3-Fosfoglicerato completo del Paso 7 (con su carboxilato en c1, su -OH en c2 y su fosfato completo en c3).
+Después del reactor: El alumno selecciona el oxígeno del -OH en c2. El reactor quita el fosfato de c3 (dejando un -OH libre en c3) y hace parpadear el oxígeno de c2 para que el alumno estampe el bloque de fosfato ahí.
+Paso 9 (Enolasa):
+Molécula inicial: Pon el 2-Fosfoglicerato completo del Paso 8 (corrige el enlace directo c2-p2 poniéndole su oxígeno puente, el carboxilato en c1 y los oxígenos del fosfato).
+Después del reactor: El alumno selecciona el enlace c2-c3 (o el -OH de c3). El reactor quita el agua (-OH de c3) y deja el enlace c2-c3 simple (order: 1) parpadeando (con el fosfato en c2 completo con sus oxígenos), para que el estudiante haga clic en c2-c3 y lo convierta en doble enlace (C=C).
+Paso 10 (Piruvato Quinasa):
+Molécula inicial: Al Fosfoenolpiruvato inicial agrégale los 3 oxígenos periféricos que le faltan al átomo de fósforo p.
+Después del reactor: El alumno selecciona el fosfato de c2 y usa ADP en el reactor. El reactor quita el fosfato y deja el enolpiruvato (con doble enlace c2=c3 y enlace simple c2-o2_keto) parpadeando, para que el alumno haga la tautomerización manual: bajar c2=c3 a enlace simple (2 -> 1) y subir c2-o2_keto a doble enlace (1 -> 2).
+Validación (winConditions): Quita o corrige la línea targetFormula: 'C3H4O3' porque el piruvato con carga -1 ('CC(=O)C(=O)[O-]') tiene fórmula C3H3O3 y eso bloquea la validación final.   
