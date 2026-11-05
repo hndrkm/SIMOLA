@@ -10,6 +10,7 @@ import {
 } from 'lucide-react';
 import { useCanvasStore } from '../../store/useCanvasStore';
 import { ElementSymbol } from '../../core/model/types';
+import { ATOM_RADII } from '../../core/model/constants';
 import { getElement, toSuperscript } from '../../core/model/periodicTable';
 
 const ISOTOPE_OPTIONS: Partial<Record<ElementSymbol, Array<{ mass: number; label: string; desc: string }>>> = {
@@ -55,6 +56,8 @@ export const AtomContextMenu: React.FC = () => {
   const graph = useCanvasStore((state) => state.graph);
   const setAtomFormalCharge = useCanvasStore((state) => state.setAtomFormalCharge);
   const setAtomIsotope = useCanvasStore((state) => state.setAtomIsotope);
+  const stageScale = useCanvasStore((state) => state.stageScale);
+  const stagePosition = useCanvasStore((state) => state.stagePosition);
 
   const menuRef = useRef<HTMLDivElement>(null);
 
@@ -101,22 +104,64 @@ export const AtomContextMenu: React.FC = () => {
 
   if (!contextMenuAtom || !atom) return null;
 
-  // Ajustar coordenadas para que no se salga de la pantalla
+  // Dimensiones del popover flotante
   const menuWidth = 288;
-  const menuHeight = 380;
-  const posX = Math.max(12, Math.min(window.innerWidth - menuWidth - 12, contextMenuAtom.clientX));
-  const posY = Math.max(12, Math.min(window.innerHeight - menuHeight - 12, contextMenuAtom.clientY));
+  const menuEstimatedHeight = 360;
+
+  // Coordenadas del átomo proyectadas en la pantalla respecto al viewport
+  const atomRadius = (ATOM_RADII[atom.element] || 17) * stageScale;
+  const atomScreenX = atom.x * stageScale + stagePosition.x;
+  const atomScreenY = atom.y * stageScale + stagePosition.y;
+
+  // Determinar la ubicación horizontal flotante cerca del átomo
+  const fitsOnRight = atomScreenX + atomRadius + menuWidth + 24 <= window.innerWidth;
+  const fitsOnLeft = atomScreenX - atomRadius - menuWidth - 24 >= 16;
+
+  let posX: number;
+  let placedSide: 'right' | 'left' = 'right';
+
+  if (fitsOnRight) {
+    posX = atomScreenX + atomRadius + 16;
+    placedSide = 'right';
+  } else if (fitsOnLeft) {
+    posX = atomScreenX - atomRadius - menuWidth - 16;
+    placedSide = 'left';
+  } else {
+    // Si no cabe holgadamente a ningún lado (pantallas estrechas), centrar sobre el área del átomo
+    posX = Math.max(16, Math.min(window.innerWidth - menuWidth - 16, atomScreenX - menuWidth / 2));
+  }
+
+  // Alinear verticalmente de forma equilibrada con el átomo (ligeramente elevado para mejor ergonomía)
+  let posY = atomScreenY - 60;
+  const maxTop = window.innerHeight - menuEstimatedHeight - 20;
+  const minTop = 68; // Por debajo del TopBar superior
+  posY = Math.max(minTop, Math.min(maxTop, posY));
+
+  // Posición vertical de la flecha indicadora hacia el centro del átomo
+  const arrowTop = Math.max(16, Math.min(menuEstimatedHeight - 32, atomScreenY - posY));
 
   return createPortal(
     <div
       ref={menuRef}
-      style={{ left: `${posX}px`, top: `${posY}px` }}
+      style={{ left: `${Math.round(posX)}px`, top: `${Math.round(posY)}px` }}
       className="fixed z-[9999] w-72 cad-panel cad-corners p-4 rounded-xl bg-white border border-slate-300 shadow-2xl backdrop-blur-xl select-none animate-fadeIn text-slate-800 font-mono"
       onContextMenu={(e) => {
         e.preventDefault();
         e.stopPropagation();
       }}
     >
+      {/* Flecha indicadora apuntando directamente al átomo */}
+      {placedSide === 'right' ? (
+        <div
+          style={{ top: `${Math.round(arrowTop)}px` }}
+          className="absolute -left-1.5 w-3 h-3 bg-white border-l border-b border-slate-300 transform rotate-45 pointer-events-none"
+        />
+      ) : (
+        <div
+          style={{ top: `${Math.round(arrowTop)}px` }}
+          className="absolute -right-1.5 w-3 h-3 bg-white border-r border-t border-slate-300 transform rotate-45 pointer-events-none"
+        />
+      )}
       {/* Cabecera del Popover */}
       <div className="flex items-center justify-between pb-3 border-b border-slate-200 mb-3">
         <div className="flex items-center gap-2">
