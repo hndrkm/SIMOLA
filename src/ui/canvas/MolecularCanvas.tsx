@@ -281,8 +281,11 @@ export const MolecularCanvas: React.FC = () => {
         </Layer>
       </Stage>
 
-      {/* Popover Menú Contextual de Clic Derecho */}
-      <AtomContextMenu />
+      {/* Popover Menú Contextual de Clic Derecho encima del Canvas */}
+      <AtomContextMenu
+        canvasWidth={dimensions.width}
+        canvasHeight={dimensions.height}
+      />
     </div>
   );
 };

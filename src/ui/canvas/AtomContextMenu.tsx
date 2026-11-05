@@ -1,5 +1,4 @@
 import React, { useEffect, useRef, useMemo } from 'react';
-import { createPortal } from 'react-dom';
 import {
   X,
   Zap,
@@ -50,7 +49,12 @@ const FORMAL_CHARGES = [
   { value: 2, label: '+2', sub: 'Catión Divalente (+2)' },
 ];
 
-export const AtomContextMenu: React.FC = () => {
+interface AtomContextMenuProps {
+  canvasWidth?: number;
+  canvasHeight?: number;
+}
+
+export const AtomContextMenu: React.FC<AtomContextMenuProps> = ({ canvasWidth, canvasHeight }) => {
   const contextMenuAtom = useCanvasStore((state) => state.contextMenuAtom);
   const setContextMenuAtom = useCanvasStore((state) => state.setContextMenuAtom);
   const graph = useCanvasStore((state) => state.graph);
@@ -105,46 +109,52 @@ export const AtomContextMenu: React.FC = () => {
   if (!contextMenuAtom || !atom) return null;
 
   // Dimensiones del popover flotante
-  const menuWidth = 288;
-  const menuEstimatedHeight = 360;
+  const menuWidth = 280;
+  const menuHeight = 350;
 
-  // Coordenadas del átomo proyectadas en la pantalla respecto al viewport
+  const cWidth = canvasWidth || window.innerWidth;
+  const cHeight = canvasHeight || window.innerHeight;
+
+  // Coordenadas del átomo proyectadas exactamente en el lienzo
   const atomRadius = (ATOM_RADII[atom.element] || 17) * stageScale;
-  const atomScreenX = atom.x * stageScale + stagePosition.x;
-  const atomScreenY = atom.y * stageScale + stagePosition.y;
+  const atomX = atom.x * stageScale + stagePosition.x;
+  const atomY = atom.y * stageScale + stagePosition.y;
 
-  // Determinar la ubicación horizontal flotante cerca del átomo
-  const fitsOnRight = atomScreenX + atomRadius + menuWidth + 24 <= window.innerWidth;
-  const fitsOnLeft = atomScreenX - atomRadius - menuWidth - 24 >= 16;
+  // Determinar la ubicación horizontal flotante cerca del átomo dentro del lienzo
+  const fitsOnRight = atomX + atomRadius + menuWidth + 20 <= cWidth;
+  const fitsOnLeft = atomX - atomRadius - menuWidth - 20 >= 16;
 
   let posX: number;
   let placedSide: 'right' | 'left' = 'right';
 
   if (fitsOnRight) {
-    posX = atomScreenX + atomRadius + 16;
+    posX = atomX + atomRadius + 14;
     placedSide = 'right';
   } else if (fitsOnLeft) {
-    posX = atomScreenX - atomRadius - menuWidth - 16;
+    posX = atomX - atomRadius - menuWidth - 14;
     placedSide = 'left';
   } else {
-    // Si no cabe holgadamente a ningún lado (pantallas estrechas), centrar sobre el área del átomo
-    posX = Math.max(16, Math.min(window.innerWidth - menuWidth - 16, atomScreenX - menuWidth / 2));
+    // Si no cabe holgadamente a ningún lado, centrar sobre el área del átomo
+    posX = Math.max(16, Math.min(cWidth - menuWidth - 16, atomX - menuWidth / 2));
   }
 
-  // Alinear verticalmente de forma equilibrada con el átomo (ligeramente elevado para mejor ergonomía)
-  let posY = atomScreenY - 60;
-  const maxTop = window.innerHeight - menuEstimatedHeight - 20;
-  const minTop = 68; // Por debajo del TopBar superior
-  posY = Math.max(minTop, Math.min(maxTop, posY));
+  // Alinear verticalmente de forma óptima con el átomo dentro del lienzo
+  let posY = atomY - 60;
+  if (posY + menuHeight > cHeight - 16) {
+    posY = cHeight - menuHeight - 16;
+  }
+  if (posY < 64) {
+    posY = 64; // Evitar la barra de navegación superior (TopBar)
+  }
 
   // Posición vertical de la flecha indicadora hacia el centro del átomo
-  const arrowTop = Math.max(16, Math.min(menuEstimatedHeight - 32, atomScreenY - posY));
+  const arrowTop = Math.max(16, Math.min(menuHeight - 32, atomY - posY));
 
-  return createPortal(
+  return (
     <div
       ref={menuRef}
       style={{ left: `${Math.round(posX)}px`, top: `${Math.round(posY)}px` }}
-      className="fixed z-[9999] w-72 cad-panel cad-corners p-4 rounded-xl bg-white border border-slate-300 shadow-2xl backdrop-blur-xl select-none animate-fadeIn text-slate-800 font-mono"
+      className="absolute z-50 w-72 cad-panel cad-corners p-4 rounded-xl bg-white border-2 border-[#008477] shadow-2xl backdrop-blur-xl select-none animate-fadeIn text-slate-800 font-mono"
       onContextMenu={(e) => {
         e.preventDefault();
         e.stopPropagation();
@@ -154,12 +164,12 @@ export const AtomContextMenu: React.FC = () => {
       {placedSide === 'right' ? (
         <div
           style={{ top: `${Math.round(arrowTop)}px` }}
-          className="absolute -left-1.5 w-3 h-3 bg-white border-l border-b border-slate-300 transform rotate-45 pointer-events-none"
+          className="absolute -left-2 w-3.5 h-3.5 bg-white border-l-2 border-b-2 border-[#008477] transform rotate-45 pointer-events-none"
         />
       ) : (
         <div
           style={{ top: `${Math.round(arrowTop)}px` }}
-          className="absolute -right-1.5 w-3 h-3 bg-white border-r border-t border-slate-300 transform rotate-45 pointer-events-none"
+          className="absolute -right-2 w-3.5 h-3.5 bg-white border-r-2 border-t-2 border-[#008477] transform rotate-45 pointer-events-none"
         />
       )}
       {/* Cabecera del Popover */}
@@ -301,7 +311,6 @@ export const AtomContextMenu: React.FC = () => {
           </div>
         )}
       </div>
-    </div>,
-    document.body
+    </div>
   );
 };

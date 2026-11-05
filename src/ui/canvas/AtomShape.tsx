@@ -1,5 +1,5 @@
 import React, { useMemo } from 'react';
-import { Circle, Group, Text } from 'react-konva';
+import { Circle, Group, Text, Line } from 'react-konva';
 import { AtomNode } from '../../core/model/types';
 import { ATOM_RADII, CPK_COLORS, getMaxValence } from '../../core/model/constants';
 import { toSuperscript } from '../../core/model/periodicTable';
@@ -19,6 +19,7 @@ export const AtomShape: React.FC<AtomShapeProps> = React.memo(({ atom, bondOrder
   const activeTemplate = useCanvasStore((state) => state.activeTemplate);
   const hoveredAtomId = useCanvasStore((state) => state.hoveredAtomId);
   const selectedAtomId = useCanvasStore((state) => state.selectedAtomId);
+  const contextMenuAtom = useCanvasStore((state) => state.contextMenuAtom);
   const pendingBondSourceId = useCanvasStore((state) => state.pendingBondSourceId);
   const setContextMenuAtom = useCanvasStore((state) => state.setContextMenuAtom);
 
@@ -57,6 +58,7 @@ export const AtomShape: React.FC<AtomShapeProps> = React.memo(({ atom, bondOrder
 
   const isHovered = hoveredAtomId === atom.id;
   const isSelected = selectedAtomId === atom.id;
+  const isContextMenuTarget = contextMenuAtom?.atomId === atom.id;
   const isHighlighted = !!atom.isHighlighted;
   const isPendingSource = pendingBondSourceId === atom.id;
   const isSelectTool = activeTool === 'select';
@@ -250,6 +252,35 @@ export const AtomShape: React.FC<AtomShapeProps> = React.memo(({ atom, bondOrder
         }
       }}
     >
+      {/* 0. Marcado Activo CAD de Clic Derecho (Mira Telescópica y Retícula de Destino) */}
+      {isContextMenuTarget && (
+        <Group listening={false}>
+          {/* Anillo exterior segmentado */}
+          <Circle
+            radius={radius + 12}
+            stroke="#008477"
+            strokeWidth={2}
+            dash={[4, 4]}
+            listening={false}
+            perfectDrawEnabled={false}
+          />
+          {/* Halo luminoso de fondo */}
+          <Circle
+            radius={radius + 7}
+            stroke="#00A896"
+            strokeWidth={2}
+            fill="rgba(0, 168, 150, 0.2)"
+            listening={false}
+            perfectDrawEnabled={false}
+          />
+          {/* 4 Guías de mira telescópica en cruz (Superior, Inferior, Izquierda, Derecha) */}
+          <Line points={[0, -radius - 3, 0, -radius - 14]} stroke="#008477" strokeWidth={2} listening={false} perfectDrawEnabled={false} />
+          <Line points={[0, radius + 3, 0, radius + 14]} stroke="#008477" strokeWidth={2} listening={false} perfectDrawEnabled={false} />
+          <Line points={[-radius - 3, 0, -radius - 14, 0]} stroke="#008477" strokeWidth={2} listening={false} perfectDrawEnabled={false} />
+          <Line points={[radius + 3, 0, radius + 14, 0]} stroke="#008477" strokeWidth={2} listening={false} perfectDrawEnabled={false} />
+        </Group>
+      )}
+
       {/* 1. Retícula Segmentada de Sitio Reactivo Post-Catálisis (Ámbar Fosfato CAD) */}
       {isHighlighted && (
         <Circle
