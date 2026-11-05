@@ -101,13 +101,32 @@ export const AtomShape: React.FC<AtomShapeProps> = React.memo(({ atom, bondOrder
   const handleContextMenu = (e: any) => {
     if (e.evt) {
       e.evt.preventDefault();
-      e.evt.stopPropagation();
     }
     e.cancelBubble = true;
 
     const clientX = e.evt?.clientX ?? window.innerWidth / 2;
     const clientY = e.evt?.clientY ?? window.innerHeight / 2;
 
+    setSelectedAtom(atom.id);
+    setSelectedBond(null);
+    setContextMenuAtom({
+      atomId: atom.id,
+      clientX,
+      clientY,
+    });
+  };
+
+  const handleDblClick = (e: any) => {
+    if (e.evt) {
+      e.evt.preventDefault();
+    }
+    e.cancelBubble = true;
+
+    const clientX = e.evt?.clientX ?? window.innerWidth / 2;
+    const clientY = e.evt?.clientY ?? window.innerHeight / 2;
+
+    setSelectedAtom(atom.id);
+    setSelectedBond(null);
     setContextMenuAtom({
       atomId: atom.id,
       clientX,
@@ -207,6 +226,8 @@ export const AtomShape: React.FC<AtomShapeProps> = React.memo(({ atom, bondOrder
       }}
       onClick={handleClick}
       onTap={handleClick}
+      onDblClick={handleDblClick}
+      onDblTap={handleDblClick}
       onMouseDown={handleMouseDown}
       onMouseUp={handleMouseUp}
       onContextMenu={handleContextMenu}
@@ -312,6 +333,8 @@ export const AtomShape: React.FC<AtomShapeProps> = React.memo(({ atom, bondOrder
         listening={true}
         perfectDrawEnabled={false}
         onContextMenu={handleContextMenu}
+        onDblClick={handleDblClick}
+        onDblTap={handleDblClick}
       />
 
       {/* 8. Satélites de Hidrógeno Implícito (Nodos orbitales de trazo fino 1px sobre fondo claro) */}

@@ -1,4 +1,5 @@
 import React, { useEffect, useRef, useMemo } from 'react';
+import { createPortal } from 'react-dom';
 import {
   X,
   Zap,
@@ -101,17 +102,20 @@ export const AtomContextMenu: React.FC = () => {
   if (!contextMenuAtom || !atom) return null;
 
   // Ajustar coordenadas para que no se salga de la pantalla
-  const menuWidth = 280;
-  const menuHeight = 360;
-  const posX = Math.min(window.innerWidth - menuWidth - 20, Math.max(10, contextMenuAtom.clientX));
-  const posY = Math.min(window.innerHeight - menuHeight - 20, Math.max(10, contextMenuAtom.clientY));
+  const menuWidth = 288;
+  const menuHeight = 380;
+  const posX = Math.max(12, Math.min(window.innerWidth - menuWidth - 12, contextMenuAtom.clientX));
+  const posY = Math.max(12, Math.min(window.innerHeight - menuHeight - 12, contextMenuAtom.clientY));
 
-  return (
+  return createPortal(
     <div
       ref={menuRef}
-      style={{ left: posX, top: posY }}
-      className="fixed z-50 w-72 cad-panel cad-corners p-4 rounded-xl bg-white border border-slate-300 shadow-2xl backdrop-blur-xl select-none animate-fadeIn text-slate-800 font-mono"
-      onContextMenu={(e) => e.preventDefault()}
+      style={{ left: `${posX}px`, top: `${posY}px` }}
+      className="fixed z-[9999] w-72 cad-panel cad-corners p-4 rounded-xl bg-white border border-slate-300 shadow-2xl backdrop-blur-xl select-none animate-fadeIn text-slate-800 font-mono"
+      onContextMenu={(e) => {
+        e.preventDefault();
+        e.stopPropagation();
+      }}
     >
       {/* Cabecera del Popover */}
       <div className="flex items-center justify-between pb-3 border-b border-slate-200 mb-3">
@@ -252,6 +256,7 @@ export const AtomContextMenu: React.FC = () => {
           </div>
         )}
       </div>
-    </div>
+    </div>,
+    document.body
   );
 };

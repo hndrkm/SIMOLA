@@ -161,40 +161,40 @@ export const TopBar: React.FC = () => {
   return (
     <>
       <header
-        className={`absolute top-2.5 left-3 sm:left-4 z-20 flex items-center justify-between gap-1.5 sm:gap-2 select-none pointer-events-none transition-all duration-300 ease-out flex-nowrap ${
-          isMissionSidebarOpen ? 'right-3 sm:right-4 lg:right-[396px] xl:right-[400px]' : 'right-3 sm:right-4'
+        className={`absolute top-2.5 left-2 sm:left-4 z-20 flex items-center justify-between gap-1.5 sm:gap-2 select-none pointer-events-none transition-all duration-300 ease-out flex-nowrap ${
+          isMissionSidebarOpen ? 'right-2 sm:right-4 lg:right-[396px] xl:right-[400px]' : 'right-2 sm:right-4'
         }`}
       >
         {/* Identidad de la Aplicación y Botón Menú Principal */}
-        <div className="cad-panel cad-corners px-2.5 sm:px-3 py-1.5 rounded-lg flex items-center gap-2 sm:gap-3 shadow-md pointer-events-auto bg-white border border-slate-300 min-w-0 shrink max-w-[220px] sm:max-w-xs md:max-w-sm">
+        <div className="cad-panel cad-corners px-2 sm:px-2.5 py-1 sm:py-1.5 rounded-lg flex items-center gap-1.5 sm:gap-2 shadow-md pointer-events-auto bg-white border border-slate-300 min-w-0 shrink max-w-[180px] sm:max-w-[220px] md:max-w-xs lg:max-w-sm">
           <button
             id="btn-return-home"
             onClick={() => setView('home')}
-            className="flex items-center gap-1.5 sm:gap-2 p-0.5 sm:p-1 rounded-md hover:bg-slate-100 text-slate-700 hover:text-black transition-all text-xs font-semibold group shrink-0"
+            className="flex items-center gap-1 sm:gap-1.5 p-0.5 sm:p-1 rounded-md hover:bg-slate-100 text-slate-700 hover:text-black transition-all text-xs font-semibold group shrink-0"
             title="Volver al Menú Principal (HomeView)"
           >
-            <ArrowLeft className="w-4 h-4 text-[#008477] group-hover:-translate-x-0.5 transition-transform" />
-            <div className="bg-white px-1.5 sm:px-2 py-0.5 rounded shadow-sm border border-slate-200 flex items-center justify-center">
+            <ArrowLeft className="w-3.5 h-3.5 sm:w-4 sm:h-4 text-[#008477] group-hover:-translate-x-0.5 transition-transform" />
+            <div className="bg-white px-1 sm:px-1.5 py-0.5 rounded shadow-xs border border-slate-200 flex items-center justify-center">
               <img
                 src={`${import.meta.env.BASE_URL}logo.png`}
                 alt="SIMOLA"
-                className="h-6 sm:h-7 w-auto object-contain"
+                className="h-5 sm:h-6 w-auto object-contain"
               />
             </div>
           </button>
 
-          <div className="h-6 w-px bg-slate-200 shrink-0" />
+          <div className="h-5 sm:h-6 w-px bg-slate-200 shrink-0" />
 
           <div className="flex flex-col min-w-0 overflow-hidden">
-            <span className="px-1.5 py-0.5 text-[9px] sm:text-[10px] font-mono bg-[#008477]/10 text-[#008477] border border-[#008477]/30 rounded font-bold truncate">
+            <span className="px-1 sm:px-1.5 py-0.5 text-[9px] sm:text-[10px] font-mono bg-[#008477]/10 text-[#008477] border border-[#008477]/30 rounded font-bold truncate">
               {getRouteLabel()}
             </span>
             {mission ? (
-              <span className="text-[10px] text-amber-700 font-mono font-bold truncate">
+              <span className="text-[9px] sm:text-[10px] text-amber-700 font-mono font-bold truncate">
                 {mission.title}
               </span>
             ) : (
-              <span className="text-[10px] text-slate-500 font-mono font-medium truncate hidden sm:inline">
+              <span className="text-[9px] sm:text-[10px] text-slate-500 font-mono font-medium truncate hidden sm:inline">
                 Laboratorio Libre
               </span>
             )}
@@ -202,7 +202,11 @@ export const TopBar: React.FC = () => {
         </div>
 
         {/* Centro: Selector de Guías Angulares (30°, 45°, 90°, 120°, Libre) */}
-        <div className="cad-panel cad-corners px-1.5 sm:px-2 py-1 rounded-lg hidden md:flex items-center gap-1 shadow-md pointer-events-auto bg-white border border-slate-300 shrink-0">
+        <div
+          className={`cad-panel cad-corners px-1.5 sm:px-2 py-1 rounded-lg items-center gap-1 shadow-md pointer-events-auto bg-white border border-slate-300 shrink-0 ${
+            isMissionSidebarOpen ? 'hidden 2xl:flex' : 'hidden lg:flex'
+          }`}
+        >
           <span className="text-[10px] font-mono font-bold text-slate-500 uppercase tracking-wider mr-1 hidden xl:flex items-center gap-1">
             <Compass className="w-3.5 h-3.5 text-[#008477]" />
             SNAP:
@@ -215,7 +219,7 @@ export const TopBar: React.FC = () => {
                 onClick={() => setSnapAngleDeg(deg)}
                 className={`px-1.5 sm:px-2 py-0.5 sm:py-1 rounded text-[10px] font-mono font-bold transition-all border ${
                   isSelected
-                    ? 'bg-[#008477] text-white border-[#008477] shadow-sm'
+                    ? 'bg-[#008477] text-white border-[#008477] shadow-xs'
                     : 'bg-slate-50 text-slate-700 border-slate-200 hover:border-slate-400 hover:bg-slate-100'
                 }`}
                 title={deg === null ? 'Movimiento y trazo libre' : `Restricción angular cada ${deg}°`}
@@ -227,12 +231,12 @@ export const TopBar: React.FC = () => {
         </div>
 
         {/* Acciones de Catálisis y Evaluación */}
-        <div className="flex items-center gap-1.5 sm:gap-2 pointer-events-auto shrink-0">
+        <div className="flex items-center gap-1 sm:gap-1.5 md:gap-2 pointer-events-auto shrink-0">
           {/* Botón Menú Lateral de Misiones */}
           <button
             id="btn-toggle-mission-sidebar"
             onClick={toggleMissionSidebar}
-            className={`cad-panel px-2.5 sm:px-3 py-1.5 rounded-lg text-xs font-mono font-bold transition-all flex items-center gap-1.5 shadow-md active:scale-95 border ${
+            className={`cad-panel px-2 sm:px-2.5 py-1.5 rounded-lg text-xs font-mono font-bold transition-all flex items-center gap-1.5 shadow-md active:scale-95 border ${
               isMissionSidebarOpen
                 ? 'bg-[#008477] text-white border-[#008477]'
                 : 'bg-white text-slate-800 hover:text-black border-slate-300 hover:border-[#008477]'
@@ -267,7 +271,7 @@ export const TopBar: React.FC = () => {
             title="Bibliografía Académica, Arquitectura y Créditos"
           >
             <BookOpen className="w-3.5 h-3.5 text-[#008477]" />
-            <span className="hidden xl:inline text-[11px]">Bibliografía</span>
+            <span className="hidden 2xl:inline text-[11px]">Bibliografía</span>
           </button>
 
           {/* Botón de Ayuda / Atajos */}
@@ -284,7 +288,7 @@ export const TopBar: React.FC = () => {
           <button
             id="btn-catalytic-reactor"
             onClick={() => setShowReactorModal(true)}
-            className="flex items-center gap-1.5 px-2.5 sm:px-3 py-1.5 rounded-lg bg-[#D97706] hover:bg-[#B45309] text-white font-mono font-bold text-xs transition-all shadow-md active:scale-95 shrink-0"
+            className="flex items-center gap-1.5 px-2 sm:px-2.5 py-1.5 rounded-lg bg-[#D97706] hover:bg-[#B45309] text-white font-mono font-bold text-xs transition-all shadow-md active:scale-95 shrink-0"
             title="Abrir Centro Activo / Reactor Catalítico para acoplar holoenzimas y cofactores"
           >
             <Zap className="w-4 h-4 fill-current" />
@@ -296,7 +300,7 @@ export const TopBar: React.FC = () => {
             id="btn-verify-structure"
             onClick={handleVerify}
             disabled={isVerifying}
-            className={`flex items-center gap-1.5 px-3 sm:px-3.5 py-1.5 rounded-lg font-mono font-bold text-xs transition-all shadow-md shrink-0 ${
+            className={`flex items-center gap-1.5 px-2.5 sm:px-3 py-1.5 rounded-lg font-mono font-bold text-xs transition-all shadow-md shrink-0 ${
               isVerifying
                 ? 'bg-slate-300 text-slate-500 cursor-wait'
                 : 'bg-[#008477] hover:bg-[#006D62] text-white hover:scale-[1.02] active:scale-95'

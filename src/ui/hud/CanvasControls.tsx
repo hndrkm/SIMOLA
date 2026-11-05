@@ -10,6 +10,7 @@ import {
   ZoomOut,
   RotateCcw,
   Trash2,
+  Zap,
 } from 'lucide-react';
 import { ToolType } from '../../core/model/types';
 import { useCanvasStore } from '../../store/useCanvasStore';
@@ -26,6 +27,11 @@ export const CanvasControls: React.FC = () => {
   const zoomBy = useCanvasStore((state) => state.zoomBy);
   const resetView = useCanvasStore((state) => state.resetView);
   const clearGraph = useCanvasStore((state) => state.clearGraph);
+  const selectedAtomId = useCanvasStore((state) => state.selectedAtomId);
+  const graph = useCanvasStore((state) => state.graph);
+  const setContextMenuAtom = useCanvasStore((state) => state.setContextMenuAtom);
+
+  const selectedAtom = selectedAtomId ? graph.nodes[selectedAtomId] : null;
 
   const canUndo = past.length > 0;
   const canRedo = future.length > 0;
@@ -140,6 +146,31 @@ export const CanvasControls: React.FC = () => {
         >
           <Trash2 className="w-4 h-4" />
         </button>
+
+        {/* Acceso Rápido al Átomo Seleccionado (Carga / Isótopos) */}
+        {selectedAtom && (
+          <div className="flex items-center gap-1.5 pl-2 border-l border-slate-200">
+            <button
+              id="btn-edit-selected-atom"
+              onClick={() => {
+                setContextMenuAtom({
+                  atomId: selectedAtom.id,
+                  clientX: Math.min(window.innerWidth - 300, Math.max(20, Math.round(window.innerWidth / 2) - 140)),
+                  clientY: Math.min(window.innerHeight - 380, Math.max(20, Math.round(window.innerHeight / 2) - 180)),
+                });
+              }}
+              className="flex items-center gap-1.5 px-2.5 py-1 rounded-md text-xs font-mono font-bold bg-[#008477]/10 hover:bg-[#008477]/20 text-[#008477] border border-[#008477]/30 transition-all active:scale-95 shadow-xs"
+              title="Modificar carga formal o isótopos del átomo seleccionado"
+            >
+              <Zap className="w-3.5 h-3.5 text-[#D97706]" />
+              <span>
+                {selectedAtom.element}
+                {selectedAtom.formalCharge !== 0 && (selectedAtom.formalCharge > 0 ? `⁺${selectedAtom.formalCharge}` : `⁻${Math.abs(selectedAtom.formalCharge)}`)}
+                : Carga/Isótopo
+              </span>
+            </button>
+          </div>
+        )}
       </div>
     </div>
   );

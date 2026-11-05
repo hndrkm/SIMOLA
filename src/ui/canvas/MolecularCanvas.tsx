@@ -2,6 +2,7 @@ import React, { useEffect, useMemo, useRef, useState } from 'react';
 import { Stage, Layer, Line, Rect } from 'react-konva';
 import Konva from 'konva';
 import { useCanvasStore } from '../../store/useCanvasStore';
+import { ATOM_RADII } from '../../core/model/constants';
 import { AtomShape } from './AtomShape';
 import { BondShape } from './BondShape';
 import { AtomContextMenu } from './AtomContextMenu';
@@ -30,6 +31,7 @@ export const MolecularCanvas: React.FC = () => {
   const cancelPendingBond = useCanvasStore((state) => state.cancelPendingBond);
   const setSelectedAtom = useCanvasStore((state) => state.setSelectedAtom);
   const setSelectedBond = useCanvasStore((state) => state.setSelectedBond);
+  const setContextMenuAtom = useCanvasStore((state) => state.setContextMenuAtom);
 
   // ResizeObserver para dimensiones reactivas
   useEffect(() => {
@@ -150,11 +152,56 @@ export const MolecularCanvas: React.FC = () => {
     return { bondOrderMap: orders, neighborAnglesMap: angles };
   }, [graph.edges, graph.nodes]);
 
+  // Interceptor infalible de clic derecho en el contenedor del lienzo
+  const handleCanvasContextMenu = (e: React.MouseEvent<HTMLDivElement>) => {
+    e.preventDefault();
+    e.stopPropagation();
+
+    const rect = containerRef.current?.getBoundingClientRect();
+    if (!rect) return;
+
+    const clientX = e.clientX;
+    const clientY = e.clientY;
+    const canvasX = clientX - rect.left;
+    const canvasY = clientY - rect.top;
+
+    // Proyectar coordenadas del cursor al plano molecular teniendo en cuenta escala y traslación
+    const worldX = (canvasX - stagePosition.x) / stageScale;
+    const worldY = (canvasY - stagePosition.y) / stageScale;
+
+    let closestAtom = null;
+    let minDistance = Infinity;
+
+    for (const atom of Object.values(graph.nodes)) {
+      const dx = atom.x - worldX;
+      const dy = atom.y - worldY;
+      const dist = Math.sqrt(dx * dx + dy * dy);
+      const hitRadius = (ATOM_RADII[atom.element] || 17) + 16;
+
+      if (dist <= hitRadius && dist < minDistance) {
+        minDistance = dist;
+        closestAtom = atom;
+      }
+    }
+
+    if (closestAtom) {
+      setSelectedAtom(closestAtom.id);
+      setSelectedBond(null);
+      setContextMenuAtom({
+        atomId: closestAtom.id,
+        clientX,
+        clientY,
+      });
+    } else {
+      setContextMenuAtom(null);
+    }
+  };
+
   return (
     <div
       ref={containerRef}
       className="w-full h-full relative overflow-hidden bg-[#F8FAFC] select-none"
-      onContextMenu={(e) => e.preventDefault()}
+      onContextMenu={handleCanvasContextMenu}
     >
       <Stage
         ref={stageRef}
