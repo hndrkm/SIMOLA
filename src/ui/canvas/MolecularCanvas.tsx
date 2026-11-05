@@ -1,11 +1,10 @@
-import React, { useEffect, useRef, useState } from 'react';
-import { Stage, Layer, Line, Circle, Rect } from 'react-konva';
+import React, { useEffect, useMemo, useRef, useState } from 'react';
+import { Stage, Layer, Line, Rect } from 'react-konva';
 import Konva from 'konva';
 import { useCanvasStore } from '../../store/useCanvasStore';
 import { AtomShape } from './AtomShape';
 import { BondShape } from './BondShape';
 import { AtomContextMenu } from './AtomContextMenu';
-
 
 export const MolecularCanvas: React.FC = () => {
   const containerRef = useRef<HTMLDivElement>(null);
@@ -29,6 +28,8 @@ export const MolecularCanvas: React.FC = () => {
   const stampTemplateAt = useCanvasStore((state) => state.stampTemplateAt);
   const updateCursorPosition = useCanvasStore((state) => state.updateCursorPosition);
   const cancelPendingBond = useCanvasStore((state) => state.cancelPendingBond);
+  const setSelectedAtom = useCanvasStore((state) => state.setSelectedAtom);
+  const setSelectedBond = useCanvasStore((state) => state.setSelectedBond);
 
   // ResizeObserver para dimensiones reactivas
   useEffect(() => {
@@ -75,7 +76,6 @@ export const MolecularCanvas: React.FC = () => {
 
   // Clic en fondo vacío (deselección, colocación de átomo, estampe de anillos/plantillas o cancelación)
   const handleStageClick = (e: Konva.KonvaEventObject<MouseEvent>) => {
-    // Si el clic fue directamente en el Stage o en el fondo decorativo
     if (e.target === e.target.getStage() || e.target.name() === 'canvas-background') {
       const stage = stageRef.current;
       if (!stage) return;
@@ -83,18 +83,19 @@ export const MolecularCanvas: React.FC = () => {
       const pointer = stage.getPointerPosition();
       if (!pointer) return;
 
-      // Transformar coordenadas de pantalla a espacio de mundo del lienzo
       const worldX = (pointer.x - stagePosition.x) / stageScale;
       const worldY = (pointer.y - stagePosition.y) / stageScale;
 
-      if (activeTool === 'atom') {
+      if (activeTool === 'select') {
+        setSelectedAtom(null);
+        setSelectedBond(null);
+      } else if (activeTool === 'atom') {
         addAtom(activeElement, Math.round(worldX), Math.round(worldY));
       } else if (activeTool === 'ring' && activeRingPreset) {
         stampRing(activeRingPreset, { x: Math.round(worldX), y: Math.round(worldY) });
       } else if (activeTool === 'template' && activeTemplate) {
         stampTemplateAt(activeTemplate, { x: Math.round(worldX), y: Math.round(worldY) });
       } else if (activeTool === 'bond' && pendingBondSourceId) {
-        // Cancelar enlace temporal si se hizo clic en espacio vacío (Auditoría A3.3)
         cancelPendingBond();
       }
     }
@@ -126,24 +127,33 @@ export const MolecularCanvas: React.FC = () => {
   // Obtener átomo fuente para línea guía temporal
   const pendingSourceAtom = pendingBondSourceId ? graph.nodes[pendingBondSourceId] : null;
 
-  // Cuadrícula decorativa pasiva de puntos
-  const gridSpacing = 40;
-  const startX = Math.floor((-stagePosition.x / stageScale) / gridSpacing) * gridSpacing - gridSpacing;
-  const endX = startX + (dimensions.width / stageScale) + gridSpacing * 2;
-  const startY = Math.floor((-stagePosition.y / stageScale) / gridSpacing) * gridSpacing - gridSpacing;
-  const endY = startY + (dimensions.height / stageScale) + gridSpacing * 2;
+  // Pre-cálculo O(E) de órdenes de enlace y ángulos vecinos por átomo
+  const { bondOrderMap, neighborAnglesMap } = useMemo(() => {
+    const orders: Record<string, number> = {};
+    const angles: Record<string, number[]> = {};
 
-  const gridDots: Array<{ x: number; y: number }> = [];
-  for (let x = startX; x <= endX; x += gridSpacing) {
-    for (let y = startY; y <= endY; y += gridSpacing) {
-      gridDots.push({ x, y });
+    for (const edge of Object.values(graph.edges)) {
+      orders[edge.sourceId] = (orders[edge.sourceId] || 0) + edge.order;
+      orders[edge.targetId] = (orders[edge.targetId] || 0) + edge.order;
+
+      const src = graph.nodes[edge.sourceId];
+      const tgt = graph.nodes[edge.targetId];
+      if (src && tgt) {
+        if (!angles[edge.sourceId]) angles[edge.sourceId] = [];
+        angles[edge.sourceId].push(Math.atan2(tgt.y - src.y, tgt.x - src.x));
+
+        if (!angles[edge.targetId]) angles[edge.targetId] = [];
+        angles[edge.targetId].push(Math.atan2(src.y - tgt.y, src.x - tgt.x));
+      }
     }
-  }
+
+    return { bondOrderMap: orders, neighborAnglesMap: angles };
+  }, [graph.edges, graph.nodes]);
 
   return (
     <div
       ref={containerRef}
-      className="w-full h-full relative overflow-hidden bg-slate-950 select-none"
+      className="w-full h-full relative overflow-hidden blueprint-grid select-none"
     >
       <Stage
         ref={stageRef}
@@ -165,31 +175,20 @@ export const MolecularCanvas: React.FC = () => {
           }
         }}
       >
-        {/* Capa 1: Base / Fondo (No interactiva, listening={false} - Auditoría A3.1) */}
-        <Layer listening={false}>
-          {/* Fondo oscuro receptor */}
+        {/* Capa de fondo invisible para atrapar eventos de clic en el lienzo sin dibujar píxeles */}
+        <Layer>
           <Rect
             name="canvas-background"
-            x={startX - 500}
-            y={startY - 500}
-            width={endX - startX + 1000}
-            height={endY - startY + 1000}
-            fill="#090d16"
+            x={-100000}
+            y={-100000}
+            width={200000}
+            height={200000}
+            fill="transparent"
+            listening={true}
           />
-
-          {/* Cuadrícula de referencia sutil */}
-          {gridDots.map((dot, idx) => (
-            <Circle
-              key={`grid_${idx}`}
-              x={dot.x}
-              y={dot.y}
-              radius={1}
-              fill="rgba(148, 163, 184, 0.15)"
-            />
-          ))}
         </Layer>
 
-        {/* Capa 2: Molecular e Interactiva */}
+        {/* Capa Molecular e Interactiva */}
         <Layer>
           {/* 1. Enlaces existentes (por debajo de los átomos) */}
           {Object.values(graph.edges).map((bond) => (
@@ -210,17 +209,23 @@ export const MolecularCanvas: React.FC = () => {
                 cursorPosition.x,
                 cursorPosition.y,
               ]}
-              stroke="#38bdf8"
-              strokeWidth={2.5}
-              dash={[8, 5]}
+              stroke="#00A896"
+              strokeWidth={2}
+              dash={[6, 4]}
               lineCap="round"
-              listening={false} // Auditoría A3.1
+              listening={false}
+              perfectDrawEnabled={false}
             />
           )}
 
           {/* 3. Átomos (por encima de los enlaces) */}
           {Object.values(graph.nodes).map((atom) => (
-            <AtomShape key={atom.id} atom={atom} />
+            <AtomShape
+              key={atom.id}
+              atom={atom}
+              bondOrderSum={bondOrderMap[atom.id] || 0}
+              neighborAngles={neighborAnglesMap[atom.id] || []}
+            />
           ))}
         </Layer>
       </Stage>
@@ -230,4 +235,3 @@ export const MolecularCanvas: React.FC = () => {
     </div>
   );
 };
-

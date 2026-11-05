@@ -42,6 +42,8 @@ interface CanvasState {
   cursorPosition: { x: number; y: number } | null;
   hoveredAtomId: string | null;
   hoveredBondId: string | null;
+  selectedAtomId: string | null;
+  selectedBondId: string | null;
   contextMenuAtom: { atomId: string; clientX: number; clientY: number } | null;
 
   // Historial de Estados (Undo / Redo)
@@ -58,6 +60,8 @@ interface CanvasState {
   setActiveTemplate: (template: MolecularTemplate | null) => void;
   setSnapAngleDeg: (deg: 30 | 45 | 90 | 120 | null) => void;
   setContextMenuAtom: (data: { atomId: string; clientX: number; clientY: number } | null) => void;
+  setSelectedAtom: (atomId: string | null) => void;
+  setSelectedBond: (bondId: string | null) => void;
 
 
   // Acciones de Navegación del Lienzo
@@ -164,6 +168,8 @@ export const useCanvasStore = create<CanvasState>((set, get) => ({
   cursorPosition: null,
   hoveredAtomId: null,
   hoveredBondId: null,
+  selectedAtomId: null,
+  selectedBondId: null,
   contextMenuAtom: null,
 
   past: [],
@@ -242,6 +248,8 @@ export const useCanvasStore = create<CanvasState>((set, get) => ({
 
   setHoveredAtom: (atomId) => set({ hoveredAtomId: atomId }),
   setHoveredBond: (bondId) => set({ hoveredBondId: bondId }),
+  setSelectedAtom: (atomId) => set({ selectedAtomId: atomId }),
+  setSelectedBond: (bondId) => set({ selectedBondId: bondId }),
 
   startPendingBond: (sourceId, initialCursor) => {
     const { graph } = get();
@@ -580,8 +588,8 @@ export const useCanvasStore = create<CanvasState>((set, get) => ({
     // Regla A2.3: Inmutabilidad si está bloqueado
     if (existingEdge.isLocked) return;
 
-    // Ciclo determinista: 1 -> 2 -> 3 -> 1
-    const nextOrder: BondOrder = existingEdge.order === 1 ? 2 : existingEdge.order === 2 ? 3 : 1;
+    // Ciclo simplificado v2.0: exclusivamente Simple (1) <-> Doble (2)
+    const nextOrder: BondOrder = existingEdge.order === 1 ? 2 : 1;
 
     const nextGraph: MolecularGraph = {
       nodes: { ...graph.nodes },

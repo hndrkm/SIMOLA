@@ -260,4 +260,28 @@
   - `src/ui/hud/TopBar.tsx`: Ajuste del ancho del header a `right-4` uniforme para evitar deformaciones.
   - `docs/05_TASK_HISTORY.md`: Registro del hotfix.
 - **Resultado de Verificación:** APROBADO (`tsc --noEmit` con 0 errores, `npm run build` exitoso en 4.15s).
-
+
+
+
+
+### 1. Orquestador y Diagnóstico Diferencial (`src/core/missions/missionEvaluator.ts` - T5.1)
+- Crea `evaluateMission(graph: MolecularGraph, mission: MissionConfig): ValidationResult` uniendo `localValidator` (Capa 1) y `rdkitValidator` (Capa 2).
+- Soporta validación bioquímica flexible en `winConditions`:
+  - `acceptedSmiles?: string[]` (para aceptar tanto formas neutras como ionizadas, ej. `CC(=O)C(=O)O` y `CC(=O)C(=O)[O-]`).
+  - `requiredSubstructures?: SubstructureRequirement[]` y `forbiddenSubstructures?: SubstructureRequirement[]` evaluados vía SMARTS en RDKit.
+- Implementa **Diagnóstico Diferencial Educativo**:
+  - Si el jugador tiene la fórmula correcta pero falla el `acceptedSmiles`, devuélvele un mensaje específico de isomería/regioquímica (*"Los átomos y la fórmula son correctos, pero el grupo funcional está conectado en el carbono equivocado para esta enzima"*).
+  - Si falta una subestructura SMARTS, indícale exactamente qué grupo funcional o enlace enzimático falta (ej. *"Falta el enlace tioéster C(=O)-S característico del Acetil-CoA"*).
+
+### 2. Catálogo de los 3 Mundos (`src/data/missions/progressionMissions.ts` - T5.2)
+Implementa las 7 misiones estructuradas en los 3 mundos:
+- **Mundo 1 (Entrenamiento Químico):**
+  1. `m1_ethene`: Construir Eteno (`C2H4`, SMILES `C=C`) explicando el doble enlace.
+  2. `m1_isomers`: Tablero inicial con Dimetil Éter (`C-O-C` desbloqueado) -> Transformarlo en su isómero Etanol (`CCO`).
+  3. `m1_phosphate`: Acoplar un grupo fosfato a una cadena de 1-Propanol para formar un enlace fosfoéster.
+- **Mundo 2 (Ruta de la Glucólisis):**
+  4. `m2_hexokinase` (**Paso 1 - Hexoquinasa**): Carga un esqueleto inicial de $\alpha$-D-Glucopiranosa con los átomos del anillo bloqueados (`isLocked: true`) y el oxígeno del Carbono 6 desbloqueado. Objetivo: usar el grupo Fosfato para formar **Glucosa-6-fosfato**.
+  5. `m2_gapdh` (**Paso 6 - GAPDH**): Carga el esqueleto de **Gliceraldehído-3-fosfato (G3P)** (`isLocked: true` en C2-C3-OPO3) y pide oxidar/fosforilar el C1 para formar **1,3-Bisfosfoglicerato**.
+  6. `m2_pyruvate_kinase` (**Paso 10 - Piruvato Quinasa**): Parte del esqueleto de Fosfoenolpiruvato (PEP) y pide retirar el fosfato y formar el grupo ceto (`C=O`) en C2 para obtener **Piruvato** (`CC(=O)C(=O)O` o `CC(=O)C(=O)[O-]`).
+- **Mundo 3 (Complejo PDH):**
+  7. `m3_pdh_acetyl_coa` (**Complejo Piruvato Deshidrogenasa**): Carga el Piruvato y el cofactor `-S-CoA` (o grupo tiol de Coenzima A). El jugador debe escindir el grupo carboxilo (descarboxilación como $\text{CO}_2$) y unir el grupo acetilo restante al azufre para formar el enlace tioéster del **Acetil-CoA**.

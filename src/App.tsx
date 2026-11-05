@@ -5,6 +5,7 @@ import { CanvasControls } from './ui/hud/CanvasControls';
 import { TopBar } from './ui/hud/TopBar';
 import { MissionSidebar } from './ui/hud/MissionSidebar';
 import { HomeView } from './ui/views/HomeView';
+import { BibliographyView } from './ui/views/BibliographyView';
 
 import { useCanvasStore } from './store/useCanvasStore';
 import { useGameStore } from './store/useGameStore';
@@ -90,6 +91,10 @@ export const App: React.FC = () => {
 
   if (currentView === 'home') {
     return <HomeView />;
+  }
+
+  if (currentView === 'bibliography') {
+    return <BibliographyView />;
   }
 
   return (

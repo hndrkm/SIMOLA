@@ -7,10 +7,11 @@ import {
 import { useCanvasStore } from './useCanvasStore';
 import { MissionConfig, MetaboliteItem } from '../core/model/types';
 
-export type GameView = 'home' | 'workspace';
+export type GameView = 'home' | 'workspace' | 'bibliography';
 export type MetabolicRouteId = 'sandbox' | 'training' | 'glycolysis' | 'pdh';
 
 const STORAGE_KEY = 'simola_completed_missions';
+const ASSISTED_MODE_KEY = 'simola_assisted_mode';
 
 function loadStoredCompletedMissions(): string[] {
   try {
@@ -18,6 +19,14 @@ function loadStoredCompletedMissions(): string[] {
     return raw ? JSON.parse(raw) : [];
   } catch {
     return [];
+  }
+}
+
+function loadStoredAssistedMode(): boolean {
+  try {
+    return localStorage.getItem(ASSISTED_MODE_KEY) === 'true';
+  } catch {
+    return false;
   }
 }
 
@@ -29,6 +38,14 @@ function saveCompletedMissions(ids: string[]): void {
   }
 }
 
+function saveAssistedMode(enabled: boolean): void {
+  try {
+    localStorage.setItem(ASSISTED_MODE_KEY, String(enabled));
+  } catch {
+    // Ignore storage quota
+  }
+}
+
 interface GameState {
   currentView: GameView;
   activeRoute: MetabolicRouteId;
@@ -37,10 +54,13 @@ interface GameState {
   attempts: Record<string, number>;
   activeCofactors: string[];
   isHintOpen: boolean;
+  assistedMode: boolean;
   metaboliteReservoir: MetaboliteItem[];
 
   // Acciones de Navegación y Rutas
   setView: (view: GameView) => void;
+  setAssistedMode: (enabled: boolean) => void;
+  toggleAssistedMode: () => void;
   loadMission: (missionId: string) => void;
   loadNextMission: () => boolean;
   resetCurrentMission: () => void;
@@ -66,9 +86,21 @@ export const useGameStore = create<GameState>((set, get) => ({
   attempts: {},
   activeCofactors: ['ATP', 'ADP', 'NAD+', 'NADH', 'Pi'],
   isHintOpen: false,
+  assistedMode: loadStoredAssistedMode(),
   metaboliteReservoir: [],
 
   setView: (view) => set({ currentView: view }),
+
+  setAssistedMode: (enabled) => {
+    saveAssistedMode(enabled);
+    set({ assistedMode: enabled });
+  },
+
+  toggleAssistedMode: () => {
+    const next = !get().assistedMode;
+    saveAssistedMode(next);
+    set({ assistedMode: next });
+  },
 
 
   loadMission: (missionId: string) => {

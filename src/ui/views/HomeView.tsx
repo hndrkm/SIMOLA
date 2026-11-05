@@ -14,6 +14,9 @@ import {
   Info,
   RotateCcw,
   AlertTriangle,
+  BookOpen,
+  ToggleLeft,
+  ToggleRight,
 } from 'lucide-react';
 import { useGameStore, MetabolicRouteId } from '../../store/useGameStore';
 import {
@@ -28,6 +31,9 @@ export const HomeView: React.FC = () => {
   const completedMissionIds = useGameStore((state) => state.completedMissionIds);
   const isMissionCompleted = useGameStore((state) => state.isMissionCompleted);
   const clearProgress = useGameStore((state) => state.clearProgress);
+  const setView = useGameStore((state) => state.setView);
+  const assistedMode = useGameStore((state) => state.assistedMode);
+  const toggleAssistedMode = useGameStore((state) => state.toggleAssistedMode);
 
   const [showResetConfirm, setShowResetConfirm] = useState(false);
 
@@ -102,20 +108,19 @@ export const HomeView: React.FC = () => {
   return (
     <div className="min-h-screen h-screen w-full overflow-y-auto bg-gradient-to-b from-[#1B2A4A] via-[#0f1a30] to-[#080d18] text-slate-100 flex flex-col justify-between select-none font-sans">
       {/* 1. Barra de Navegación Superior con Logo Horizontal */}
-      <header className="px-6 lg:px-12 py-4 flex flex-wrap items-center justify-between gap-4 border-b border-white/10 bg-[#1B2A4A]/80 backdrop-blur-md sticky top-0 z-30 shrink-0">
+      <header className="px-6 lg:px-12 py-3.5 flex flex-wrap items-center justify-between gap-4 border-b border-[#00A896]/30 bg-[#0B132B]/95 backdrop-blur-md sticky top-0 z-30 shrink-0">
         <div className="flex items-center gap-3">
-          {/* Placa clara que contiene el logo horizontal sin texto SIMOLA redundante */}
-          <div className="bg-slate-100 px-4 py-1.5 rounded-xl shadow-md border border-white/30 flex items-center justify-center">
+          <div className="bg-slate-100 px-3.5 py-1.5 rounded-lg shadow-md border border-white/30 flex items-center justify-center">
             <img
               src={`${import.meta.env.BASE_URL}logo.png`}
               alt="SIMOLA"
-              className="h-10 w-auto object-contain"
+              className="h-9 w-auto object-contain"
             />
           </div>
 
           <div className="flex flex-col">
-            <span className="px-2 py-0.5 rounded-full text-[10px] font-mono font-semibold bg-[#00A896]/20 text-[#00c7b2] border border-[#00A896]/40 self-start">
-              SIMOLA • Rigor Bioquímico Universitario
+            <span className="px-2 py-0.5 rounded text-[10px] font-mono font-bold bg-[#00A896]/20 text-[#00c7b2] border border-[#00A896]/40 self-start">
+              SIMOLA v2.0 • Blueprint CAD Edition
             </span>
             <span className="text-[11px] text-slate-400 font-medium hidden sm:inline mt-0.5">
               Simulador Molecular y Rutas Metabólicas Interactivas
@@ -123,33 +128,64 @@ export const HomeView: React.FC = () => {
           </div>
         </div>
 
-        <div className="flex items-center gap-2.5">
-          {/* Botón Laboratorio de Síntesis y Modelado Estructural */}
+        <div className="flex items-center gap-2">
+          {/* Switch Global de Modo Asistencia Guiada */}
+          <div className="flex items-center gap-1.5 px-3 py-1.5 rounded-lg cad-panel text-xs font-mono">
+            <Sparkles className="w-3.5 h-3.5 text-[#00A896]" />
+            <span className="text-slate-300 font-bold hidden md:inline">Guía Asistida:</span>
+            <button
+              type="button"
+              id="btn-home-toggle-assisted"
+              onClick={toggleAssistedMode}
+              className="flex items-center gap-1 font-mono font-bold transition-all text-[#00c7b2]"
+              title="Activar / Desactivar Modo Asistencia Guiada con autocompletado y solución directa"
+            >
+              {assistedMode ? (
+                <ToggleRight className="w-5 h-5 text-[#00A896]" />
+              ) : (
+                <ToggleLeft className="w-5 h-5 text-slate-500" />
+              )}
+              <span>{assistedMode ? 'ON' : 'OFF'}</span>
+            </button>
+          </div>
+
+          {/* Botón Laboratorio de Síntesis */}
           <button
             id="btn-home-sandbox-nav"
             onClick={startSandbox}
-            className="flex items-center gap-2 px-3.5 py-2 rounded-xl text-xs font-bold bg-[#00A896]/15 hover:bg-[#00A896]/25 text-[#00c7b2] border border-[#00A896]/40 transition-all active:scale-95 shadow-sm"
+            className="flex items-center gap-2 px-3 py-1.5 rounded-lg text-xs font-mono font-bold bg-[#00A896]/15 hover:bg-[#00A896]/25 text-[#00c7b2] border border-[#00A896]/40 transition-all active:scale-95 shadow-sm"
             title="Abrir pizarra vacía sin restricciones de misión"
           >
             <FlaskConical className="w-4 h-4 text-[#00A896]" />
-            <span>Laboratorio de Síntesis y Modelado</span>
+            <span className="hidden sm:inline">Laboratorio</span>
+          </button>
+
+          {/* Botón Bibliografía Académica y Créditos */}
+          <button
+            id="btn-home-bibliography"
+            onClick={() => setView('bibliography')}
+            className="flex items-center gap-1.5 px-3 py-1.5 rounded-lg text-xs font-mono font-bold bg-[#1B2A4A] hover:bg-[#22355c] text-slate-200 border border-[#00A896]/40 transition-all active:scale-95 shadow-sm"
+            title="Bibliografía Académica, Arquitectura de Software y Créditos"
+          >
+            <BookOpen className="w-4 h-4 text-[#00A896]" />
+            <span>Bibliografía</span>
           </button>
 
           {/* Botón Continuar Misión */}
           <button
             id="btn-home-continue-nav"
             onClick={handleContinueNextIncomplete}
-            className="flex items-center gap-2 px-4 py-2 rounded-xl text-xs font-bold bg-[#F77F00] hover:bg-[#ff941a] text-slate-950 transition-all active:scale-95 shadow-lg shadow-[#F77F00]/25 glow-amber"
+            className="flex items-center gap-2 px-3.5 py-1.5 rounded-lg text-xs font-mono font-bold bg-[#F77F00] hover:bg-[#ff941a] text-slate-950 transition-all active:scale-95 shadow-md shadow-[#F77F00]/25 glow-amber"
           >
             <Play className="w-4 h-4 fill-current" />
-            <span className="hidden sm:inline">Continuar</span> Itinerario
+            <span className="hidden sm:inline">Continuar</span>
           </button>
 
           {/* Botón Reiniciar Progreso Académico */}
           <button
             id="btn-home-reset-progress"
             onClick={() => setShowResetConfirm(true)}
-            className="p-2 rounded-xl text-slate-400 hover:text-rose-300 hover:bg-rose-500/10 border border-white/5 transition-all text-xs"
+            className="p-1.5 rounded-lg text-slate-400 hover:text-rose-300 hover:bg-rose-500/10 border border-white/5 transition-all text-xs"
             title="Reiniciar Progreso Académico guardado"
           >
             <RotateCcw className="w-4 h-4" />

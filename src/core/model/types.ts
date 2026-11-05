@@ -24,6 +24,7 @@ export interface AtomNode {
   isotope?: number;     // Número másico del isótopo (ej. 13 para 13C, 14 para 14C)
   isLocked?: boolean;   // Si es true, no se puede borrar ni transmutar
   hasError?: boolean;   // Flag visual activado por el validador
+  isHighlighted?: boolean; // Sitio reactivo post-catálisis / asistencia guiada (retícula ámbar)
 }
 
 export interface BondEdge {
@@ -32,6 +33,7 @@ export interface BondEdge {
   targetId: string;
   order: BondOrder;
   isLocked?: boolean;
+  isHighlighted?: boolean; // Enlace reactivo post-catálisis / asistencia guiada
 }
 
 export interface MolecularGraph {
@@ -146,6 +148,10 @@ export interface MissionConfig {
   allowedElements: ElementSymbol[];
   initialGraph?: MolecularGraph;
   catalyticReaction?: CatalyticReactionConfig;
+  solutionGraph?: MolecularGraph; // Grafo del producto final verificado para Modo Asistencia Guiada
+  guidedInstructions?: string[];  // Pasos paso a paso de resolución para Modo Asistencia Guiada
+  reactiveSiteAtomId?: string;    // Átomo reactivo que debe seleccionar el usuario antes del reactor
+  reactiveSiteBondId?: string;    // Enlace reactivo que debe seleccionar el usuario antes del reactor
   winConditions: WinConditions;
 }
 

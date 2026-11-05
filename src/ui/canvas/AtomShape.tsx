@@ -7,19 +7,20 @@ import { useCanvasStore } from '../../store/useCanvasStore';
 
 interface AtomShapeProps {
   atom: AtomNode;
+  bondOrderSum?: number;
+  neighborAngles?: number[];
 }
 
-export const AtomShape: React.FC<AtomShapeProps> = ({ atom }) => {
-  const graph = useCanvasStore((state) => state.graph);
+export const AtomShape: React.FC<AtomShapeProps> = React.memo(({ atom, bondOrderSum, neighborAngles }) => {
   const activeTool = useCanvasStore((state) => state.activeTool);
   const activeElement = useCanvasStore((state) => state.activeElement);
   const activeIsotope = useCanvasStore((state) => state.activeIsotope);
   const activeRingPreset = useCanvasStore((state) => state.activeRingPreset);
   const activeTemplate = useCanvasStore((state) => state.activeTemplate);
   const hoveredAtomId = useCanvasStore((state) => state.hoveredAtomId);
+  const selectedAtomId = useCanvasStore((state) => state.selectedAtomId);
   const pendingBondSourceId = useCanvasStore((state) => state.pendingBondSourceId);
   const setContextMenuAtom = useCanvasStore((state) => state.setContextMenuAtom);
-
 
   const startAtomMove = useCanvasStore((state) => state.startAtomMove);
   const moveAtom = useCanvasStore((state) => state.moveAtom);
@@ -31,12 +32,16 @@ export const AtomShape: React.FC<AtomShapeProps> = ({ atom }) => {
   const startPendingBond = useCanvasStore((state) => state.startPendingBond);
   const finishPendingBond = useCanvasStore((state) => state.finishPendingBond);
   const setHoveredAtom = useCanvasStore((state) => state.setHoveredAtom);
+  const setSelectedAtom = useCanvasStore((state) => state.setSelectedAtom);
+  const setSelectedBond = useCanvasStore((state) => state.setSelectedBond);
 
   const radius = ATOM_RADII[atom.element] || 22;
-  const fillColor = CPK_COLORS[atom.element] || '#475569';
+  const cpkColor = CPK_COLORS[atom.element] || '#475569';
   const textColor = CPK_TEXT_COLORS[atom.element] || '#ffffff';
 
   const isHovered = hoveredAtomId === atom.id;
+  const isSelected = selectedAtomId === atom.id;
+  const isHighlighted = !!atom.isHighlighted;
   const isPendingSource = pendingBondSourceId === atom.id;
   const isSelectTool = activeTool === 'select';
   const isBondTool = activeTool === 'bond';
@@ -48,7 +53,10 @@ export const AtomShape: React.FC<AtomShapeProps> = ({ atom }) => {
   const handleClick = (e: any) => {
     e.cancelBubble = true;
 
-    if (isEraserTool) {
+    if (isSelectTool) {
+      setSelectedAtom(atom.id);
+      setSelectedBond(null);
+    } else if (isEraserTool) {
       removeAtom(atom.id);
     } else if (isRingTool && activeRingPreset) {
       sproutRing(atom.id, activeRingPreset);
@@ -73,20 +81,9 @@ export const AtomShape: React.FC<AtomShapeProps> = ({ atom }) => {
     }
   };
 
-  // Calcular orden de enlaces conectados a este átomo
-  let currentBondOrderSum = 0;
-  const neighborAngles: number[] = [];
-  for (const edge of Object.values(graph.edges)) {
-    if (edge.sourceId === atom.id) {
-      currentBondOrderSum += edge.order;
-      const n = graph.nodes[edge.targetId];
-      if (n) neighborAngles.push(Math.atan2(n.y - atom.y, n.x - atom.x));
-    } else if (edge.targetId === atom.id) {
-      currentBondOrderSum += edge.order;
-      const n = graph.nodes[edge.sourceId];
-      if (n) neighborAngles.push(Math.atan2(n.y - atom.y, n.x - atom.x));
-    }
-  }
+  // Cálculo O(1) de hidrógenos satélite
+  const currentBondOrderSum = bondOrderSum ?? 0;
+  const angles = neighborAngles ?? [];
 
   const maxValence = getMaxValence(atom.element, atom.formalCharge);
   const implicitHCount =
@@ -98,7 +95,7 @@ export const AtomShape: React.FC<AtomShapeProps> = ({ atom }) => {
     const positions: Array<{ x: number; y: number }> = [];
     const satDistance = radius - 1; // "Medio cuerpo" en el borde
 
-    if (neighborAngles.length === 0) {
+    if (angles.length === 0) {
       const step = (2 * Math.PI) / implicitHCount;
       const startAngle = -Math.PI / 2;
       for (let i = 0; i < implicitHCount; i++) {
@@ -111,7 +108,7 @@ export const AtomShape: React.FC<AtomShapeProps> = ({ atom }) => {
     } else {
       let sumDx = 0;
       let sumDy = 0;
-      for (const ang of neighborAngles) {
+      for (const ang of angles) {
         sumDx += Math.cos(ang);
         sumDy += Math.sin(ang);
       }
@@ -145,23 +142,23 @@ export const AtomShape: React.FC<AtomShapeProps> = ({ atom }) => {
     }
 
     return positions;
-  }, [implicitHCount, radius, neighborAngles.join(',')]);
+  }, [implicitHCount, radius, angles.join(',')]);
 
   // Texto con isótopo opcional como superíndice (ej. ¹⁴C o ¹³C)
   const isotopePrefix = atom.isotope ? toSuperscript(atom.isotope) : '';
   const displaySymbol = `${isotopePrefix}${atom.element}`;
 
-  // Formateo de carga formal: +, -, 2+, 2-, etc.
+  // Formateo de carga formal
   const chargeStr =
     atom.formalCharge === 0
       ? ''
       : atom.formalCharge === 1
-      ? '+'
+      ? '⊕'
       : atom.formalCharge === -1
-      ? '−'
+      ? '⊖'
       : atom.formalCharge > 1
-      ? `${atom.formalCharge}+`
-      : `${Math.abs(atom.formalCharge)}−`;
+      ? `${atom.formalCharge}⊕`
+      : `${Math.abs(atom.formalCharge)}⊖`;
 
   return (
     <Group
@@ -187,7 +184,6 @@ export const AtomShape: React.FC<AtomShapeProps> = ({ atom }) => {
           clientY: e.evt.clientY,
         });
       }}
-
       onMouseEnter={(e) => {
         setHoveredAtom(atom.id);
         const stage = e.target.getStage();
@@ -207,119 +203,148 @@ export const AtomShape: React.FC<AtomShapeProps> = ({ atom }) => {
         }
       }}
     >
-      {/* Halo de Error de Valencia o Conectividad (Capa 1) */}
+      {/* 1. Retícula Segmentada de Sitio Reactivo Post-Catálisis (Ámbar Fosfato CAD) */}
+      {isHighlighted && (
+        <Circle
+          radius={radius + 8}
+          stroke="#F77F00"
+          strokeWidth={2.5}
+          dash={[6, 3]}
+          listening={false}
+          perfectDrawEnabled={false}
+        />
+      )}
+
+      {/* 2. Anillo de Selección Técnica CAD (Verde Azulado Catalítico) */}
+      {isSelected && (
+        <Circle
+          radius={radius + 6}
+          stroke="#00A896"
+          strokeWidth={2}
+          dash={[6, 3]}
+          listening={false}
+          perfectDrawEnabled={false}
+        />
+      )}
+
+      {/* 3. Halo Vectorial de Error de Valencia o Conectividad */}
       {atom.hasError && (
         <Circle
           radius={radius + 8}
           stroke="#ef4444"
-          strokeWidth={3}
-          fill="rgba(239, 68, 68, 0.2)"
-          dash={[5, 3]}
+          strokeWidth={2.5}
+          dash={[6, 3]}
+          fill="rgba(239, 68, 68, 0.15)"
           listening={false}
+          perfectDrawEnabled={false}
         />
       )}
 
-      {/* Halo de Átomo Origen de Enlace en progreso */}
+      {/* 4. Halo de Átomo Origen de Enlace en progreso */}
       {isPendingSource && (
         <Circle
           radius={radius + 6}
           stroke="#38bdf8"
-          strokeWidth={2.5}
-          fill="rgba(56, 189, 248, 0.2)"
+          strokeWidth={2}
+          dash={[4, 2]}
+          fill="rgba(56, 189, 248, 0.15)"
           listening={false}
+          perfectDrawEnabled={false}
         />
       )}
 
-      {/* Indicador de Hover */}
-      {isHovered && !atom.hasError && !isPendingSource && (
+      {/* 5. Indicador de Hover */}
+      {isHovered && !atom.hasError && !isPendingSource && !isSelected && !isHighlighted && (
         <Circle
           radius={radius + 5}
-          stroke={isEraserTool ? '#f43f5e' : isRingTool || isTemplateTool ? '#10b981' : '#38bdf8'}
-          strokeWidth={2}
-          fill="rgba(255, 255, 255, 0.08)"
+          stroke={isEraserTool ? '#f43f5e' : isRingTool || isTemplateTool ? '#10b981' : '#00A896'}
+          strokeWidth={1.5}
+          dash={[5, 3]}
           listening={false}
+          perfectDrawEnabled={false}
         />
       )}
 
-      {/* Anillo de Bloqueo (Átomo no editable) */}
+      {/* 6. Anillo de Bloqueo (Átomo no editable) */}
       {atom.isLocked && (
         <Circle
           radius={radius + 3}
           stroke="#eab308"
-          strokeWidth={2}
+          strokeWidth={1.5}
           dash={[4, 3]}
           listening={false}
+          perfectDrawEnabled={false}
         />
       )}
 
-      {/* Cuerpo principal del átomo */}
+      {/* 7. Cuerpo principal Wireframe CAD: Núcleo oscuro (#0B132B) + Anillo perimetral CPK */}
       <Circle
         radius={radius}
-        fill={fillColor}
-        stroke={atom.isLocked ? '#ca8a04' : 'rgba(255, 255, 255, 0.3)'}
-        strokeWidth={1.5}
-        shadowColor="rgba(0, 0, 0, 0.45)"
-        shadowBlur={8}
-        shadowOffset={{ x: 0, y: 3 }}
-        shadowOpacity={0.5}
+        fill="#0B132B"
+        stroke={cpkColor}
+        strokeWidth={2}
+        listening={true}
+        perfectDrawEnabled={false}
       />
 
-      {/* Satélites de Hidrógeno Implícito ("Medio Cuerpo" Reactivo) */}
+      {/* 8. Satélites de Hidrógeno Implícito (Nodos orbitales de trazo fino 1px sin sombras) */}
       {satellitePositions.map((sat, idx) => (
         <Group key={`sat_h_${idx}`} x={sat.x} y={sat.y} listening={false}>
           <Circle
             radius={7}
-            fill="#f1f5f9"
+            fill="#0B132B"
             stroke="#94a3b8"
             strokeWidth={1}
-            shadowColor="rgba(0, 0, 0, 0.4)"
-            shadowBlur={4}
-            shadowOffset={{ x: 0, y: 1 }}
+            listening={false}
+            perfectDrawEnabled={false}
           />
           <Text
             text="H"
             fontSize={8}
             fontStyle="bold"
-            fontFamily="Inter, sans-serif"
-            fill="#334155"
+            fontFamily="monospace"
+            fill="#94a3b8"
             align="center"
             verticalAlign="middle"
             offsetX={3.2}
             offsetY={4.5}
+            listening={false}
+            perfectDrawEnabled={false}
           />
         </Group>
       ))}
 
-      {/* Símbolo químico del elemento con isótopo opcional */}
-
+      {/* 9. Símbolo químico del elemento */}
       <Text
         text={displaySymbol}
         fontSize={atom.element.length > 1 || atom.isotope ? 13 : 15}
         fontStyle="bold"
-        fontFamily="Inter, -apple-system, BlinkMacSystemFont, sans-serif"
+        fontFamily="monospace"
         fill={textColor}
         align="center"
         verticalAlign="middle"
         offsetX={displaySymbol.length * 4}
         offsetY={7}
         listening={false}
+        perfectDrawEnabled={false}
       />
 
-      {/* Carga formal superíndice */}
+      {/* 10. Carga formal superíndice */}
       {chargeStr !== '' && (
         <Text
           text={chargeStr}
           fontSize={11}
           fontStyle="bold"
-          fontFamily="Inter, sans-serif"
+          fontFamily="monospace"
           fill={atom.formalCharge > 0 ? '#38bdf8' : '#f87171'}
           offsetX={-radius * 0.45}
           offsetY={radius * 0.75}
           listening={false}
+          perfectDrawEnabled={false}
         />
       )}
 
-      {/* Controles Rápidos de Carga Formal (+ / -) al hacer Hover */}
+      {/* 11. Controles Rápidos de Carga Formal (+ / -) al hacer Hover */}
       {isHovered && !atom.isLocked && !isEraserTool && (
         <Group x={radius + 12} y={0}>
           {/* Botón Incrementar Carga (+) */}
@@ -336,22 +361,22 @@ export const AtomShape: React.FC<AtomShapeProps> = ({ atom }) => {
           >
             <Circle
               radius={8}
-              fill="#0284c7"
-              stroke="#38bdf8"
-              strokeWidth={1}
-              shadowBlur={4}
-              shadowColor="rgba(0,0,0,0.5)"
+              fill="#0B132B"
+              stroke="#00A896"
+              strokeWidth={1.5}
             />
             <Text
               text="+"
               fontSize={11}
               fontStyle="bold"
-              fill="#ffffff"
+              fontFamily="monospace"
+              fill="#00A896"
               align="center"
               verticalAlign="middle"
               offsetX={3.5}
               offsetY={5}
               listening={false}
+              perfectDrawEnabled={false}
             />
           </Group>
 
@@ -369,26 +394,28 @@ export const AtomShape: React.FC<AtomShapeProps> = ({ atom }) => {
           >
             <Circle
               radius={8}
-              fill="#e11d48"
+              fill="#0B132B"
               stroke="#fb7185"
-              strokeWidth={1}
-              shadowBlur={4}
-              shadowColor="rgba(0,0,0,0.5)"
+              strokeWidth={1.5}
             />
             <Text
               text="−"
               fontSize={11}
               fontStyle="bold"
-              fill="#ffffff"
+              fontFamily="monospace"
+              fill="#fb7185"
               align="center"
               verticalAlign="middle"
               offsetX={4}
               offsetY={5}
               listening={false}
+              perfectDrawEnabled={false}
             />
           </Group>
         </Group>
       )}
     </Group>
   );
-};
+});
+
+AtomShape.displayName = 'AtomShape';

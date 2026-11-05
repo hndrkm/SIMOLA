@@ -45,9 +45,9 @@ export const CanvasControls: React.FC = () => {
 
   return (
     <div className="absolute bottom-6 left-1/2 -translate-x-1/2 z-20 flex items-center gap-2 select-none">
-      <div className="glass-panel px-3 py-2 rounded-2xl flex items-center gap-1.5 border border-slate-700/60 shadow-2xl">
+      <div className="cad-panel cad-corners px-3 py-2 rounded-lg flex items-center gap-1.5 shadow-2xl">
         {/* Selector de Herramientas Principales */}
-        <div className="flex items-center gap-1 pr-2 border-r border-slate-700/60">
+        <div className="flex items-center gap-1 pr-2 border-r border-[#00A896]/30">
           {tools.map((tool) => {
             const isActive = activeTool === tool.id;
             return (
@@ -55,27 +55,28 @@ export const CanvasControls: React.FC = () => {
                 key={tool.id}
                 id={`btn-tool-${tool.id}`}
                 onClick={() => setActiveTool(tool.id)}
-                className={`flex items-center gap-1.5 px-3 py-2 rounded-xl text-xs font-semibold transition-all ${
+                className={`flex items-center gap-1.5 px-3 py-1.5 rounded-md text-xs font-mono transition-all ${
                   isActive
-                    ? 'bg-[#00A896] text-slate-950 shadow-lg shadow-[#00A896]/30 scale-[1.03] font-bold'
-                    : 'text-slate-300 hover:bg-slate-800 hover:text-white'
+                    ? 'bg-[#00A896] text-slate-950 font-bold shadow-md shadow-[#00A896]/30'
+                    : 'text-slate-300 hover:bg-slate-800/80 hover:text-white'
                 }`}
-                title={`${tool.label} (${tool.shortcut})`}
+                title={`${tool.label} [${tool.shortcut}]`}
               >
                 {tool.icon}
                 <span className="hidden sm:inline">{tool.label}</span>
+                <span className="text-[10px] opacity-60 hidden md:inline">[{tool.shortcut}]</span>
               </button>
             );
           })}
         </div>
 
         {/* Acciones de Historial (Undo / Redo) */}
-        <div className="flex items-center gap-1 px-2 border-r border-slate-700/60">
+        <div className="flex items-center gap-1 px-2 border-r border-[#00A896]/30">
           <button
             id="btn-undo"
             onClick={undo}
             disabled={!canUndo}
-            className={`p-2 rounded-xl transition-all ${
+            className={`p-1.5 rounded-md transition-all ${
               canUndo
                 ? 'text-slate-200 hover:bg-slate-800 hover:text-white active:scale-95'
                 : 'text-slate-600 cursor-not-allowed'
@@ -88,7 +89,7 @@ export const CanvasControls: React.FC = () => {
             id="btn-redo"
             onClick={redo}
             disabled={!canRedo}
-            className={`p-2 rounded-xl transition-all ${
+            className={`p-1.5 rounded-md transition-all ${
               canRedo
                 ? 'text-slate-200 hover:bg-slate-800 hover:text-white active:scale-95'
                 : 'text-slate-600 cursor-not-allowed'
@@ -99,48 +100,46 @@ export const CanvasControls: React.FC = () => {
           </button>
         </div>
 
-        {/* Controles de Zoom y Centrado */}
-        <div className="flex items-center gap-1 px-2 border-r border-slate-700/60">
-          <button
-            id="btn-zoom-out"
-            onClick={() => zoomBy(0.85)}
-            className="p-2 rounded-xl text-slate-200 hover:bg-slate-800 hover:text-white active:scale-95 transition-all"
-            title="Alejar"
-          >
-            <ZoomOut className="w-4 h-4" />
-          </button>
-          <span className="text-[11px] font-mono text-slate-400 min-w-[42px] text-center">
-            {Math.round(stageScale * 100)}%
-          </span>
+        {/* Acciones de Navegación (Zoom / Reset) */}
+        <div className="flex items-center gap-1 px-2 border-r border-[#00A896]/30">
           <button
             id="btn-zoom-in"
             onClick={() => zoomBy(1.15)}
-            className="p-2 rounded-xl text-slate-200 hover:bg-slate-800 hover:text-white active:scale-95 transition-all"
-            title="Acercar"
+            className="p-1.5 rounded-md text-slate-300 hover:bg-slate-800 hover:text-white transition-all active:scale-95"
+            title="Acercar Zoom"
           >
             <ZoomIn className="w-4 h-4" />
+          </button>
+          <span className="text-[10px] font-mono text-[#00c7b2] min-w-[36px] text-center font-bold">
+            {Math.round(stageScale * 100)}%
+          </span>
+          <button
+            id="btn-zoom-out"
+            onClick={() => zoomBy(0.85)}
+            className="p-1.5 rounded-md text-slate-300 hover:bg-slate-800 hover:text-white transition-all active:scale-95"
+            title="Alejar Zoom"
+          >
+            <ZoomOut className="w-4 h-4" />
           </button>
           <button
             id="btn-reset-view"
             onClick={resetView}
-            className="p-2 rounded-xl text-slate-400 hover:bg-slate-800 hover:text-sky-400 active:scale-95 transition-all"
-            title="Restablecer Vista (100%)"
+            className="p-1.5 rounded-md text-slate-400 hover:bg-slate-800 hover:text-white transition-all"
+            title="Restablecer vista a escala 100% (0)"
           >
             <RotateCcw className="w-3.5 h-3.5" />
           </button>
         </div>
 
-        {/* Limpieza rápida del lienzo */}
-        <div className="pl-1">
-          <button
-            id="btn-clear-canvas"
-            onClick={handleClear}
-            className="p-2 rounded-xl text-rose-400/80 hover:bg-rose-500/20 hover:text-rose-300 active:scale-95 transition-all"
-            title="Limpiar Lienzo"
-          >
-            <Trash2 className="w-4 h-4" />
-          </button>
-        </div>
+        {/* Limpiar Lienzo */}
+        <button
+          id="btn-clear-canvas"
+          onClick={handleClear}
+          className="p-1.5 rounded-md text-slate-400 hover:text-rose-400 hover:bg-rose-500/15 transition-all"
+          title="Limpiar lienzo (Conserva átomos bloqueados)"
+        >
+          <Trash2 className="w-4 h-4" />
+        </button>
       </div>
     </div>
   );
