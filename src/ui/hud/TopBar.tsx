@@ -9,6 +9,7 @@ import {
   Zap,
   Compass,
   BookOpen,
+  Layers,
 } from 'lucide-react';
 import { useCanvasStore } from '../../store/useCanvasStore';
 import { useGameStore } from '../../store/useGameStore';
@@ -32,6 +33,8 @@ export const TopBar: React.FC = () => {
   const loadNextMission = useGameStore((state) => state.loadNextMission);
   const completeCurrentMission = useGameStore((state) => state.completeCurrentMission);
   const setView = useGameStore((state) => state.setView);
+  const isMissionSidebarOpen = useGameStore((state) => state.isMissionSidebarOpen);
+  const toggleMissionSidebar = useGameStore((state) => state.toggleMissionSidebar);
 
   const [showHelp, setShowHelp] = useState(false);
   const [showReactorModal, setShowReactorModal] = useState(false);
@@ -158,50 +161,50 @@ export const TopBar: React.FC = () => {
   return (
     <>
       <header
-        className="absolute top-4 left-4 right-4 z-20 flex flex-wrap items-center justify-between gap-3 select-none pointer-events-none transition-all"
+        className="absolute top-3 left-4 right-4 z-20 flex flex-wrap items-center justify-between gap-3 select-none pointer-events-none transition-all"
       >
         {/* Identidad de la Aplicación y Botón Menú Principal */}
-        <div className="cad-panel cad-corners px-3 py-1.5 rounded-lg flex items-center gap-3 shadow-xl pointer-events-auto max-w-full">
+        <div className="cad-panel cad-corners px-3 py-1.5 rounded-lg flex items-center gap-3 shadow-md pointer-events-auto max-w-full bg-white border border-slate-300">
           <button
             id="btn-return-home"
             onClick={() => setView('home')}
-            className="flex items-center gap-2 p-1 rounded-md hover:bg-white/10 text-slate-300 hover:text-white transition-all text-xs font-semibold group shrink-0"
+            className="flex items-center gap-2 p-1 rounded-md hover:bg-slate-100 text-slate-700 hover:text-black transition-all text-xs font-semibold group shrink-0"
             title="Volver al Menú Principal (HomeView)"
           >
-            <ArrowLeft className="w-4 h-4 text-[#00A896] group-hover:-translate-x-0.5 transition-transform" />
-            <div className="bg-slate-100 px-2.5 py-1 rounded-md shadow-md border border-white/20 flex items-center justify-center">
+            <ArrowLeft className="w-4 h-4 text-[#008477] group-hover:-translate-x-0.5 transition-transform" />
+            <div className="bg-white px-2 py-0.5 rounded shadow-sm border border-slate-200 flex items-center justify-center">
               <img
                 src={`${import.meta.env.BASE_URL}logo.png`}
                 alt="SIMOLA"
-                className="h-8 w-auto object-contain"
+                className="h-7 w-auto object-contain"
               />
             </div>
           </button>
 
-          <div className="h-6 w-px bg-[#00A896]/30 shrink-0" />
+          <div className="h-6 w-px bg-slate-200 shrink-0" />
 
           <div className="flex flex-col min-w-0">
             <div className="flex items-center gap-2">
-              <span className="px-2 py-0.5 text-[10px] font-mono bg-[#00A896]/20 text-[#00c7b2] border border-[#00A896]/40 rounded font-bold truncate">
+              <span className="px-2 py-0.5 text-[10px] font-mono bg-[#008477]/10 text-[#008477] border border-[#008477]/30 rounded font-bold truncate">
                 {getRouteLabel()}
               </span>
             </div>
             {mission ? (
-              <span className="text-[10px] text-amber-200/90 font-mono font-medium truncate max-w-[200px] sm:max-w-xs">
+              <span className="text-[10px] text-amber-700 font-mono font-bold truncate max-w-[200px] sm:max-w-xs">
                 {mission.title}
               </span>
             ) : (
-              <span className="text-[10px] text-slate-400 font-mono font-medium">
-                Laboratorio de Síntesis y Modelado Estructural
+              <span className="text-[10px] text-slate-500 font-mono font-medium">
+                Laboratorio de Síntesis y Modelado
               </span>
             )}
           </div>
         </div>
 
         {/* Centro: Selector de Guías Angulares (30°, 45°, 90°, 120°, Libre) */}
-        <div className="cad-panel cad-corners px-2.5 py-1.5 rounded-lg flex items-center gap-1 shadow-xl pointer-events-auto">
-          <span className="text-[10px] font-mono font-bold text-slate-400 uppercase tracking-wider mr-1 hidden sm:flex items-center gap-1">
-            <Compass className="w-3.5 h-3.5 text-[#00A896]" />
+        <div className="cad-panel cad-corners px-2 py-1 rounded-lg flex items-center gap-1 shadow-md pointer-events-auto bg-white border border-slate-300">
+          <span className="text-[10px] font-mono font-bold text-slate-500 uppercase tracking-wider mr-1 hidden sm:flex items-center gap-1">
+            <Compass className="w-3.5 h-3.5 text-[#008477]" />
             SNAP:
           </span>
           {([30, 45, 90, 120, null] as const).map((deg) => {
@@ -212,8 +215,8 @@ export const TopBar: React.FC = () => {
                 onClick={() => setSnapAngleDeg(deg)}
                 className={`px-2 py-1 rounded text-[10px] font-mono font-bold transition-all border ${
                   isSelected
-                    ? 'bg-[#00A896] text-slate-950 border-[#00c7b2] shadow-sm'
-                    : 'bg-slate-900/70 text-slate-300 border-white/5 hover:border-white/20 hover:bg-slate-800'
+                    ? 'bg-[#008477] text-white border-[#008477] shadow-sm'
+                    : 'bg-slate-50 text-slate-700 border-slate-200 hover:border-slate-400 hover:bg-slate-100'
                 }`}
                 title={deg === null ? 'Movimiento y trazo libre' : `Restricción angular cada ${deg}°`}
               >
@@ -225,18 +228,33 @@ export const TopBar: React.FC = () => {
 
         {/* Acciones de Catálisis y Evaluación */}
         <div className="flex items-center gap-2 pointer-events-auto self-end md:self-center">
+          {/* Botón Menú Lateral de Misiones */}
+          <button
+            id="btn-toggle-mission-sidebar"
+            onClick={toggleMissionSidebar}
+            className={`cad-panel px-3 py-1.5 rounded-lg text-xs font-mono font-bold transition-all flex items-center gap-1.5 shadow-md active:scale-95 border ${
+              isMissionSidebarOpen
+                ? 'bg-[#008477] text-white border-[#008477]'
+                : 'bg-white text-slate-800 hover:text-black border-slate-300 hover:border-[#008477]'
+            }`}
+            title="Abrir / Ocultar Menú Lateral de Misiones y Etapas"
+          >
+            <Layers className="w-3.5 h-3.5" />
+            <span>Misión</span>
+          </button>
+
           {/* Contador de Átomos y Enlaces */}
-          <div className="cad-panel px-3 py-1.5 rounded-lg hidden xl:flex items-center gap-2.5 text-xs">
-            <div className="flex items-center gap-1.5 text-slate-300">
-              <span className="w-2 h-2 rounded-full bg-[#00A896]" />
+          <div className="cad-panel px-3 py-1.5 rounded-lg hidden xl:flex items-center gap-2.5 text-xs bg-white border border-slate-300 text-slate-700">
+            <div className="flex items-center gap-1.5">
+              <span className="w-2 h-2 rounded-full bg-[#008477]" />
               <span className="font-mono text-[11px]">
-                Át: <strong className="text-white">{atomCount}</strong>
+                Át: <strong className="text-slate-900">{atomCount}</strong>
               </span>
             </div>
-            <span className="text-slate-600">|</span>
-            <div className="flex items-center gap-1.5 text-slate-300">
+            <span className="text-slate-300">|</span>
+            <div className="flex items-center gap-1.5">
               <span className="font-mono text-[11px]">
-                Enl: <strong className="text-white">{bondCount}</strong>
+                Enl: <strong className="text-slate-900">{bondCount}</strong>
               </span>
             </div>
           </div>
@@ -245,10 +263,10 @@ export const TopBar: React.FC = () => {
           <button
             id="btn-topbar-bibliography"
             onClick={() => setView('bibliography')}
-            className="cad-panel px-2.5 py-2 rounded-lg text-slate-300 hover:text-white hover:border-[#00A896] transition-all text-xs font-mono font-bold flex items-center gap-1.5 shadow-md active:scale-95"
+            className="cad-panel px-2.5 py-1.5 rounded-lg text-slate-700 hover:text-slate-900 hover:border-[#008477] transition-all text-xs font-mono font-bold flex items-center gap-1.5 shadow-md active:scale-95 bg-white border border-slate-300"
             title="Bibliografía Académica, Arquitectura y Créditos"
           >
-            <BookOpen className="w-3.5 h-3.5 text-[#00A896]" />
+            <BookOpen className="w-3.5 h-3.5 text-[#008477]" />
             <span className="hidden lg:inline text-[11px]">Bibliografía</span>
           </button>
 
@@ -256,17 +274,17 @@ export const TopBar: React.FC = () => {
           <button
             id="btn-help-shortcuts"
             onClick={() => setShowHelp(true)}
-            className="cad-panel p-2 rounded-lg text-slate-300 hover:text-white hover:bg-white/10 transition-all shadow-md"
+            className="cad-panel p-2 rounded-lg text-slate-700 hover:text-slate-900 hover:bg-slate-100 transition-all shadow-md bg-white border border-slate-300"
             title="Atajos de teclado y ayuda"
           >
-            <HelpCircle className="w-4 h-4 text-slate-300" />
+            <HelpCircle className="w-4 h-4 text-slate-600" />
           </button>
 
           {/* Botón Centro Activo / Reactor Catalítico */}
           <button
             id="btn-catalytic-reactor"
             onClick={() => setShowReactorModal(true)}
-            className="flex items-center gap-1.5 px-3 py-2 rounded-lg bg-[#F77F00] hover:bg-[#ff941a] text-slate-950 font-mono font-black text-xs transition-all shadow-lg shadow-[#F77F00]/25 glow-amber active:scale-95"
+            className="flex items-center gap-1.5 px-3 py-1.5 rounded-lg bg-[#D97706] hover:bg-[#B45309] text-white font-mono font-bold text-xs transition-all shadow-md active:scale-95"
             title="Abrir Centro Activo / Reactor Catalítico para acoplar holoenzimas y cofactores"
           >
             <Zap className="w-4 h-4 fill-current" />
@@ -278,22 +296,22 @@ export const TopBar: React.FC = () => {
             id="btn-verify-structure"
             onClick={handleVerify}
             disabled={isVerifying}
-            className={`flex items-center gap-2 px-3.5 py-2 rounded-lg font-mono font-black text-xs transition-all shadow-lg shadow-[#00A896]/30 ${
+            className={`flex items-center gap-1.5 px-3.5 py-1.5 rounded-lg font-mono font-bold text-xs transition-all shadow-md ${
               isVerifying
-                ? 'bg-slate-700 text-slate-400 cursor-wait'
-                : 'bg-[#00A896] hover:bg-[#00c7b2] text-slate-950 glow-teal hover:scale-[1.02] active:scale-95'
+                ? 'bg-slate-300 text-slate-500 cursor-wait'
+                : 'bg-[#008477] hover:bg-[#006D62] text-white hover:scale-[1.02] active:scale-95'
             }`}
             title="Evaluar estructura y estereoquímica contra los criterios bioquímicos"
           >
             {isVerifying ? (
               <>
-                <Loader2 className="w-4 h-4 animate-spin text-[#00A896]" />
+                <Loader2 className="w-4 h-4 animate-spin text-white" />
                 <span>Evaluando...</span>
               </>
             ) : (
               <>
-                <CheckCircle2 className="w-4 h-4 text-slate-950 fill-current" />
-                <span>Evaluar Estructura</span>
+                <CheckCircle2 className="w-4 h-4 text-white fill-current" />
+                <span>Evaluar</span>
               </>
             )}
           </button>

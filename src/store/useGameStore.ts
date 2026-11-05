@@ -55,12 +55,15 @@ interface GameState {
   activeCofactors: string[];
   isHintOpen: boolean;
   assistedMode: boolean;
+  isMissionSidebarOpen: boolean;
   metaboliteReservoir: MetaboliteItem[];
 
   // Acciones de Navegación y Rutas
   setView: (view: GameView) => void;
   setAssistedMode: (enabled: boolean) => void;
   toggleAssistedMode: () => void;
+  setMissionSidebarOpen: (open: boolean) => void;
+  toggleMissionSidebar: () => void;
   loadMission: (missionId: string) => void;
   loadNextMission: () => boolean;
   resetCurrentMission: () => void;
@@ -87,6 +90,7 @@ export const useGameStore = create<GameState>((set, get) => ({
   activeCofactors: ['ATP', 'ADP', 'NAD+', 'NADH', 'Pi'],
   isHintOpen: false,
   assistedMode: loadStoredAssistedMode(),
+  isMissionSidebarOpen: true,
   metaboliteReservoir: [],
 
   setView: (view) => set({ currentView: view }),
@@ -101,6 +105,9 @@ export const useGameStore = create<GameState>((set, get) => ({
     saveAssistedMode(next);
     set({ assistedMode: next });
   },
+
+  setMissionSidebarOpen: (open) => set({ isMissionSidebarOpen: open }),
+  toggleMissionSidebar: () => set((state) => ({ isMissionSidebarOpen: !state.isMissionSidebarOpen })),
 
 
   loadMission: (missionId: string) => {
@@ -130,6 +137,7 @@ export const useGameStore = create<GameState>((set, get) => ({
       currentMissionId: missionId,
       attempts,
       isHintOpen: false,
+      isMissionSidebarOpen: true,
     });
   },
 

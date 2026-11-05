@@ -43,29 +43,28 @@ export const FunctionalGroupsModal: React.FC<FunctionalGroupsModalProps> = ({
     {
       id: 'functional_group',
       label: 'Grupos Funcionales',
-      icon: <Sparkles className="w-4 h-4 text-amber-400" />,
+      icon: <Sparkles className="w-4 h-4 text-amber-500" />,
       count: TEMPLATES.filter((t) => t.category === 'functional_group').length,
     },
     {
       id: 'holoenzyme',
       label: 'Holoenzimas (EC)',
-      icon: <Activity className="w-4 h-4 text-purple-400" />,
+      icon: <Activity className="w-4 h-4 text-purple-500" />,
       count: TEMPLATES.filter((t) => t.category === 'holoenzyme').length,
     },
     {
       id: 'coenzyme',
       label: 'Coenzimas / Cofactores',
-      icon: <Zap className="w-4 h-4 text-sky-400" />,
+      icon: <Zap className="w-4 h-4 text-sky-500" />,
       count: TEMPLATES.filter((t) => t.category === 'coenzyme').length,
     },
     {
       id: 'base_skeleton',
       label: 'Estructuras Base',
-      icon: <Layers className="w-4 h-4 text-emerald-400" />,
+      icon: <Layers className="w-4 h-4 text-emerald-500" />,
       count: TEMPLATES.filter((t) => t.category === 'base_skeleton').length,
     },
   ];
-
 
   const filteredTemplates = useMemo(() => {
     const query = searchQuery.trim().toLowerCase();
@@ -98,22 +97,22 @@ export const FunctionalGroupsModal: React.FC<FunctionalGroupsModalProps> = ({
   };
 
   return (
-    <div className="fixed inset-0 z-50 flex items-center justify-center p-4 bg-slate-950/80 backdrop-blur-md select-none animate-fadeIn">
-      <div className="cad-panel cad-corners-full w-full max-w-5xl max-h-[90vh] flex flex-col rounded-xl border border-[#00A896]/40 shadow-2xl overflow-hidden bg-[#1B2A4A] font-mono">
+    <div className="fixed inset-0 z-50 flex items-center justify-center p-4 bg-slate-900/40 backdrop-blur-sm select-none animate-fadeIn">
+      <div className="cad-panel cad-corners-full w-full max-w-5xl max-h-[90vh] flex flex-col rounded-xl border border-slate-300 shadow-2xl overflow-hidden bg-white font-mono text-slate-800">
         {/* Cabecera del Modal */}
-        <div className="px-5 py-3.5 border-b border-[#00A896]/30 flex items-center justify-between bg-[#16233e]">
+        <div className="px-5 py-3.5 border-b border-slate-200 flex items-center justify-between bg-slate-50">
           <div className="flex items-center gap-3">
-            <div className="w-9 h-9 rounded-lg bg-[#F77F00]/20 border border-[#F77F00]/40 flex items-center justify-center text-[#F77F00]">
+            <div className="w-9 h-9 rounded-lg bg-[#D97706]/10 border border-[#D97706]/30 flex items-center justify-center text-[#D97706]">
               <Boxes className="w-5 h-5" />
             </div>
             <div>
-              <h2 className="text-sm sm:text-base font-bold text-slate-100 flex items-center gap-2">
+              <h2 className="text-sm sm:text-base font-bold text-slate-900 flex items-center gap-2">
                 Catálogo de Plantillas Bioquímicas
-                <span className="text-[10px] px-2 py-0.5 rounded bg-slate-800 text-[#ff941a] border border-[#F77F00]/30 font-mono">
+                <span className="text-[10px] px-2 py-0.5 rounded bg-slate-100 text-[#D97706] border border-[#D97706]/30 font-mono font-bold">
                   {TEMPLATES.length} Plantillas
                 </span>
               </h2>
-              <p className="text-xs text-slate-400 font-sans">
+              <p className="text-xs text-slate-500 font-sans">
                 Estampa esqueletos moleculares completos o acóplalos (Sprout) directamente a átomos existentes
               </p>
             </div>
@@ -121,7 +120,7 @@ export const FunctionalGroupsModal: React.FC<FunctionalGroupsModalProps> = ({
 
           <button
             onClick={onClose}
-            className="p-1 rounded text-slate-400 hover:text-white hover:bg-white/10 transition-colors"
+            className="p-1 rounded text-slate-400 hover:text-slate-800 hover:bg-slate-200/60 transition-colors"
             title="Cerrar (Esc)"
           >
             <X className="w-5 h-5" />
@@ -129,9 +128,9 @@ export const FunctionalGroupsModal: React.FC<FunctionalGroupsModalProps> = ({
         </div>
 
         {/* Pestañas de Navegación y Buscador */}
-        <div className="px-5 py-2.5 border-b border-white/10 flex flex-wrap items-center justify-between gap-3 bg-[#0B132B]/80">
+        <div className="px-5 py-2.5 border-b border-slate-200 flex flex-wrap items-center justify-between gap-3 bg-slate-50/70">
           {/* Tabs */}
-          <div className="flex items-center gap-1.5">
+          <div className="flex items-center gap-1.5 overflow-x-auto pb-0.5 max-w-full">
             {tabs.map((tab) => {
               const isActive = activeTab === tab.id;
               return (
@@ -143,17 +142,17 @@ export const FunctionalGroupsModal: React.FC<FunctionalGroupsModalProps> = ({
                     const firstOfTab = TEMPLATES.find((t) => t.category === tab.id);
                     if (firstOfTab) setSelectedTemplate(firstOfTab);
                   }}
-                  className={`flex items-center gap-1.5 px-3 py-1 rounded-lg text-xs font-mono font-bold transition-all border ${
+                  className={`flex items-center gap-1.5 px-3 py-1 rounded-lg text-xs font-mono font-bold transition-all border whitespace-nowrap ${
                     isActive
-                      ? 'bg-[#00A896] text-slate-950 border-[#00c7b2] shadow-sm'
-                      : 'bg-[#16233e] text-slate-400 hover:text-white border-white/10'
+                      ? 'bg-[#008477] text-white border-[#008477] shadow-xs'
+                      : 'bg-white text-slate-600 hover:text-slate-900 border-slate-200 hover:bg-slate-100'
                   }`}
                 >
                   {tab.icon}
                   <span>{tab.label}</span>
                   <span
-                    className={`text-[10px] px-1.5 py-0.2 rounded ${
-                      isActive ? 'bg-slate-900 text-[#00c7b2]' : 'bg-slate-800 text-slate-400'
+                    className={`text-[10px] px-1.5 py-0.2 rounded font-mono ${
+                      isActive ? 'bg-slate-900 text-white' : 'bg-slate-100 text-slate-600'
                     }`}
                   >
                     {tab.count}
@@ -171,13 +170,13 @@ export const FunctionalGroupsModal: React.FC<FunctionalGroupsModalProps> = ({
               value={searchQuery}
               onChange={(e) => setSearchQuery(e.target.value)}
               placeholder="Buscar plantilla..."
-              className="w-full bg-[#0B132B] border border-white/10 rounded-lg pl-8 pr-3 py-1 text-xs text-slate-200 placeholder-slate-500 focus:outline-none focus:border-[#00A896] transition-colors font-mono"
+              className="w-full bg-white border border-slate-300 rounded-lg pl-8 pr-3 py-1 text-xs text-slate-800 placeholder-slate-400 focus:outline-none focus:border-[#008477] shadow-xs transition-colors font-mono"
             />
           </div>
         </div>
 
         {/* Cuerpo del Modal: Catálogo + Previsualización */}
-        <div className="flex-1 overflow-hidden grid grid-cols-1 md:grid-cols-3 gap-4 p-4 min-h-0">
+        <div className="flex-1 overflow-hidden grid grid-cols-1 md:grid-cols-3 gap-4 p-4 min-h-0 bg-white">
           {/* Lista de Tarjetas (2 Columnas) */}
           <div className="md:col-span-2 overflow-y-auto pr-2 flex flex-col gap-2">
             {filteredTemplates.map((template) => {
@@ -190,32 +189,31 @@ export const FunctionalGroupsModal: React.FC<FunctionalGroupsModalProps> = ({
                   id={`template-card-${template.id}`}
                   onClick={() => setSelectedTemplate(template)}
                   onDoubleClick={() => setInspectorTemplate(template)}
-                  className={`p-3.5 rounded-2xl border transition-all cursor-pointer flex items-center justify-between gap-3 ${
+                  className={`p-3 rounded-xl border transition-all cursor-pointer flex items-center justify-between gap-3 ${
                     isSelected
-                      ? 'bg-sky-500/15 border-sky-400/70 shadow-lg shadow-sky-950/40 scale-[1.01]'
-                      : 'bg-slate-800/40 border-slate-700/50 hover:bg-slate-800/70 hover:border-slate-600'
+                      ? 'bg-[#008477]/10 border-[#008477] shadow-xs scale-[1.005]'
+                      : 'bg-white border-slate-200 hover:bg-slate-50 hover:border-slate-300'
                   }`}
                   title="Doble clic para inspeccionar formulación y mecanismo bioquímico"
                 >
-                  <div className="flex items-center gap-3">
-
+                  <div className="flex items-center gap-3 min-w-0">
                     {/* Badge de Abreviatura Química */}
-                    <div className="w-12 h-12 rounded-xl bg-slate-800 border border-slate-700 flex items-center justify-center font-bold text-xs font-mono text-sky-300 shadow-inner flex-shrink-0">
+                    <div className="w-12 h-12 rounded-xl bg-slate-100 border border-slate-200 flex items-center justify-center font-bold text-xs font-mono text-slate-800 shadow-xs flex-shrink-0">
                       {template.abbreviation}
                     </div>
 
                     {/* Información */}
-                    <div className="flex flex-col">
+                    <div className="flex flex-col min-w-0">
                       <div className="flex items-center gap-2">
-                        <h4 className="text-xs font-bold text-slate-200">{template.name}</h4>
+                        <h4 className="text-xs font-bold text-slate-900 truncate">{template.name}</h4>
                         {isStoreActive && (
-                          <span className="text-[9px] px-1.5 py-0.2 rounded-full bg-emerald-500/20 text-emerald-300 border border-emerald-500/30">
+                          <span className="text-[9px] px-1.5 py-0.2 rounded-full bg-emerald-100 text-emerald-800 border border-emerald-300 font-bold shrink-0">
                             Activo
                           </span>
                         )}
                       </div>
-                      <p className="text-[11px] text-slate-400 line-clamp-1">{template.description}</p>
-                      <span className="text-[10px] text-slate-500 font-mono mt-0.5">
+                      <p className="text-[11px] text-slate-500 line-clamp-1">{template.description}</p>
+                      <span className="text-[10px] text-slate-400 font-mono mt-0.5">
                         {template.atoms.length} átomos · {template.bonds.length} enlaces
                       </span>
                     </div>
@@ -228,7 +226,7 @@ export const FunctionalGroupsModal: React.FC<FunctionalGroupsModalProps> = ({
                         e.stopPropagation();
                         handleInsertCenter(template);
                       }}
-                      className="p-2 rounded-xl bg-slate-800 hover:bg-sky-500 text-slate-300 hover:text-white border border-slate-700/60 hover:border-sky-400 transition-all text-xs font-semibold flex items-center gap-1"
+                      className="p-2 rounded-lg bg-slate-100 hover:bg-[#008477] text-slate-700 hover:text-white border border-slate-200 hover:border-[#008477] transition-all text-xs font-semibold flex items-center gap-1 shadow-xs"
                       title="Insertar en el centro del lienzo"
                     >
                       <Maximize2 className="w-3.5 h-3.5" />
@@ -240,7 +238,7 @@ export const FunctionalGroupsModal: React.FC<FunctionalGroupsModalProps> = ({
                         e.stopPropagation();
                         handleActivateStampMode(template);
                       }}
-                      className="py-1.5 px-3 rounded-xl bg-sky-500 hover:bg-sky-400 text-white font-bold text-xs shadow-md shadow-sky-500/20 transition-all flex items-center gap-1"
+                      className="py-1.5 px-3 rounded-lg bg-[#008477] hover:bg-[#006e63] text-white font-bold text-xs shadow-xs transition-all flex items-center gap-1"
                       title="Estampar en lienzo o acoplar (Sprout) en átomo"
                     >
                       <MousePointerClick className="w-3.5 h-3.5" />
@@ -252,43 +250,43 @@ export const FunctionalGroupsModal: React.FC<FunctionalGroupsModalProps> = ({
             })}
 
             {filteredTemplates.length === 0 && (
-              <div className="p-8 text-center text-slate-500 text-xs">
+              <div className="p-8 text-center text-slate-400 text-xs font-mono">
                 No se encontraron plantillas coincidentes con "{searchQuery}"
               </div>
             )}
           </div>
 
           {/* Panel Lateral: Detalle Bioquímico y Mecánica de Acople */}
-          <div className="glass-panel p-4 rounded-2xl border border-slate-700/80 bg-slate-900/90 flex flex-col justify-between overflow-y-auto">
+          <div className="p-4 rounded-xl border border-slate-200 bg-slate-50 flex flex-col justify-between overflow-y-auto">
             {selectedTemplate && (
               <div className="flex flex-col gap-4">
-                <div className="border-b border-slate-800 pb-3">
+                <div className="border-b border-slate-200 pb-3">
                   <div className="flex items-center justify-between">
-                    <span className="text-[10px] font-mono uppercase tracking-wider text-sky-400 font-semibold">
+                    <span className="text-[10px] font-mono uppercase tracking-wider text-[#008477] font-bold">
                       Detalle Químico
                     </span>
-                    <span className="text-[10px] px-2 py-0.5 rounded-full bg-slate-800 text-slate-400 border border-slate-700 font-mono">
+                    <span className="text-[10px] px-2 py-0.5 rounded-full bg-white text-slate-700 border border-slate-200 font-mono font-bold shadow-xs">
                       {selectedTemplate.abbreviation}
                     </span>
                   </div>
-                  <h3 className="text-base font-bold text-slate-100 mt-1">{selectedTemplate.name}</h3>
-                  <p className="text-xs text-slate-300 mt-1">{selectedTemplate.description}</p>
+                  <h3 className="text-base font-bold text-slate-900 mt-1">{selectedTemplate.name}</h3>
+                  <p className="text-xs text-slate-600 mt-1">{selectedTemplate.description}</p>
                 </div>
 
                 {/* Rol Bioquímico Didáctico */}
-                <div className="bg-sky-950/30 border border-sky-500/20 p-3 rounded-xl">
-                  <span className="text-[10px] font-bold text-sky-400 uppercase tracking-wide block mb-1 flex items-center gap-1">
-                    <Sparkles className="w-3 h-3 text-sky-400" />
+                <div className="bg-emerald-50 border border-emerald-200 p-3 rounded-xl">
+                  <span className="text-[10px] font-bold text-emerald-800 uppercase tracking-wide block mb-1 flex items-center gap-1">
+                    <Sparkles className="w-3 h-3 text-emerald-600" />
                     Relevancia Metabólica
                   </span>
-                  <p className="text-xs text-sky-200/90 leading-relaxed">
+                  <p className="text-xs text-emerald-900 leading-relaxed font-sans">
                     {selectedTemplate.biochemicalRole}
                   </p>
                 </div>
 
                 {/* Composición Atómica */}
-                <div className="bg-slate-800/40 p-3 rounded-xl border border-slate-700/50">
-                  <span className="text-[10px] font-semibold text-slate-400 uppercase tracking-wide block mb-2">
+                <div className="bg-white p-3 rounded-xl border border-slate-200 shadow-xs">
+                  <span className="text-[10px] font-bold text-slate-500 uppercase tracking-wide block mb-2 font-mono">
                     Estructura Interna
                   </span>
                   <div className="flex flex-wrap gap-1.5">
@@ -297,8 +295,8 @@ export const FunctionalGroupsModal: React.FC<FunctionalGroupsModalProps> = ({
                         key={atom.tempId}
                         className={`text-[10px] font-mono px-2 py-0.5 rounded-lg border ${
                           atom.tempId === selectedTemplate.attachmentAtomTempId
-                            ? 'bg-amber-500/20 text-amber-300 border-amber-400/50 font-bold'
-                            : 'bg-slate-800 text-slate-300 border-slate-700'
+                            ? 'bg-amber-100 text-amber-900 border-amber-300 font-bold'
+                            : 'bg-slate-100 text-slate-700 border-slate-200'
                         }`}
                         title={
                           atom.tempId === selectedTemplate.attachmentAtomTempId
@@ -315,26 +313,26 @@ export const FunctionalGroupsModal: React.FC<FunctionalGroupsModalProps> = ({
                 </div>
 
                 {/* Guía didáctica de uso */}
-                <div className="bg-slate-800/20 p-3 rounded-xl border border-slate-700/30 text-[11px] text-slate-400 leading-relaxed">
-                  <strong className="text-slate-300 block mb-1">Mecánica interactiva:</strong>
+                <div className="bg-white p-3 rounded-xl border border-slate-200 text-[11px] text-slate-600 leading-relaxed shadow-xs">
+                  <strong className="text-slate-800 block mb-1">Mecánica interactiva:</strong>
                   • <strong>Clic en lienzo vacío:</strong> Estampa la estructura completa.<br />
                   • <strong>Clic sobre un átomo:</strong> Realiza un <em>Sprout</em> (acoplamiento covalente directo respetando valencias).
                 </div>
 
-                <div className="space-y-2 mt-3 pt-3 border-t border-slate-800">
+                <div className="space-y-2 mt-2 pt-3 border-t border-slate-200">
                   <button
                     id="btn-use-template"
                     onClick={() => handleActivateStampMode(selectedTemplate)}
-                    className="w-full py-2.5 px-4 rounded-xl font-extrabold text-xs bg-[#F77F00] hover:bg-[#ff941a] text-slate-950 shadow-lg shadow-[#F77F00]/30 flex items-center justify-center gap-2 transition-all active:scale-95 glow-amber"
+                    className="w-full py-2.5 px-4 rounded-xl font-extrabold text-xs bg-[#D97706] hover:bg-[#b45309] text-white shadow-md flex items-center justify-center gap-2 transition-all active:scale-95"
                   >
-                    <MousePointerClick className="w-4 h-4 text-slate-950 fill-current" />
+                    <MousePointerClick className="w-4 h-4 text-white fill-current" />
                     <span>Activar Herramienta de Plantilla</span>
                   </button>
 
                   <button
                     id="btn-stamp-center"
                     onClick={() => handleInsertCenter(selectedTemplate)}
-                    className="w-full py-2 px-4 rounded-xl font-bold text-xs bg-[#00A896] hover:bg-[#00c7b2] text-slate-950 shadow-md shadow-[#00A896]/20 transition-all flex items-center justify-center gap-1.5 active:scale-95 glow-teal"
+                    className="w-full py-2 px-4 rounded-xl font-bold text-xs bg-[#008477] hover:bg-[#006e63] text-white shadow-xs transition-all flex items-center justify-center gap-1.5 active:scale-95"
                   >
                     <Maximize2 className="w-3.5 h-3.5" />
                     <span>Estampar al Centro del Lienzo</span>
@@ -343,9 +341,9 @@ export const FunctionalGroupsModal: React.FC<FunctionalGroupsModalProps> = ({
                   <button
                     id="btn-inspect-template"
                     onClick={() => setInspectorTemplate(selectedTemplate)}
-                    className="w-full py-2 px-4 rounded-xl font-semibold text-xs bg-slate-800 hover:bg-slate-700 text-slate-200 border border-slate-700 hover:border-slate-500 transition-all flex items-center justify-center gap-1.5 active:scale-95"
+                    className="w-full py-2 px-4 rounded-xl font-semibold text-xs bg-white hover:bg-slate-100 text-slate-700 border border-slate-300 transition-all flex items-center justify-center gap-1.5 active:scale-95 shadow-xs"
                   >
-                    <BookOpen className="w-3.5 h-3.5 text-[#00A896]" />
+                    <BookOpen className="w-3.5 h-3.5 text-[#008477]" />
                     <span>🔬 Inspeccionar Mecanismo Bioquímico</span>
                   </button>
                 </div>
@@ -364,4 +362,3 @@ export const FunctionalGroupsModal: React.FC<FunctionalGroupsModalProps> = ({
     </div>
   );
 };
-

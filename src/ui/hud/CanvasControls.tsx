@@ -45,9 +45,9 @@ export const CanvasControls: React.FC = () => {
 
   return (
     <div className="absolute bottom-6 left-1/2 -translate-x-1/2 z-20 flex items-center gap-2 select-none">
-      <div className="cad-panel cad-corners px-3 py-2 rounded-lg flex items-center gap-1.5 shadow-2xl">
+      <div className="cad-panel cad-corners px-3 py-2 rounded-lg flex items-center gap-1.5 shadow-lg bg-white border border-slate-300 text-slate-700">
         {/* Selector de Herramientas Principales */}
-        <div className="flex items-center gap-1 pr-2 border-r border-[#00A896]/30">
+        <div className="flex items-center gap-1 pr-2 border-r border-slate-200">
           {tools.map((tool) => {
             const isActive = activeTool === tool.id;
             return (
@@ -57,8 +57,8 @@ export const CanvasControls: React.FC = () => {
                 onClick={() => setActiveTool(tool.id)}
                 className={`flex items-center gap-1.5 px-3 py-1.5 rounded-md text-xs font-mono transition-all ${
                   isActive
-                    ? 'bg-[#00A896] text-slate-950 font-bold shadow-md shadow-[#00A896]/30'
-                    : 'text-slate-300 hover:bg-slate-800/80 hover:text-white'
+                    ? 'bg-[#008477] text-white font-bold shadow-xs'
+                    : 'text-slate-700 hover:bg-slate-100 hover:text-slate-900'
                 }`}
                 title={`${tool.label} [${tool.shortcut}]`}
               >
@@ -71,15 +71,15 @@ export const CanvasControls: React.FC = () => {
         </div>
 
         {/* Acciones de Historial (Undo / Redo) */}
-        <div className="flex items-center gap-1 px-2 border-r border-[#00A896]/30">
+        <div className="flex items-center gap-1 px-2 border-r border-slate-200">
           <button
             id="btn-undo"
             onClick={undo}
             disabled={!canUndo}
             className={`p-1.5 rounded-md transition-all ${
               canUndo
-                ? 'text-slate-200 hover:bg-slate-800 hover:text-white active:scale-95'
-                : 'text-slate-600 cursor-not-allowed'
+                ? 'text-slate-700 hover:bg-slate-100 hover:text-slate-900 active:scale-95'
+                : 'text-slate-300 cursor-not-allowed'
             }`}
             title="Deshacer (Ctrl+Z)"
           >
@@ -91,8 +91,8 @@ export const CanvasControls: React.FC = () => {
             disabled={!canRedo}
             className={`p-1.5 rounded-md transition-all ${
               canRedo
-                ? 'text-slate-200 hover:bg-slate-800 hover:text-white active:scale-95'
-                : 'text-slate-600 cursor-not-allowed'
+                ? 'text-slate-700 hover:bg-slate-100 hover:text-slate-900 active:scale-95'
+                : 'text-slate-300 cursor-not-allowed'
             }`}
             title="Rehacer (Ctrl+Y)"
           >
@@ -101,22 +101,22 @@ export const CanvasControls: React.FC = () => {
         </div>
 
         {/* Acciones de Navegación (Zoom / Reset) */}
-        <div className="flex items-center gap-1 px-2 border-r border-[#00A896]/30">
+        <div className="flex items-center gap-1 px-2 border-r border-slate-200">
           <button
             id="btn-zoom-in"
             onClick={() => zoomBy(1.15)}
-            className="p-1.5 rounded-md text-slate-300 hover:bg-slate-800 hover:text-white transition-all active:scale-95"
+            className="p-1.5 rounded-md text-slate-700 hover:bg-slate-100 hover:text-slate-900 transition-all active:scale-95"
             title="Acercar Zoom"
           >
             <ZoomIn className="w-4 h-4" />
           </button>
-          <span className="text-[10px] font-mono text-[#00c7b2] min-w-[36px] text-center font-bold">
+          <span className="text-[10px] font-mono text-[#008477] min-w-[36px] text-center font-bold">
             {Math.round(stageScale * 100)}%
           </span>
           <button
             id="btn-zoom-out"
             onClick={() => zoomBy(0.85)}
-            className="p-1.5 rounded-md text-slate-300 hover:bg-slate-800 hover:text-white transition-all active:scale-95"
+            className="p-1.5 rounded-md text-slate-700 hover:bg-slate-100 hover:text-slate-900 transition-all active:scale-95"
             title="Alejar Zoom"
           >
             <ZoomOut className="w-4 h-4" />
@@ -124,7 +124,7 @@ export const CanvasControls: React.FC = () => {
           <button
             id="btn-reset-view"
             onClick={resetView}
-            className="p-1.5 rounded-md text-slate-400 hover:bg-slate-800 hover:text-white transition-all"
+            className="p-1.5 rounded-md text-slate-500 hover:bg-slate-100 hover:text-slate-900 transition-all"
             title="Restablecer vista a escala 100% (0)"
           >
             <RotateCcw className="w-3.5 h-3.5" />
@@ -135,7 +135,7 @@ export const CanvasControls: React.FC = () => {
         <button
           id="btn-clear-canvas"
           onClick={handleClear}
-          className="p-1.5 rounded-md text-slate-400 hover:text-rose-400 hover:bg-rose-500/15 transition-all"
+          className="p-1.5 rounded-md text-slate-400 hover:text-rose-600 hover:bg-rose-50 transition-all"
           title="Limpiar lienzo (Conserva átomos bloqueados)"
         >
           <Trash2 className="w-4 h-4" />

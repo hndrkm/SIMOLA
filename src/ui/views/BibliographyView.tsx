@@ -98,81 +98,75 @@ const REFERENCES: ReferenceItem[] = [
     id: 'konva',
     category: 'graphics',
     title: 'Konva.js & React-Konva: 2D Canvas JavaScript Framework',
-    apa: 'Lavrenov, A. (2024). Konva.js: High-performance 2D canvas framework for desktop and mobile applications. https://konvajs.org/',
-    ieee: 'A. Lavrenov, "Konva.js: High-performance 2D canvas framework for desktop and mobile applications," 2024. [Online]. Available: https://konvajs.org/',
+    apa: 'Lavrenov, A. (2024). Konva: 2D Canvas JavaScript framework for desktop and mobile applications (Version 9.3). https://konvajs.org/',
+    ieee: 'A. Lavrenov, "Konva: 2D Canvas JavaScript framework," v. 9.3, 2024. [Online]. Available: https://konvajs.org/',
     url: 'https://konvajs.org/',
-    tags: ['Konva Stage', 'Renderizado 60 FPS', 'Grafo de Escena'],
+    tags: ['Konva Engine', '60 FPS Pipeline', 'Grafo Escena 2D'],
+  },
+  {
+    id: 'lucide',
+    category: 'graphics',
+    title: 'Lucide Icons: Beautiful & Consistent Icon Toolkit',
+    apa: 'Lucide Contributors. (2024). Lucide: Community-driven icon library (Version 0.380). https://lucide.dev/',
+    ieee: 'Lucide Contributors, "Lucide: Community-driven icon library," v. 0.380, 2024. [Online]. Available: https://lucide.dev/',
+    url: 'https://lucide.dev/',
+    tags: ['Iconografía Vectorial', 'SVG Dinámico', 'Diseño CAD'],
   },
 
-  // 4. Motor Quimioinformático y Notaciones Moleculares
+  // 4. Quimioinformática y Validación
   {
     id: 'rdkit',
     category: 'chemoinformatics',
-    title: 'RDKit: Open-Source Cheminformatics and Machine Learning Toolkit',
-    apa: 'Landrum, G., Tosco, P., Kelley, B., Srinath, de Marchi, M., Stadler, A., Cole, J., Savelyev, A., Deane, C., & RDKit Contributors. (2024). RDKit: Open-source cheminformatics (Version 2024.03). GitHub. https://doi.org/10.5281/zenodo.10986506',
-    ieee: 'G. Landrum et al., "RDKit: Open-source cheminformatics," v. 2024.03, Zenodo, 2024. doi: 10.5281/zenodo.10986506.',
+    title: 'RDKit: Open-Source Cheminformatics and Machine Learning',
+    apa: 'Landrum, G., Tosco, P., Kelley, B., Srinivas, R., Gedeck, P., Vianello, R., Schneider, N., Savelyev, A., Cosgrove, D., & Cole, J. (2024). RDKit: Open-source cheminformatics (Version 2024.03.1). https://doi.org/10.5281/zenodo.10978934',
+    ieee: 'G. Landrum et al., "RDKit: Open-source cheminformatics," Zenodo, 2024. doi: 10.5281/zenodo.10978934.',
     url: 'https://www.rdkit.org/',
-    tags: ['WebAssembly', 'Aromaticidad Huckel', 'Sanitización Estructural'],
+    tags: ['RDKit Wasm', 'SMILES Canónico', 'Subestructura SMARTS'],
   },
   {
-    id: 'smiles',
+    id: 'iupac_goldbook',
     category: 'chemoinformatics',
-    title: 'SMILES, A Chemical Language and Information System',
-    apa: 'Weininger, D. (1988). SMILES, a chemical language and information system. 1. Introduction to methodology and encoding rules. Journal of Chemical Information and Computer Sciences, 28(1), 31–36. https://doi.org/10.1021/ci00057a005',
-    ieee: 'D. Weininger, "SMILES, a chemical language and information system. 1. Introduction to methodology and encoding rules," J. Chem. Inf. Comput. Sci., vol. 28, no. 1, pp. 31–36, Feb. 1988. doi: 10.1021/ci00057a005.',
-    tags: ['Notación Canónica', 'Topología Lineal', 'Quimioinformática'],
-  },
-  {
-    id: 'molfile',
-    category: 'chemoinformatics',
-    title: 'Description of Several Chemical Structure File Formats (MDL Molfile V2000)',
-    apa: 'Dalby, A., Nourse, J. G., Hounshell, W. D., Gushurst, A. K., Grier, D. L., Leland, B. A., & Laufer, J. (1992). Description of several chemical structure file formats based on queries and molecular structures. Journal of Chemical Information and Computer Sciences, 32(3), 244–255. https://doi.org/10.1021/ci00007a012',
-    ieee: 'A. Dalby et al., "Description of several chemical structure file formats based on queries and molecular structures," J. Chem. Inf. Comput. Sci., vol. 32, no. 3, pp. 244–255, May 1992. doi: 10.1021/ci00007a012.',
-    tags: ['Matriz de Conectividad', 'Molfile V2000', 'Intercambio Molecular'],
+    title: 'IUPAC Compendium of Chemical Terminology (Gold Book)',
+    apa: 'International Union of Pure and Applied Chemistry. (2019). Compendium of chemical terminology (Gold Book) (2nd ed.). IUPAC. https://doi.org/10.1351/goldbook',
+    ieee: 'IUPAC, Compendium of Chemical Terminology (Gold Book), 2nd ed. Research Triangle Park, NC, USA: IUPAC, 2019. doi: 10.1351/goldbook.',
+    url: 'https://goldbook.iupac.org/',
+    tags: ['Norma IUPAC', 'Valencias Covalentes', 'Hibridación sp²'],
   },
 
-  // 5. Referencias Bioquímicas y Rutas Metabólicas
+  // 5. Bioquímica, Enzimología y Rutas Metabólicas
   {
     id: 'lehninger',
     category: 'biochemistry',
     title: 'Lehninger Principles of Biochemistry (8th Edition)',
-    apa: 'Nelson, D. L., & Cox, M. M. (2021). Lehninger principles of biochemistry (8th ed.). Macmillan Learning / W. H. Freeman.',
-    ieee: 'D. L. Nelson and M. M. Cox, Lehninger Principles of Biochemistry, 8th ed., New York, NY, USA: Macmillan Learning, 2021.',
-    tags: ['Glucólisis EMP', 'Complejo PDH', 'Bioenergética Celular'],
+    apa: 'Nelson, D. L., & Cox, M. M. (2021). Lehninger principles of biochemistry (8th ed.). W. H. Freeman / Macmillan Learning.',
+    ieee: 'D. L. Nelson and M. M. Cox, Lehninger Principles of Biochemistry, 8th ed. New York, NY, USA: W. H. Freeman, 2021.',
+    tags: ['Glucólisis EMP', 'Complejo PDH', 'ΔG°\' Termodinámico'],
   },
   {
-    id: 'berg-stryer',
+    id: 'voet',
     category: 'biochemistry',
-    title: 'Biochemistry (9th Edition)',
-    apa: 'Berg, J. M., Tymoczko, J. L., Gatto, G. J., & Stryer, L. (2019). Biochemistry (9th ed.). W. H. Freeman and Company.',
-    ieee: 'J. M. Berg, J. L. Tymoczko, G. J. Gatto, and L. Stryer, Biochemistry, 9th ed., New York, NY, USA: W. H. Freeman, 2019.',
-    tags: ['Mecanismos Catalíticos', 'Enzimología', 'Cinética Enzimática'],
+    title: 'Biochemistry (4th Edition)',
+    apa: 'Voet, D., & Voet, J. G. (2011). Biochemistry (4th ed.). John Wiley & Sons.',
+    ieee: 'D. Voet and J. G. Voet, Biochemistry, 4th ed. Hoboken, NJ, USA: John Wiley & Sons, 2011.',
+    tags: ['Mecanismos Catalíticos', 'Enzimología EC', 'Proyecciones Haworth'],
   },
   {
-    id: 'iubmb-ec',
+    id: 'iubmb',
     category: 'biochemistry',
-    title: 'Enzyme Nomenclature and Classification (NC-IUBMB / ExplorEnz)',
-    apa: 'McDonald, A. G., Boyce, S., & Tipton, K. F. (2009). ExplorEnz: The enzyme database. Nucleic Acids Research, 37(Database issue), D593–D597. https://doi.org/10.1093/nar/gkn822',
-    ieee: 'A. G. McDonald, S. Boyce, and K. F. Tipton, "ExplorEnz: the enzyme database," Nucleic Acids Res., vol. 37, no. suppl_1, pp. D593–D597, Jan. 2009. doi: 10.1093/nar/gkn822.',
-    url: 'https://www.enzyme-database.org/',
-    tags: ['Códigos EC', 'Clasificación Enzimática', 'IUBMB'],
-  },
-  {
-    id: 'kegg',
-    category: 'biochemistry',
-    title: 'KEGG: Kyoto Encyclopedia of Genes and Genomes',
-    apa: 'Kanehisa, M., Furumichi, M., Sato, Y., Kawashima, M., & Ishiguro-Watanabe, M. (2023). KEGG for taxonomy-based analysis of pathways and genomes. Nucleic Acids Research, 51(D1), D587–D592. https://doi.org/10.1093/nar/gkac963',
-    ieee: 'M. Kanehisa et al., "KEGG for taxonomy-based analysis of pathways and genomes," Nucleic Acids Res., vol. 51, no. D1, pp. D587–D592, Jan. 2023. doi: 10.1093/nar/gkac963.',
-    url: 'https://www.genome.jp/kegg/',
-    tags: ['Rutas Metabólicas', 'Mapas de Referencia', 'Metabolómica'],
+    title: 'Enzyme Nomenclature: Recommendations of the Nomenclature Committee of the IUBMB',
+    apa: 'International Union of Biochemistry and Molecular Biology. (2023). Enzyme nomenclature recommendations. IUBMB. https://www.qmul.ac.uk/sbcs/iubmb/enzyme/',
+    ieee: 'IUBMB, "Enzyme Nomenclature Recommendations," London, UK: Queen Mary University of London, 2023. [Online]. Available: https://www.qmul.ac.uk/sbcs/iubmb/enzyme/',
+    url: 'https://www.qmul.ac.uk/sbcs/iubmb/enzyme/',
+    tags: ['Clasificación EC', 'Holoenzimas', 'Catálisis E1/E2/E3'],
   },
 ];
 
 export const BibliographyView: React.FC = () => {
   const setView = useGameStore((state) => state.setView);
   const currentMissionId = useGameStore((state) => state.currentMissionId);
-  const [selectedFormat, setSelectedFormat] = useState<'apa' | 'ieee'>('apa');
+
   const [activeCategory, setActiveCategory] = useState<string>('all');
+  const [selectedFormat, setSelectedFormat] = useState<'apa' | 'ieee'>('apa');
   const [copiedId, setCopiedId] = useState<string | null>(null);
 
   const handleCopyCitation = (id: string, text: string) => {
@@ -187,46 +181,48 @@ export const BibliographyView: React.FC = () => {
       : REFERENCES.filter((r) => r.category === activeCategory);
 
   return (
-    <div className="min-h-screen w-full bg-[#0B132B] text-slate-100 blueprint-grid overflow-y-auto flex flex-col font-sans select-text">
+    <div className="min-h-screen w-full bg-[#F8FAFC] text-slate-800 overflow-y-auto flex flex-col font-sans select-text">
       {/* 1. Header de Telemetría y Navegación */}
-      <header className="px-6 lg:px-12 py-4 flex items-center justify-between gap-4 border-b border-[#00A896]/30 bg-[#0B132B]/95 backdrop-blur-md sticky top-0 z-30 shrink-0">
+      <header className="px-6 lg:px-12 py-3.5 flex items-center justify-between gap-4 border-b border-slate-200 bg-white/95 backdrop-blur-md sticky top-0 z-30 shrink-0 shadow-xs">
         <div className="flex items-center gap-4">
           <button
             onClick={() => setView(currentMissionId ? 'workspace' : 'home')}
-            className="flex items-center gap-2 px-3 py-1.5 rounded-lg text-xs font-mono font-bold bg-[#1B2A4A] hover:bg-[#22355c] text-[#00c7b2] border border-[#00A896]/40 transition-all active:scale-95 shadow-sm"
+            className="flex items-center gap-2 px-3 py-1.5 rounded-lg text-xs font-mono font-bold bg-slate-50 hover:bg-slate-100 text-[#008477] border border-slate-300 transition-all active:scale-95 shadow-xs"
           >
             <ArrowLeft className="w-4 h-4" />
             <span>Volver a {currentMissionId ? 'la Pizarra' : 'Inicio'}</span>
           </button>
 
-          <div className="h-5 w-[1px] bg-[#00A896]/30 hidden sm:block" />
+          <div className="h-5 w-[1px] bg-slate-200 hidden sm:block" />
 
           <div className="flex items-center gap-2.5">
-            <BookOpen className="w-5 h-5 text-[#00A896]" />
-            <h1 className="text-base sm:text-lg font-black tracking-wide text-white flex items-center gap-2">
-              SIMOLA <span className="text-[#00A896] text-xs font-mono px-2 py-0.5 rounded border border-[#00A896]/40 bg-[#00A896]/10">v2.0 CAD</span>
+            <BookOpen className="w-5 h-5 text-[#008477]" />
+            <h1 className="text-base sm:text-lg font-black tracking-wide text-slate-900 flex items-center gap-2">
+              SIMOLA <span className="text-[#008477] text-xs font-mono px-2 py-0.5 rounded border border-[#008477]/30 bg-[#008477]/10 font-bold">v2.0 CAD</span>
             </h1>
           </div>
         </div>
 
         {/* Selector de Formato de Cita (APA 7ª vs IEEE) */}
-        <div className="cad-panel cad-corners px-2 py-1 rounded-lg flex items-center gap-1 text-xs font-mono">
-          <span className="text-slate-400 font-bold hidden sm:inline mr-1 text-[11px]">Estilo:</span>
+        <div className="cad-panel cad-corners px-2 py-1 rounded-lg flex items-center gap-1 text-xs font-mono bg-slate-50 border border-slate-200">
+          <span className="text-slate-500 font-bold hidden sm:inline mr-1 text-[11px]">Estilo:</span>
           <button
             onClick={() => setSelectedFormat('apa')}
-            className={`px-2.5 py-1 rounded font-bold text-[11px] transition-all ${selectedFormat === 'apa'
-                ? 'bg-[#00A896] text-slate-950 shadow-sm'
-                : 'text-slate-400 hover:text-white'
-              }`}
+            className={`px-2.5 py-1 rounded font-bold text-[11px] transition-all ${
+              selectedFormat === 'apa'
+                ? 'bg-[#008477] text-white shadow-xs'
+                : 'text-slate-600 hover:text-slate-900'
+            }`}
           >
             APA 7.ª Ed.
           </button>
           <button
             onClick={() => setSelectedFormat('ieee')}
-            className={`px-2.5 py-1 rounded font-bold text-[11px] transition-all ${selectedFormat === 'ieee'
-                ? 'bg-[#00A896] text-slate-950 shadow-sm'
-                : 'text-slate-400 hover:text-white'
-              }`}
+            className={`px-2.5 py-1 rounded font-bold text-[11px] transition-all ${
+              selectedFormat === 'ieee'
+                ? 'bg-[#008477] text-white shadow-xs'
+                : 'text-slate-600 hover:text-slate-900'
+            }`}
           >
             IEEE
           </button>
@@ -236,68 +232,66 @@ export const BibliographyView: React.FC = () => {
       {/* 2. Contenido Principal */}
       <main className="max-w-6xl w-full mx-auto px-6 lg:px-12 py-8 flex flex-col gap-8 flex-1">
         {/* TARJETA DESTACADA: Autoría, Arquitectura e Ingeniería del Proyecto */}
-        <section className="cad-panel cad-corners-full p-6 sm:p-8 rounded-2xl relative overflow-hidden bg-gradient-to-br from-[#1B2A4A] via-[#101b33] to-[#0B132B] border border-[#00A896]/40 shadow-2xl">
-          <div className="absolute top-0 right-0 w-64 h-64 bg-[#00A896]/5 rounded-full blur-3xl pointer-events-none" />
-
+        <section className="cad-panel cad-corners-full p-6 sm:p-8 rounded-2xl relative overflow-hidden bg-white border border-slate-300 shadow-sm">
           <div className="flex flex-col md:flex-row items-start md:items-center justify-between gap-6 relative z-10">
             <div className="space-y-3">
-              <div className="inline-flex items-center gap-2 px-3 py-1 rounded-full bg-[#00A896]/15 border border-[#00A896]/40 text-[#00c7b2] text-xs font-mono font-bold">
-                <Award className="w-3.5 h-3.5 text-[#00A896]" />
+              <div className="inline-flex items-center gap-2 px-3 py-1 rounded-full bg-[#008477]/10 border border-[#008477]/30 text-[#008477] text-xs font-mono font-bold">
+                <Award className="w-3.5 h-3.5 text-[#008477]" />
                 AUTORÍA Y DESARROLLO DEL PROYECTO
               </div>
 
-              <h2 className="text-2xl sm:text-3xl font-black text-white tracking-tight">
+              <h2 className="text-2xl sm:text-3xl font-black text-slate-900 tracking-tight">
                 Frak Abel
               </h2>
 
-              <div className="flex flex-col sm:flex-row sm:items-center gap-2 sm:gap-4 text-xs font-mono text-slate-300">
-                <span className="flex items-center gap-1.5 text-[#00c7b2]">
+              <div className="flex flex-col sm:flex-row sm:items-center gap-2 sm:gap-4 text-xs font-mono text-slate-600">
+                <span className="flex items-center gap-1.5 text-[#008477] font-bold">
                   <GraduationCap className="w-4 h-4" />
                   Carrera de Bioquímica
                 </span>
-                <span className="text-slate-600 hidden sm:inline">•</span>
-                <span className="text-slate-300">
+                <span className="text-slate-300 hidden sm:inline">•</span>
+                <span className="text-slate-700 font-medium">
                   Universidad Mayor de San Andrés (UMSA)
                 </span>
-                <span className="text-slate-600 hidden sm:inline">•</span>
-                <span className="text-slate-400">
+                <span className="text-slate-300 hidden sm:inline">•</span>
+                <span className="text-slate-500">
                   La Paz, Bolivia
                 </span>
               </div>
 
-              <p className="text-xs sm:text-sm text-slate-300 max-w-2xl leading-relaxed pt-1">
+              <p className="text-xs sm:text-sm text-slate-600 max-w-2xl leading-relaxed pt-1 font-sans">
                 Arquitectura de software, modelado quimioinformático interactivo, motor de validación mecanística a 60 FPS y diseño de la estación visual de ingeniería bioquímica <strong>SIMOLA</strong> (<em>Interactive Molecular & Metabolic Sandbox</em>).
               </p>
             </div>
 
-            <div className="cad-panel p-4 rounded-xl border border-white/10 bg-slate-900/80 shrink-0 flex flex-col gap-2 min-w-[220px]">
-              <span className="text-[10px] font-mono uppercase tracking-wider text-slate-400 font-bold">
+            <div className="cad-panel p-4 rounded-xl border border-slate-200 bg-slate-50 shrink-0 flex flex-col gap-2 min-w-[220px] shadow-xs">
+              <span className="text-[10px] font-mono uppercase tracking-wider text-slate-500 font-bold">
                 Especificaciones del Sistema
               </span>
-              <div className="text-xs font-mono flex items-center justify-between text-slate-200">
+              <div className="text-xs font-mono flex items-center justify-between text-slate-700">
                 <span>Versión:</span>
-                <strong className="text-[#00c7b2]">v2.0 CAD Edition</strong>
+                <strong className="text-[#008477]">v2.0 CAD Edition</strong>
               </div>
-              <div className="text-xs font-mono flex items-center justify-between text-slate-200">
+              <div className="text-xs font-mono flex items-center justify-between text-slate-700">
                 <span>Pipeline Gráfico:</span>
-                <strong className="text-white">Konva 2D (60 FPS)</strong>
+                <strong className="text-slate-900">Konva 2D (60 FPS)</strong>
               </div>
-              <div className="text-xs font-mono flex items-center justify-between text-slate-200">
+              <div className="text-xs font-mono flex items-center justify-between text-slate-700">
                 <span>Motor Químico:</span>
-                <strong className="text-amber-400">RDKit Wasm</strong>
+                <strong className="text-amber-700">RDKit Wasm</strong>
               </div>
-              <div className="text-xs font-mono flex items-center justify-between text-slate-200">
+              <div className="text-xs font-mono flex items-center justify-between text-slate-700">
                 <span>Rutas Modeladas:</span>
-                <strong className="text-[#00c7b2]">Glucólisis EMP (10/10)</strong>
+                <strong className="text-[#008477]">Glucólisis EMP (10/10)</strong>
               </div>
             </div>
           </div>
         </section>
 
         {/* Filtros de Categoría */}
-        <section className="flex flex-wrap items-center gap-2 border-b border-white/10 pb-4">
-          <span className="text-xs font-mono font-bold text-slate-400 uppercase tracking-wider mr-2 flex items-center gap-1.5">
-            <Layers className="w-3.5 h-3.5 text-[#00A896]" />
+        <section className="flex flex-wrap items-center gap-2 border-b border-slate-200 pb-4">
+          <span className="text-xs font-mono font-bold text-slate-500 uppercase tracking-wider mr-2 flex items-center gap-1.5">
+            <Layers className="w-3.5 h-3.5 text-[#008477]" />
             Categoría:
           </span>
           {[
@@ -311,10 +305,11 @@ export const BibliographyView: React.FC = () => {
             <button
               key={cat.id}
               onClick={() => setActiveCategory(cat.id)}
-              className={`px-3 py-1.5 rounded-lg text-xs font-mono font-bold transition-all border ${activeCategory === cat.id
-                  ? 'bg-[#00A896] text-slate-950 border-[#00c7b2] shadow-sm'
-                  : 'cad-panel text-slate-300 hover:text-white border-white/10 hover:border-[#00A896]/50'
-                }`}
+              className={`px-3 py-1.5 rounded-lg text-xs font-mono font-bold transition-all border ${
+                activeCategory === cat.id
+                  ? 'bg-[#008477] text-white border-[#008477] shadow-xs'
+                  : 'bg-white text-slate-700 hover:text-slate-900 border-slate-200 hover:bg-slate-50'
+              }`}
             >
               {cat.label}
             </button>
@@ -330,16 +325,16 @@ export const BibliographyView: React.FC = () => {
             return (
               <article
                 key={ref.id}
-                className="cad-panel cad-corners p-5 rounded-xl border border-white/10 hover:border-[#00A896]/40 transition-all bg-[#1B2A4A]/60 flex flex-col gap-3 group"
+                className="cad-panel cad-corners p-5 rounded-xl border border-slate-200 hover:border-slate-300 transition-all bg-white shadow-xs flex flex-col gap-3 group"
               >
                 <div className="flex items-start justify-between gap-4">
                   <div className="flex flex-wrap items-center gap-2">
-                    <h3 className="text-sm font-bold text-white group-hover:text-[#00c7b2] transition-colors flex items-center gap-2">
-                      {ref.category === 'languages' && <Code2 className="w-4 h-4 text-[#00A896]" />}
-                      {ref.category === 'frameworks' && <Cpu className="w-4 h-4 text-sky-400" />}
-                      {ref.category === 'graphics' && <Layers className="w-4 h-4 text-emerald-400" />}
-                      {ref.category === 'chemoinformatics' && <Atom className="w-4 h-4 text-amber-400" />}
-                      {ref.category === 'biochemistry' && <FlaskConical className="w-4 h-4 text-purple-400" />}
+                    <h3 className="text-sm font-bold text-slate-900 group-hover:text-[#008477] transition-colors flex items-center gap-2">
+                      {ref.category === 'languages' && <Code2 className="w-4 h-4 text-[#008477]" />}
+                      {ref.category === 'frameworks' && <Cpu className="w-4 h-4 text-sky-600" />}
+                      {ref.category === 'graphics' && <Layers className="w-4 h-4 text-emerald-600" />}
+                      {ref.category === 'chemoinformatics' && <Atom className="w-4 h-4 text-amber-600" />}
+                      {ref.category === 'biochemistry' && <FlaskConical className="w-4 h-4 text-purple-600" />}
                       {ref.title}
                     </h3>
                   </div>
@@ -350,7 +345,7 @@ export const BibliographyView: React.FC = () => {
                         href={ref.url}
                         target="_blank"
                         rel="noopener noreferrer"
-                        className="p-1.5 rounded bg-slate-900/60 hover:bg-slate-800 text-slate-400 hover:text-[#00c7b2] border border-white/5 transition-all"
+                        className="p-1.5 rounded bg-slate-50 hover:bg-slate-100 text-slate-500 hover:text-[#008477] border border-slate-200 transition-all"
                         title="Abrir enlace oficial"
                       >
                         <ExternalLink className="w-3.5 h-3.5" />
@@ -358,15 +353,16 @@ export const BibliographyView: React.FC = () => {
                     )}
                     <button
                       onClick={() => handleCopyCitation(ref.id, citationText)}
-                      className={`flex items-center gap-1.5 px-2.5 py-1 rounded text-[11px] font-mono font-bold transition-all border ${isCopied
-                          ? 'bg-emerald-500/20 text-emerald-300 border-emerald-500/40'
-                          : 'bg-slate-900/60 hover:bg-slate-800 text-slate-300 hover:text-white border-white/10'
-                        }`}
+                      className={`flex items-center gap-1.5 px-2.5 py-1 rounded text-[11px] font-mono font-bold transition-all border ${
+                        isCopied
+                          ? 'bg-emerald-50 text-emerald-800 border-emerald-300'
+                          : 'bg-slate-50 hover:bg-slate-100 text-slate-700 hover:text-slate-900 border-slate-300'
+                      }`}
                       title="Copiar cita formal al portapapeles"
                     >
                       {isCopied ? (
                         <>
-                          <Check className="w-3 h-3 text-emerald-400" />
+                          <Check className="w-3 h-3 text-emerald-600" />
                           <span>¡Copiado!</span>
                         </>
                       ) : (
@@ -380,7 +376,7 @@ export const BibliographyView: React.FC = () => {
                 </div>
 
                 {/* Texto de la Cita */}
-                <p className="text-xs font-mono text-slate-300 bg-[#0B132B]/80 p-3 rounded-lg border border-white/5 leading-relaxed selection:bg-[#00A896] selection:text-slate-950">
+                <p className="text-xs font-mono text-slate-700 bg-slate-50 p-3 rounded-lg border border-slate-200 leading-relaxed selection:bg-[#008477] selection:text-white">
                   {citationText}
                 </p>
 
@@ -389,7 +385,7 @@ export const BibliographyView: React.FC = () => {
                   {ref.tags.map((tag) => (
                     <span
                       key={tag}
-                      className="px-2 py-0.5 rounded text-[10px] font-mono bg-white/5 text-slate-400 border border-white/5"
+                      className="px-2 py-0.5 rounded text-[10px] font-mono bg-slate-100 text-slate-600 border border-slate-200"
                     >
                       #{tag}
                     </span>
@@ -402,7 +398,7 @@ export const BibliographyView: React.FC = () => {
       </main>
 
       {/* 3. Footer */}
-      <footer className="px-6 lg:px-12 py-4 border-t border-[#00A896]/20 bg-[#0B132B]/95 text-center text-xs font-mono text-slate-500">
+      <footer className="px-6 lg:px-12 py-4 border-t border-slate-200 bg-white text-center text-xs font-mono text-slate-500">
         SIMOLA v2.0 • Desarrollado por Hendrik Michael Ramos Suarez • UMSA • 2026
       </footer>
     </div>
@@ -410,4 +406,3 @@ export const BibliographyView: React.FC = () => {
 };
 
 export default BibliographyView;
-

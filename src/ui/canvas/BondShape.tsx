@@ -46,19 +46,19 @@ export const BondShape: React.FC<BondShapeProps> = React.memo(({ bond, sourceAto
   const isRing = activeTool === 'ring';
   const isSelect = activeTool === 'select';
 
-  // Color de trazo técnico CAD:
-  let strokeColor = '#64748b'; // Slate-500 base wireframe
+  // Color de trazo técnico CAD para fondo claro:
+  let strokeColor = '#334155'; // Slate-700 nítido sobre fondo claro
   if (bond.isLocked) {
-    strokeColor = '#475569'; // Atenuado si está bloqueado
+    strokeColor = '#64748B'; // Slate-500 atenuado si está bloqueado
   }
   if (isHighlighted) {
-    strokeColor = '#F77F00'; // Ámbar reactivo post-catálisis / asistencia guiada
+    strokeColor = '#D97706'; // Ámbar reactivo post-catálisis / asistencia guiada
   }
   if (isSelected) {
-    strokeColor = '#00A896'; // Verde azulado catalítico de selección
+    strokeColor = '#008477'; // Verde azulado catalítico de selección
   }
   if (isHovered && !isSelected && !isHighlighted) {
-    strokeColor = isEraser ? '#f43f5e' : isRing ? '#10b981' : '#00A896';
+    strokeColor = isEraser ? '#E11D48' : isRing ? '#059669' : '#008477';
   }
 
   const baseStrokeWidth = 2.5;

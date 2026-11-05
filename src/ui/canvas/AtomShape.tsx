@@ -1,7 +1,7 @@
 import React, { useMemo } from 'react';
 import { Circle, Group, Text } from 'react-konva';
 import { AtomNode } from '../../core/model/types';
-import { ATOM_RADII, CPK_COLORS, CPK_TEXT_COLORS, getMaxValence } from '../../core/model/constants';
+import { ATOM_RADII, CPK_COLORS, getMaxValence } from '../../core/model/constants';
 import { toSuperscript } from '../../core/model/periodicTable';
 import { useCanvasStore } from '../../store/useCanvasStore';
 
@@ -34,9 +34,26 @@ export const AtomShape: React.FC<AtomShapeProps> = React.memo(({ atom, bondOrder
   const setSelectedAtom = useCanvasStore((state) => state.setSelectedAtom);
   const setSelectedBond = useCanvasStore((state) => state.setSelectedBond);
 
-  const radius = ATOM_RADII[atom.element] || 22;
-  const cpkColor = CPK_COLORS[atom.element] || '#475569';
-  const textColor = CPK_TEXT_COLORS[atom.element] || '#ffffff';
+  const radius = ATOM_RADII[atom.element] || 17;
+  const cpkColor = CPK_COLORS[atom.element] || '#334155';
+  
+  // Color de texto de alto contraste para fondo claro
+  const getHighContrastTextColor = (elem: string): string => {
+    switch (elem) {
+      case 'C': return '#0F172A';
+      case 'H': return '#334155';
+      case 'O': return '#B91C1C';
+      case 'N': return '#1D4ED8';
+      case 'P': return '#B45309';
+      case 'S': return '#854D0E';
+      case 'F':
+      case 'Cl': return '#047857';
+      case 'Br': return '#7E22CE';
+      case 'I': return '#6D28D9';
+      default: return '#0F172A';
+    }
+  };
+  const textColor = getHighContrastTextColor(atom.element);
 
   const isHovered = hoveredAtomId === atom.id;
   const isSelected = selectedAtomId === atom.id;
@@ -276,23 +293,23 @@ export const AtomShape: React.FC<AtomShapeProps> = React.memo(({ atom, bondOrder
         />
       )}
 
-      {/* 7. Cuerpo principal Wireframe CAD: Núcleo oscuro (#0B132B) + Anillo perimetral CPK */}
+      {/* 7. Cuerpo principal Wireframe CAD: Núcleo blanco (#FFFFFF) + Anillo perimetral CPK */}
       <Circle
         radius={radius}
-        fill="#0B132B"
+        fill="#FFFFFF"
         stroke={cpkColor}
         strokeWidth={2}
         listening={true}
         perfectDrawEnabled={false}
       />
 
-      {/* 8. Satélites de Hidrógeno Implícito (Nodos orbitales de trazo fino 1px sin sombras) */}
+      {/* 8. Satélites de Hidrógeno Implícito (Nodos orbitales de trazo fino 1px sobre fondo claro) */}
       {satellitePositions.map((sat, idx) => (
         <Group key={`sat_h_${idx}`} x={sat.x} y={sat.y} listening={false}>
           <Circle
             radius={6}
-            fill="#0B132B"
-            stroke="#94a3b8"
+            fill="#FFFFFF"
+            stroke="#64748B"
             strokeWidth={1}
             listening={false}
             perfectDrawEnabled={false}
@@ -302,7 +319,7 @@ export const AtomShape: React.FC<AtomShapeProps> = React.memo(({ atom, bondOrder
             fontSize={7}
             fontStyle="bold"
             fontFamily="monospace"
-            fill="#94a3b8"
+            fill="#334155"
             align="center"
             verticalAlign="middle"
             offsetX={3}
@@ -335,7 +352,7 @@ export const AtomShape: React.FC<AtomShapeProps> = React.memo(({ atom, bondOrder
           fontSize={10}
           fontStyle="bold"
           fontFamily="monospace"
-          fill={atom.formalCharge > 0 ? '#38bdf8' : '#f87171'}
+          fill={atom.formalCharge > 0 ? '#0284C7' : '#DC2626'}
           offsetX={-radius * 0.45}
           offsetY={radius * 0.75}
           listening={false}

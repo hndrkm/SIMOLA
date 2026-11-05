@@ -73,22 +73,22 @@ export const PeriodicTableModal: React.FC<PeriodicTableModalProps> = ({ isOpen, 
   ];
 
   return (
-    <div className="fixed inset-0 z-50 flex items-center justify-center p-4 bg-slate-950/80 backdrop-blur-md select-none animate-fadeIn">
-      <div className="cad-panel cad-corners-full w-full max-w-6xl max-h-[92vh] flex flex-col rounded-xl border border-[#00A896]/40 shadow-2xl overflow-hidden bg-[#1B2A4A] font-mono">
+    <div className="fixed inset-0 z-50 flex items-center justify-center p-4 bg-slate-900/40 backdrop-blur-sm select-none animate-fadeIn">
+      <div className="cad-panel cad-corners-full w-full max-w-6xl max-h-[92vh] flex flex-col rounded-xl border border-slate-300 shadow-2xl overflow-hidden bg-white font-mono text-slate-800">
         {/* Cabecera del Modal */}
-        <div className="px-5 py-3.5 border-b border-[#00A896]/30 flex items-center justify-between bg-[#16233e]">
+        <div className="px-5 py-3.5 border-b border-slate-200 flex items-center justify-between bg-slate-50">
           <div className="flex items-center gap-3">
-            <div className="w-9 h-9 rounded-lg bg-[#00A896]/20 border border-[#00A896]/40 flex items-center justify-center text-[#00A896]">
+            <div className="w-9 h-9 rounded-lg bg-[#008477]/10 border border-[#008477]/30 flex items-center justify-center text-[#008477]">
               <Atom className="w-5 h-5" />
             </div>
             <div>
-              <h2 className="text-sm sm:text-base font-bold text-slate-100 flex items-center gap-2">
+              <h2 className="text-sm sm:text-base font-bold text-slate-900 flex items-center gap-2">
                 Tabla Periódica Completa
-                <span className="text-[10px] px-2 py-0.5 rounded bg-slate-800 text-[#00c7b2] border border-[#00A896]/30 font-mono">
+                <span className="text-[10px] px-2 py-0.5 rounded bg-slate-100 text-[#008477] border border-[#008477]/30 font-mono font-bold">
                   118 Elementos
                 </span>
               </h2>
-              <p className="text-xs text-slate-400 font-sans">
+              <p className="text-xs text-slate-500 font-sans">
                 Selecciona cualquier elemento químico o isótopo para incorporarlo al editor molecular
               </p>
             </div>
@@ -96,7 +96,7 @@ export const PeriodicTableModal: React.FC<PeriodicTableModalProps> = ({ isOpen, 
 
           <button
             onClick={onClose}
-            className="p-1 rounded text-slate-400 hover:text-white hover:bg-white/10 transition-colors"
+            className="p-1 rounded text-slate-400 hover:text-slate-800 hover:bg-slate-200/60 transition-colors"
             title="Cerrar (Esc)"
           >
             <X className="w-5 h-5" />
@@ -104,7 +104,7 @@ export const PeriodicTableModal: React.FC<PeriodicTableModalProps> = ({ isOpen, 
         </div>
 
         {/* Barra de Filtros y Búsqueda */}
-        <div className="px-6 py-3 border-b border-white/10 flex flex-wrap items-center justify-between gap-3 bg-slate-950/40">
+        <div className="px-6 py-3 border-b border-slate-200 flex flex-wrap items-center justify-between gap-3 bg-slate-50/70">
           {/* Buscador */}
           <div className="relative flex-1 min-w-[240px] max-w-md">
             <Search className="w-4 h-4 absolute left-3 top-1/2 -translate-y-1/2 text-slate-400" />
@@ -113,12 +113,12 @@ export const PeriodicTableModal: React.FC<PeriodicTableModalProps> = ({ isOpen, 
               value={searchQuery}
               onChange={(e) => setSearchQuery(e.target.value)}
               placeholder="Buscar por símbolo, nombre o número atómico (ej. C, Carbono, 6)..."
-              className="w-full bg-slate-900 border border-slate-700/80 rounded-xl pl-9 pr-3 py-1.5 text-xs text-slate-200 placeholder-slate-500 focus:outline-none focus:border-[#00A896]/60 transition-colors"
+              className="w-full bg-white border border-slate-300 rounded-xl pl-9 pr-8 py-1.5 text-xs text-slate-800 placeholder-slate-400 focus:outline-none focus:border-[#008477] shadow-xs transition-colors"
             />
             {searchQuery && (
               <button
                 onClick={() => setSearchQuery('')}
-                className="absolute right-2.5 top-1/2 -translate-y-1/2 text-slate-500 hover:text-slate-300 text-xs"
+                className="absolute right-2.5 top-1/2 -translate-y-1/2 text-slate-400 hover:text-slate-600 text-xs"
               >
                 ✕
               </button>
@@ -134,15 +134,15 @@ export const PeriodicTableModal: React.FC<PeriodicTableModalProps> = ({ isOpen, 
                 <button
                   key={cat.id}
                   onClick={() => setSelectedCategory(cat.id)}
-                  className={`px-2.5 py-1 rounded-lg text-[11px] font-medium whitespace-nowrap transition-all ${
+                  className={`px-2.5 py-1 rounded-lg text-[11px] font-medium whitespace-nowrap transition-all border ${
                     isSelected
-                      ? 'bg-[#00A896] text-slate-950 font-bold shadow-md shadow-[#00A896]/30'
-                      : 'bg-slate-800/60 text-slate-400 hover:bg-slate-800 hover:text-slate-200'
+                      ? 'bg-[#008477] text-white font-bold border-[#008477] shadow-xs'
+                      : 'bg-white text-slate-600 border-slate-200 hover:bg-slate-100 hover:text-slate-900'
                   }`}
                 >
                   {color && (
                     <span
-                      className="inline-block w-2 h-2 rounded-full mr-1.5"
+                      className="inline-block w-2 h-2 rounded-full mr-1.5 border border-slate-300"
                       style={{ backgroundColor: color }}
                     />
                   )}
@@ -154,7 +154,7 @@ export const PeriodicTableModal: React.FC<PeriodicTableModalProps> = ({ isOpen, 
         </div>
 
         {/* Contenido Principal: Rejilla Periódica + Tarjeta de Detalle */}
-        <div className="flex-1 overflow-hidden grid grid-cols-1 lg:grid-cols-4 gap-4 p-4 min-h-0">
+        <div className="flex-1 overflow-hidden grid grid-cols-1 lg:grid-cols-4 gap-4 p-4 min-h-0 bg-white">
           {/* Rejilla de la Tabla Periódica (3 columnas de ancho en desktop) */}
           <div className="lg:col-span-3 overflow-auto pr-1 flex flex-col justify-start">
             <div
@@ -195,29 +195,29 @@ export const PeriodicTableModal: React.FC<PeriodicTableModalProps> = ({ isOpen, 
                       gridRow: row,
                       gridColumn: col,
                     }}
-                    className={`relative p-1 rounded-lg flex flex-col items-center justify-center transition-all ${
+                    className={`relative p-0.5 rounded-lg flex flex-col items-center justify-center transition-all ${
                       isFilteredOut
                         ? 'opacity-20 pointer-events-none scale-95'
                         : isSelected
-                        ? 'ring-2 ring-sky-400 shadow-lg scale-105 z-10'
+                        ? 'ring-2 ring-[#008477] shadow-md scale-105 z-10'
                         : 'hover:scale-105 hover:z-10'
                     }`}
                   >
                     <div
-                      className="w-full h-11 rounded-md flex flex-col items-center justify-center shadow-sm relative overflow-hidden"
+                      className="w-full h-11 rounded-md flex flex-col items-center justify-center shadow-xs relative overflow-hidden transition-shadow"
                       style={{
-                        backgroundColor: elem.cpkColor,
+                        backgroundColor: elem.cpkColor === '#FFFFFF' ? '#F8FAFC' : elem.cpkColor,
                         color: elem.textColor,
-                        border: `1.5px solid ${isSelected ? '#38bdf8' : categoryColor}`,
+                        border: `1.5px solid ${isSelected ? '#008477' : categoryColor}`,
                       }}
                     >
-                      <span className="text-[8px] absolute top-0.5 left-1 font-mono opacity-80">
+                      <span className="text-[8px] absolute top-0.5 left-1 font-mono font-bold opacity-75">
                         {elem.atomicNumber}
                       </span>
-                      <span className="text-xs font-bold leading-none tracking-tight">
+                      <span className="text-xs font-black leading-none tracking-tight">
                         {elem.symbol}
                       </span>
-                      <span className="text-[7.5px] font-medium truncate max-w-[90%] leading-tight opacity-90">
+                      <span className="text-[7.5px] font-semibold truncate max-w-[90%] leading-tight opacity-90">
                         {elem.name}
                       </span>
                     </div>
@@ -228,31 +228,31 @@ export const PeriodicTableModal: React.FC<PeriodicTableModalProps> = ({ isOpen, 
           </div>
 
           {/* Panel Lateral de Detalle del Elemento Seleccionado */}
-          <div className="glass-panel p-4 rounded-2xl border border-slate-700/80 bg-slate-900/90 flex flex-col justify-between overflow-y-auto">
+          <div className="p-4 rounded-xl border border-slate-200 bg-slate-50 flex flex-col justify-between overflow-y-auto">
             {selectedElem ? (
               <div className="flex flex-col gap-4">
                 {/* Elemento Destacado */}
                 <div className="flex items-center gap-3">
                   <div
-                    className="w-16 h-16 rounded-2xl flex flex-col items-center justify-center shadow-lg border border-white/20 flex-shrink-0"
+                    className="w-16 h-16 rounded-xl flex flex-col items-center justify-center shadow-md border border-slate-300 flex-shrink-0"
                     style={{
-                      backgroundColor: selectedElem.cpkColor,
+                      backgroundColor: selectedElem.cpkColor === '#FFFFFF' ? '#F8FAFC' : selectedElem.cpkColor,
                       color: selectedElem.textColor,
                     }}
                   >
-                    <span className="text-[10px] font-mono leading-none opacity-80">
+                    <span className="text-[10px] font-mono leading-none opacity-80 font-bold">
                       {selectedElem.atomicNumber}
                     </span>
                     <span className="text-2xl font-black leading-tight">
                       {selectedElem.symbol}
                     </span>
-                    <span className="text-[9px] font-mono opacity-80 leading-none">
+                    <span className="text-[9px] font-mono opacity-80 leading-none font-semibold">
                       {selectedElem.atomicMass.toFixed(2)}
                     </span>
                   </div>
 
                   <div>
-                    <h3 className="text-base font-bold text-slate-100">{selectedElem.name}</h3>
+                    <h3 className="text-base font-bold text-slate-900">{selectedElem.name}</h3>
                     <span
                       className="inline-block text-[10px] font-semibold px-2 py-0.5 rounded-full mt-1 border"
                       style={{
@@ -268,17 +268,17 @@ export const PeriodicTableModal: React.FC<PeriodicTableModalProps> = ({ isOpen, 
 
                 {/* Parámetros Fisicoquímicos */}
                 <div className="grid grid-cols-2 gap-2 text-xs">
-                  <div className="bg-slate-800/60 p-2.5 rounded-xl border border-slate-700/50">
-                    <span className="text-[10px] text-slate-400 block">Valencias Permitidas</span>
-                    <span className="font-semibold text-slate-200">
+                  <div className="bg-white p-2.5 rounded-lg border border-slate-200 shadow-xs">
+                    <span className="text-[10px] text-slate-500 block font-mono">Valencias Permitidas</span>
+                    <span className="font-bold text-slate-800">
                       {selectedElem.allowedValences.length > 0
                         ? selectedElem.allowedValences.join(', ')
                         : '0 (Inerte)'}
                     </span>
                   </div>
-                  <div className="bg-slate-800/60 p-2.5 rounded-xl border border-slate-700/50">
-                    <span className="text-[10px] text-slate-400 block">Periodo / Grupo</span>
-                    <span className="font-semibold text-slate-200">
+                  <div className="bg-white p-2.5 rounded-lg border border-slate-200 shadow-xs">
+                    <span className="text-[10px] text-slate-500 block font-mono">Periodo / Grupo</span>
+                    <span className="font-bold text-slate-800">
                       P: {selectedElem.period} | G: {selectedElem.group}
                     </span>
                   </div>
@@ -287,22 +287,22 @@ export const PeriodicTableModal: React.FC<PeriodicTableModalProps> = ({ isOpen, 
                 {/* Selector de Isótopos Clave */}
                 <div>
                   <div className="flex items-center gap-1.5 mb-2">
-                    <Sparkles className="w-3.5 h-3.5 text-amber-400" />
-                    <span className="text-xs font-semibold text-slate-300">Isótopos Clave</span>
+                    <Sparkles className="w-3.5 h-3.5 text-amber-500" />
+                    <span className="text-xs font-bold text-slate-700">Isótopos Clave</span>
                   </div>
 
                   <div className="flex flex-col gap-1.5">
                     {/* Opción Estándar (Sin marcar) */}
                     <button
                       onClick={() => setChosenIsotope(undefined)}
-                      className={`flex items-center justify-between p-2 rounded-xl text-left border text-xs transition-all ${
+                      className={`flex items-center justify-between p-2 rounded-lg text-left border text-xs transition-all ${
                         chosenIsotope === undefined
-                          ? 'bg-sky-500/20 border-sky-400/60 text-sky-200'
-                          : 'bg-slate-800/40 border-slate-700/40 text-slate-300 hover:bg-slate-800'
+                          ? 'bg-[#008477]/10 border-[#008477] text-[#008477] font-bold shadow-xs'
+                          : 'bg-white border-slate-200 text-slate-700 hover:bg-slate-100'
                       }`}
                     >
                       <span>Natural / Estándar ({selectedElem.symbol})</span>
-                      {chosenIsotope === undefined && <Check className="w-3.5 h-3.5 text-sky-400" />}
+                      {chosenIsotope === undefined && <Check className="w-3.5 h-3.5 text-[#008477]" />}
                     </button>
 
                     {/* Lista de Isótopos */}
@@ -313,28 +313,28 @@ export const PeriodicTableModal: React.FC<PeriodicTableModalProps> = ({ isOpen, 
                           <button
                             key={iso.massNumber}
                             onClick={() => setChosenIsotope(iso.massNumber)}
-                            className={`p-2 rounded-xl text-left border text-xs flex flex-col gap-0.5 transition-all ${
+                            className={`p-2 rounded-lg text-left border text-xs flex flex-col gap-0.5 transition-all ${
                               isIsoSelected
-                                ? 'bg-amber-500/20 border-amber-400/60 text-amber-200'
-                                : 'bg-slate-800/40 border-slate-700/40 text-slate-300 hover:bg-slate-800'
+                                ? 'bg-amber-50 border-amber-400 text-amber-900 font-bold shadow-xs'
+                                : 'bg-white border-slate-200 text-slate-700 hover:bg-slate-100'
                             }`}
                           >
                             <div className="flex items-center justify-between">
                               <span className="font-bold flex items-center gap-1.5">
                                 {iso.symbol}
-                                <span className="font-normal text-[11px] text-slate-400">
+                                <span className="font-normal text-[11px] text-slate-500">
                                   ({iso.name})
                                 </span>
                               </span>
                               {iso.isRadioactive && (
-                                <span className="text-[9px] px-1.5 py-0.2 rounded bg-rose-500/20 text-rose-300 border border-rose-500/40">
+                                <span className="text-[9px] px-1.5 py-0.2 rounded bg-rose-50 text-rose-700 border border-rose-300 font-bold">
                                   Radiactivo
                                 </span>
                               )}
-                              {isIsoSelected && <Check className="w-3.5 h-3.5 text-amber-400" />}
+                              {isIsoSelected && <Check className="w-3.5 h-3.5 text-amber-600" />}
                             </div>
                             {iso.description && (
-                              <span className="text-[10px] text-slate-400 leading-tight">
+                              <span className="text-[10px] text-slate-500 leading-tight">
                                 {iso.description}
                               </span>
                             )}
@@ -342,7 +342,7 @@ export const PeriodicTableModal: React.FC<PeriodicTableModalProps> = ({ isOpen, 
                         );
                       })
                     ) : (
-                      <span className="text-[11px] text-slate-500 italic p-1">
+                      <span className="text-[11px] text-slate-400 italic p-1">
                         Sin variantes isotópicas destacadas registradas
                       </span>
                     )}
@@ -350,7 +350,7 @@ export const PeriodicTableModal: React.FC<PeriodicTableModalProps> = ({ isOpen, 
                 </div>
               </div>
             ) : (
-              <div className="h-full flex flex-col items-center justify-center text-slate-500 text-xs">
+              <div className="h-full flex flex-col items-center justify-center text-slate-400 text-xs">
                 <Info className="w-6 h-6 mb-2 opacity-50" />
                 Haz clic en cualquier elemento de la tabla para ver sus detalles
               </div>
@@ -361,10 +361,10 @@ export const PeriodicTableModal: React.FC<PeriodicTableModalProps> = ({ isOpen, 
               <button
                 id="btn-confirm-element-selection"
                 onClick={() => handleSelectElement(selectedElem, chosenIsotope)}
-                className="w-full mt-4 py-2.5 px-4 rounded-xl font-bold text-xs bg-[#00A896] hover:bg-[#00c7b2] text-slate-950 shadow-lg shadow-[#00A896]/30 flex items-center justify-center gap-2 transition-all active:scale-95 glow-teal"
+                className="w-full mt-4 py-2.5 px-4 rounded-xl font-bold text-xs bg-[#008477] hover:bg-[#006e63] text-white shadow-md flex items-center justify-center gap-2 transition-all active:scale-95"
               >
                 <span>Usar en Lienzo:</span>
-                <span className="font-mono text-sm bg-slate-900/80 text-white px-2 py-0.5 rounded-lg border border-white/20">
+                <span className="font-mono text-sm bg-white text-slate-900 px-2 py-0.5 rounded-lg border border-slate-200 font-black shadow-xs">
                   {chosenIsotope ? `${chosenIsotope}${selectedElem.symbol}` : selectedElem.symbol}
                 </span>
               </button>

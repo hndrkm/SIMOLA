@@ -20,8 +20,6 @@ export const App: React.FC = () => {
   const undo = useCanvasStore((state) => state.undo);
   const redo = useCanvasStore((state) => state.redo);
   const resetView = useCanvasStore((state) => state.resetView);
-  const currentMissionId = useGameStore((state) => state.currentMissionId);
-
 
   // Escuchador global de atajos de teclado para flujo ergonómico de escritorio
   useEffect(() => {
@@ -98,11 +96,11 @@ export const App: React.FC = () => {
   }
 
   return (
-    <main className="w-screen h-screen relative bg-[#0c1424] overflow-hidden font-sans">
+    <main className="w-screen h-screen relative bg-[#F1F5F9] overflow-hidden font-sans">
       <TopBar />
       <ElementToolbar />
       <MolecularCanvas />
-      {currentMissionId && <MissionSidebar />}
+      <MissionSidebar />
       <CanvasControls />
     </main>
   );

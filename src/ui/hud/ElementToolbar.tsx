@@ -8,12 +8,29 @@ import {
   Sparkles,
 } from 'lucide-react';
 import { ElementSymbol, BondOrder } from '../../core/model/types';
-import { CPK_COLORS, CPK_TEXT_COLORS, ELEMENT_NAMES, getMaxValence } from '../../core/model/constants';
+import { CPK_COLORS, ELEMENT_NAMES, getMaxValence } from '../../core/model/constants';
 import { toSuperscript } from '../../core/model/periodicTable';
 import { RING_PRESETS, RingPreset, RingCategory } from '../../core/model/geometry';
 import { useCanvasStore } from '../../store/useCanvasStore';
 import { PeriodicTableModal } from '../modals/PeriodicTableModal';
 import { FunctionalGroupsModal } from '../modals/FunctionalGroupsModal';
+
+function getElementBadgeStyles(elem: ElementSymbol) {
+  const cpk = CPK_COLORS[elem] || '#64748B';
+  let textColor = '#0F172A';
+  if (elem === 'O') textColor = '#B91C1C';
+  else if (elem === 'N') textColor = '#1D4ED8';
+  else if (elem === 'P') textColor = '#B45309';
+  else if (elem === 'S') textColor = '#854D0E';
+  else if (elem === 'Cl' || elem === 'F') textColor = '#047857';
+  else if (elem === 'H') textColor = '#334155';
+
+  return {
+    backgroundColor: '#FFFFFF',
+    color: textColor,
+    borderColor: cpk === '#FFFFFF' ? '#94A3B8' : cpk,
+  };
+}
 
 export const ElementToolbar: React.FC = () => {
   const activeTool = useCanvasStore((state) => state.activeTool);
@@ -51,9 +68,9 @@ export const ElementToolbar: React.FC = () => {
     <>
       <aside className="absolute left-4 top-20 z-20 flex flex-col gap-3 select-none">
         {/* Panel 1: Elementos Químicos Rápidos (Top 5) + Tabla Periódica */}
-        <div className="cad-panel cad-corners rounded-lg p-2.5 flex flex-col gap-2 min-w-[145px] shadow-2xl">
-          <div className="px-1 pb-1 border-b border-[#00A896]/30 flex items-center justify-between">
-            <span className="text-[10px] font-mono font-bold tracking-wider uppercase text-[#00c7b2]">
+        <div className="cad-panel cad-corners rounded-lg p-2.5 flex flex-col gap-2 min-w-[145px] shadow-lg bg-white border border-slate-300 text-slate-800">
+          <div className="px-1 pb-1 border-b border-slate-200 flex items-center justify-between">
+            <span className="text-[10px] font-mono font-bold tracking-wider uppercase text-[#008477]">
               Recientes
             </span>
             <span className="text-[10px] text-slate-400 font-mono">5 Top</span>
@@ -62,8 +79,7 @@ export const ElementToolbar: React.FC = () => {
           <div className="flex flex-col gap-1">
             {recentElements.map((elem) => {
               const isSelected = activeTool === 'atom' && activeElement === elem;
-              const cpk = CPK_COLORS[elem] || '#475569';
-              const textCpk = CPK_TEXT_COLORS[elem] || '#ffffff';
+              const badgeStyle = getElementBadgeStyles(elem);
               const valence = getMaxValence(elem);
               const hasIsotope = isSelected && activeIsotope !== undefined;
 
@@ -74,22 +90,22 @@ export const ElementToolbar: React.FC = () => {
                   onClick={() => handleSelectElement(elem)}
                   className={`group flex items-center gap-2 px-2 py-1 rounded-md transition-all duration-150 text-left border ${
                     isSelected
-                      ? 'bg-[#00A896]/20 border-[#00A896] shadow-md shadow-[#00A896]/20'
-                      : 'hover:bg-slate-800/80 border-transparent hover:border-slate-700/60'
+                      ? 'bg-[#008477]/10 border-[#008477] shadow-xs'
+                      : 'hover:bg-slate-100 border-transparent hover:border-slate-200'
                   }`}
                   title={`${ELEMENT_NAMES[elem] || elem} (Valencia máx: ${valence})`}
                 >
                   {/* Badge con código CPK Wireframe */}
                   <div
-                    className="w-6 h-6 rounded flex items-center justify-center font-mono font-bold text-xs shadow-inner shrink-0 relative"
+                    className="w-6 h-6 rounded flex items-center justify-center font-mono font-bold text-xs shadow-xs shrink-0 relative border-2"
                     style={{
-                      backgroundColor: '#0B132B',
-                      color: textCpk,
-                      border: `2px solid ${cpk}`,
+                      backgroundColor: badgeStyle.backgroundColor,
+                      color: badgeStyle.color,
+                      borderColor: badgeStyle.borderColor,
                     }}
                   >
                     {hasIsotope && (
-                      <span className="absolute -top-1 -left-1 text-[8px] font-mono text-[#F77F00] font-black">
+                      <span className="absolute -top-1 -left-1 text-[8px] font-mono text-[#D97706] font-black">
                         {toSuperscript(activeIsotope!)}
                       </span>
                     )}
@@ -98,10 +114,10 @@ export const ElementToolbar: React.FC = () => {
 
                   {/* Nombre y valencia */}
                   <div className="flex flex-col min-w-0">
-                    <span className={`text-xs font-mono font-bold truncate ${isSelected ? 'text-[#00c7b2]' : 'text-slate-200'}`}>
+                    <span className={`text-xs font-mono font-bold truncate ${isSelected ? 'text-[#008477]' : 'text-slate-800'}`}>
                       {hasIsotope ? `${toSuperscript(activeIsotope!)}${elem}` : elem}
                     </span>
-                    <span className="text-[9px] font-mono text-slate-400">
+                    <span className="text-[9px] font-mono text-slate-500">
                       Val: {valence}
                     </span>
                   </div>
@@ -114,18 +130,18 @@ export const ElementToolbar: React.FC = () => {
           <button
             id="btn-open-periodic-table"
             onClick={() => setPeriodicModalOpen(true)}
-            className="mt-0.5 w-full py-1.5 px-2 rounded-md text-[11px] font-mono font-bold bg-slate-900/90 hover:bg-slate-800 text-[#00c7b2] border border-[#00A896]/40 hover:border-[#00A896] flex items-center justify-center gap-1.5 transition-all active:scale-95 shadow-sm"
+            className="mt-0.5 w-full py-1.5 px-2 rounded-md text-[11px] font-mono font-bold bg-white hover:bg-slate-50 text-[#008477] border border-slate-300 hover:border-[#008477] flex items-center justify-center gap-1.5 transition-all active:scale-95 shadow-xs"
             title="Abrir Tabla Periódica Completa (118 Elementos e Isótopos)"
           >
-            <Table className="w-3.5 h-3.5 text-[#00A896]" />
+            <Table className="w-3.5 h-3.5 text-[#008477]" />
             <span>Tabla Periódica</span>
           </button>
         </div>
 
         {/* Panel 2: Motor de Anillos (3 a 8 Lados) y Heterociclos */}
-        <div className="cad-panel cad-corners rounded-lg p-2.5 flex flex-col gap-1.5 min-w-[145px] shadow-2xl relative">
-          <div className="px-1 pb-1 border-b border-[#00A896]/30 flex items-center justify-between">
-            <span className="text-[10px] font-mono font-bold tracking-wider uppercase text-[#00c7b2]">
+        <div className="cad-panel cad-corners rounded-lg p-2.5 flex flex-col gap-1.5 min-w-[145px] shadow-lg bg-white border border-slate-300 text-slate-800 relative">
+          <div className="px-1 pb-1 border-b border-slate-200 flex items-center justify-between">
+            <span className="text-[10px] font-mono font-bold tracking-wider uppercase text-[#008477]">
               Anillos
             </span>
             <span className="text-[10px] text-slate-400 font-mono">3-8 L</span>
@@ -133,10 +149,10 @@ export const ElementToolbar: React.FC = () => {
 
           {/* Estado de Anillo Activo */}
           {activeTool === 'ring' && activeRingPreset ? (
-            <div className="bg-[#00A896]/20 border border-[#00A896] p-1.5 rounded-md flex items-center justify-between">
+            <div className="bg-[#008477]/10 border border-[#008477] p-1.5 rounded-md flex items-center justify-between shadow-xs">
               <div className="flex items-center gap-1.5 overflow-hidden">
-                <Hexagon className="w-3.5 h-3.5 text-[#00A896] shrink-0 animate-pulse" />
-                <span className="text-[10px] font-mono font-bold text-[#00c7b2] truncate">
+                <Hexagon className="w-3.5 h-3.5 text-[#008477] shrink-0 animate-pulse" />
+                <span className="text-[10px] font-mono font-bold text-[#008477] truncate">
                   {activeRingPreset.name}
                 </span>
               </div>
@@ -145,7 +161,7 @@ export const ElementToolbar: React.FC = () => {
                   setActiveRingPreset(null);
                   setActiveTool('atom');
                 }}
-                className="p-0.5 rounded text-slate-400 hover:text-white"
+                className="p-0.5 rounded text-slate-400 hover:text-slate-700"
                 title="Desactivar modo anillo"
               >
                 <X className="w-3.5 h-3.5" />
@@ -155,10 +171,10 @@ export const ElementToolbar: React.FC = () => {
             <button
               id="btn-open-rings-menu"
               onClick={() => setRingMenuOpen(!isRingMenuOpen)}
-              className="py-1.5 px-2 rounded-md text-[11px] font-mono font-bold bg-slate-900/90 hover:bg-slate-800 text-[#00c7b2] border border-[#00A896]/40 hover:border-[#00A896] flex items-center justify-between transition-all"
+              className="py-1.5 px-2 rounded-md text-[11px] font-mono font-bold bg-white hover:bg-slate-50 text-[#008477] border border-slate-300 hover:border-[#008477] flex items-center justify-between transition-all shadow-xs"
             >
               <div className="flex items-center gap-1.5">
-                <Hexagon className="w-3.5 h-3.5 text-[#00A896]" />
+                <Hexagon className="w-3.5 h-3.5 text-[#008477]" />
                 <span>Selector Anillos</span>
               </div>
               <ChevronDown className="w-3 h-3 text-slate-400" />
@@ -167,27 +183,27 @@ export const ElementToolbar: React.FC = () => {
 
           {/* Menú Flotante de Anillos */}
           {isRingMenuOpen && (
-            <div className="absolute left-[105%] top-0 w-64 cad-panel cad-corners p-3 rounded-lg shadow-2xl bg-[#0B132B]/98 flex flex-col gap-2 z-30 animate-fadeIn border border-[#00A896]/60">
-              <div className="flex items-center justify-between pb-1 border-b border-[#00A896]/30">
-                <span className="text-[11px] font-mono font-bold text-slate-200">Anillos Paramétricos</span>
+            <div className="absolute left-[105%] top-0 w-64 cad-panel cad-corners p-3 rounded-lg shadow-2xl bg-white border border-slate-300 flex flex-col gap-2 z-30 animate-fadeIn text-slate-800">
+              <div className="flex items-center justify-between pb-1 border-b border-slate-200">
+                <span className="text-[11px] font-mono font-bold text-slate-900">Anillos Paramétricos</span>
                 <button
                   onClick={() => setRingMenuOpen(false)}
-                  className="p-1 rounded hover:bg-slate-800 text-slate-400 hover:text-white"
+                  className="p-1 rounded hover:bg-slate-100 text-slate-400 hover:text-slate-700"
                 >
                   <X className="w-3.5 h-3.5" />
                 </button>
               </div>
 
               {/* Sub-tabs de Anillos */}
-              <div className="grid grid-cols-3 gap-1 p-0.5 bg-slate-950/80 rounded-md border border-white/5">
+              <div className="grid grid-cols-3 gap-1 p-0.5 bg-slate-100 rounded-md border border-slate-200">
                 {(['saturated', 'unsaturated', 'heterocycle'] as RingCategory[]).map((cat) => (
                   <button
                     key={cat}
                     onClick={() => setRingCategoryTab(cat)}
                     className={`py-1 text-[10px] font-mono font-semibold rounded capitalize transition-all ${
                       ringCategoryTab === cat
-                        ? 'bg-[#00A896] text-slate-950 font-bold'
-                        : 'text-slate-400 hover:text-slate-200'
+                        ? 'bg-[#008477] text-white font-bold shadow-xs'
+                        : 'text-slate-600 hover:text-slate-900'
                     }`}
                   >
                     {cat === 'saturated' ? 'Simples' : cat === 'unsaturated' ? 'Dobles' : 'Hetero'}
@@ -201,17 +217,17 @@ export const ElementToolbar: React.FC = () => {
                   <button
                     key={preset.id}
                     onClick={() => handleSelectRingPreset(preset)}
-                    className="p-2 rounded-md text-left bg-slate-900/60 hover:bg-[#00A896]/15 border border-[#00A896]/20 hover:border-[#00A896]/60 flex flex-col transition-all group"
+                    className="p-2 rounded-md text-left bg-white hover:bg-slate-50 border border-slate-200 hover:border-[#008477] flex flex-col transition-all group shadow-xs"
                   >
                     <div className="flex items-center justify-between">
-                      <span className="text-xs font-mono font-bold text-slate-200 group-hover:text-[#00c7b2]">
+                      <span className="text-xs font-mono font-bold text-slate-800 group-hover:text-[#008477]">
                         {preset.name}
                       </span>
-                      <span className="text-[9px] font-mono px-1.5 py-0.2 rounded bg-slate-800 text-slate-400 border border-white/5">
+                      <span className="text-[9px] font-mono px-1.5 py-0.2 rounded bg-slate-100 text-slate-600 border border-slate-200 font-bold">
                         {preset.sides}L
                       </span>
                     </div>
-                    <span className="text-[10px] text-slate-400 leading-tight mt-0.5">
+                    <span className="text-[10px] text-slate-500 leading-tight mt-0.5 font-sans">
                       {preset.description}
                     </span>
                   </button>
@@ -222,19 +238,19 @@ export const ElementToolbar: React.FC = () => {
         </div>
 
         {/* Panel 3: Plantillas y Grupos Funcionales */}
-        <div className="cad-panel cad-corners rounded-lg p-2.5 flex flex-col gap-1.5 min-w-[145px] shadow-2xl">
-          <div className="px-1 pb-1 border-b border-[#00A896]/30 flex items-center justify-between">
-            <span className="text-[10px] font-mono font-bold tracking-wider uppercase text-[#ff941a]">
+        <div className="cad-panel cad-corners rounded-lg p-2.5 flex flex-col gap-1.5 min-w-[145px] shadow-lg bg-white border border-slate-300 text-slate-800">
+          <div className="px-1 pb-1 border-b border-slate-200 flex items-center justify-between">
+            <span className="text-[10px] font-mono font-bold tracking-wider uppercase text-[#D97706]">
               Plantillas
             </span>
             <span className="text-[10px] text-slate-400 font-mono">CAD</span>
           </div>
 
           {activeTool === 'template' && activeTemplate ? (
-            <div className="bg-[#F77F00]/20 border border-[#F77F00] p-1.5 rounded-md flex items-center justify-between">
+            <div className="bg-amber-50 border border-amber-300 p-1.5 rounded-md flex items-center justify-between shadow-xs">
               <div className="flex items-center gap-1.5 overflow-hidden">
-                <Sparkles className="w-3.5 h-3.5 text-[#F77F00] shrink-0 animate-pulse" />
-                <span className="text-[10px] font-mono font-bold text-[#ff941a] truncate">
+                <Sparkles className="w-3.5 h-3.5 text-[#D97706] shrink-0 animate-pulse" />
+                <span className="text-[10px] font-mono font-bold text-[#D97706] truncate">
                   {activeTemplate.abbreviation}
                 </span>
               </div>
@@ -243,7 +259,7 @@ export const ElementToolbar: React.FC = () => {
                   setActiveTemplate(null);
                   setActiveTool('atom');
                 }}
-                className="p-0.5 rounded text-slate-400 hover:text-white"
+                className="p-0.5 rounded text-slate-400 hover:text-slate-700"
                 title="Desactivar modo plantilla"
               >
                 <X className="w-3.5 h-3.5" />
@@ -253,19 +269,19 @@ export const ElementToolbar: React.FC = () => {
             <button
               id="btn-open-functional-modal"
               onClick={() => setFunctionalModalOpen(true)}
-              className="py-1.5 px-2 rounded-md text-[11px] font-mono font-bold bg-slate-900/90 hover:bg-slate-800 text-[#ff941a] border border-[#F77F00]/40 hover:border-[#F77F00] flex items-center justify-center gap-1.5 transition-all active:scale-95 shadow-sm"
+              className="py-1.5 px-2 rounded-md text-[11px] font-mono font-bold bg-white hover:bg-slate-50 text-[#D97706] border border-slate-300 hover:border-[#D97706] flex items-center justify-center gap-1.5 transition-all active:scale-95 shadow-xs"
               title="Abrir Grupos Funcionales, Coenzimas y Esqueletos Base"
             >
-              <Boxes className="w-3.5 h-3.5 text-[#F77F00]" />
+              <Boxes className="w-3.5 h-3.5 text-[#D97706]" />
               <span>Plantillas / G.F.</span>
             </button>
           )}
         </div>
 
         {/* Panel 4: Selector de Orden de Enlace por Defecto */}
-        <div className="cad-panel cad-corners rounded-lg p-2.5 flex flex-col gap-1.5 min-w-[145px] shadow-2xl">
-          <div className="px-1 pb-1 border-b border-[#00A896]/30">
-            <span className="text-[10px] font-mono font-bold tracking-wider uppercase text-slate-300">
+        <div className="cad-panel cad-corners rounded-lg p-2.5 flex flex-col gap-1.5 min-w-[145px] shadow-lg bg-white border border-slate-300 text-slate-800">
+          <div className="px-1 pb-1 border-b border-slate-200">
+            <span className="text-[10px] font-mono font-bold tracking-wider uppercase text-slate-600">
               Tipo Enlace
             </span>
           </div>
@@ -286,8 +302,8 @@ export const ElementToolbar: React.FC = () => {
                   }}
                   className={`py-1.5 px-1 rounded-md flex flex-col items-center justify-center font-mono font-bold transition-all border ${
                     isSelected
-                      ? 'bg-[#00A896] text-slate-950 border-[#00c7b2] shadow-sm'
-                      : 'bg-slate-900/70 hover:bg-slate-800 border-white/5 text-slate-300'
+                      ? 'bg-[#008477] text-white border-[#008477] shadow-xs'
+                      : 'bg-white hover:bg-slate-50 border-slate-200 text-slate-700 shadow-xs'
                   }`}
                   title={`Enlace ${name} (Orden ${order})`}
                 >
