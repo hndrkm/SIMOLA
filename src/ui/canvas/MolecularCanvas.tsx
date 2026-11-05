@@ -154,6 +154,7 @@ export const MolecularCanvas: React.FC = () => {
     <div
       ref={containerRef}
       className="w-full h-full relative overflow-hidden bg-[#F8FAFC] select-none"
+      onContextMenu={(e) => e.preventDefault()}
     >
       <Stage
         ref={stageRef}
@@ -169,6 +170,9 @@ export const MolecularCanvas: React.FC = () => {
         onTap={handleStageClick}
         onMouseMove={handleMouseMove}
         onMouseUp={handleMouseUp}
+        onContextMenu={(e) => {
+          e.evt.preventDefault();
+        }}
         onDragEnd={(e) => {
           if (e.target === stageRef.current) {
             setStagePosition({ x: e.target.x(), y: e.target.y() });

@@ -161,49 +161,49 @@ export const TopBar: React.FC = () => {
   return (
     <>
       <header
-        className="absolute top-3 left-4 right-4 z-20 flex flex-wrap items-center justify-between gap-3 select-none pointer-events-none transition-all"
+        className={`absolute top-2.5 left-3 sm:left-4 z-20 flex items-center justify-between gap-1.5 sm:gap-2 select-none pointer-events-none transition-all duration-300 ease-out flex-nowrap ${
+          isMissionSidebarOpen ? 'right-3 sm:right-4 lg:right-[396px] xl:right-[400px]' : 'right-3 sm:right-4'
+        }`}
       >
         {/* Identidad de la Aplicación y Botón Menú Principal */}
-        <div className="cad-panel cad-corners px-3 py-1.5 rounded-lg flex items-center gap-3 shadow-md pointer-events-auto max-w-full bg-white border border-slate-300">
+        <div className="cad-panel cad-corners px-2.5 sm:px-3 py-1.5 rounded-lg flex items-center gap-2 sm:gap-3 shadow-md pointer-events-auto bg-white border border-slate-300 min-w-0 shrink max-w-[220px] sm:max-w-xs md:max-w-sm">
           <button
             id="btn-return-home"
             onClick={() => setView('home')}
-            className="flex items-center gap-2 p-1 rounded-md hover:bg-slate-100 text-slate-700 hover:text-black transition-all text-xs font-semibold group shrink-0"
+            className="flex items-center gap-1.5 sm:gap-2 p-0.5 sm:p-1 rounded-md hover:bg-slate-100 text-slate-700 hover:text-black transition-all text-xs font-semibold group shrink-0"
             title="Volver al Menú Principal (HomeView)"
           >
             <ArrowLeft className="w-4 h-4 text-[#008477] group-hover:-translate-x-0.5 transition-transform" />
-            <div className="bg-white px-2 py-0.5 rounded shadow-sm border border-slate-200 flex items-center justify-center">
+            <div className="bg-white px-1.5 sm:px-2 py-0.5 rounded shadow-sm border border-slate-200 flex items-center justify-center">
               <img
                 src={`${import.meta.env.BASE_URL}logo.png`}
                 alt="SIMOLA"
-                className="h-7 w-auto object-contain"
+                className="h-6 sm:h-7 w-auto object-contain"
               />
             </div>
           </button>
 
           <div className="h-6 w-px bg-slate-200 shrink-0" />
 
-          <div className="flex flex-col min-w-0">
-            <div className="flex items-center gap-2">
-              <span className="px-2 py-0.5 text-[10px] font-mono bg-[#008477]/10 text-[#008477] border border-[#008477]/30 rounded font-bold truncate">
-                {getRouteLabel()}
-              </span>
-            </div>
+          <div className="flex flex-col min-w-0 overflow-hidden">
+            <span className="px-1.5 py-0.5 text-[9px] sm:text-[10px] font-mono bg-[#008477]/10 text-[#008477] border border-[#008477]/30 rounded font-bold truncate">
+              {getRouteLabel()}
+            </span>
             {mission ? (
-              <span className="text-[10px] text-amber-700 font-mono font-bold truncate max-w-[200px] sm:max-w-xs">
+              <span className="text-[10px] text-amber-700 font-mono font-bold truncate">
                 {mission.title}
               </span>
             ) : (
-              <span className="text-[10px] text-slate-500 font-mono font-medium">
-                Laboratorio de Síntesis y Modelado
+              <span className="text-[10px] text-slate-500 font-mono font-medium truncate hidden sm:inline">
+                Laboratorio Libre
               </span>
             )}
           </div>
         </div>
 
         {/* Centro: Selector de Guías Angulares (30°, 45°, 90°, 120°, Libre) */}
-        <div className="cad-panel cad-corners px-2 py-1 rounded-lg flex items-center gap-1 shadow-md pointer-events-auto bg-white border border-slate-300">
-          <span className="text-[10px] font-mono font-bold text-slate-500 uppercase tracking-wider mr-1 hidden sm:flex items-center gap-1">
+        <div className="cad-panel cad-corners px-1.5 sm:px-2 py-1 rounded-lg hidden md:flex items-center gap-1 shadow-md pointer-events-auto bg-white border border-slate-300 shrink-0">
+          <span className="text-[10px] font-mono font-bold text-slate-500 uppercase tracking-wider mr-1 hidden xl:flex items-center gap-1">
             <Compass className="w-3.5 h-3.5 text-[#008477]" />
             SNAP:
           </span>
@@ -213,7 +213,7 @@ export const TopBar: React.FC = () => {
               <button
                 key={deg === null ? 'free' : `${deg}deg`}
                 onClick={() => setSnapAngleDeg(deg)}
-                className={`px-2 py-1 rounded text-[10px] font-mono font-bold transition-all border ${
+                className={`px-1.5 sm:px-2 py-0.5 sm:py-1 rounded text-[10px] font-mono font-bold transition-all border ${
                   isSelected
                     ? 'bg-[#008477] text-white border-[#008477] shadow-sm'
                     : 'bg-slate-50 text-slate-700 border-slate-200 hover:border-slate-400 hover:bg-slate-100'
@@ -227,12 +227,12 @@ export const TopBar: React.FC = () => {
         </div>
 
         {/* Acciones de Catálisis y Evaluación */}
-        <div className="flex items-center gap-2 pointer-events-auto self-end md:self-center">
+        <div className="flex items-center gap-1.5 sm:gap-2 pointer-events-auto shrink-0">
           {/* Botón Menú Lateral de Misiones */}
           <button
             id="btn-toggle-mission-sidebar"
             onClick={toggleMissionSidebar}
-            className={`cad-panel px-3 py-1.5 rounded-lg text-xs font-mono font-bold transition-all flex items-center gap-1.5 shadow-md active:scale-95 border ${
+            className={`cad-panel px-2.5 sm:px-3 py-1.5 rounded-lg text-xs font-mono font-bold transition-all flex items-center gap-1.5 shadow-md active:scale-95 border ${
               isMissionSidebarOpen
                 ? 'bg-[#008477] text-white border-[#008477]'
                 : 'bg-white text-slate-800 hover:text-black border-slate-300 hover:border-[#008477]'
@@ -240,19 +240,19 @@ export const TopBar: React.FC = () => {
             title="Abrir / Ocultar Menú Lateral de Misiones y Etapas"
           >
             <Layers className="w-3.5 h-3.5" />
-            <span>Misión</span>
+            <span className="hidden sm:inline">Misión</span>
           </button>
 
           {/* Contador de Átomos y Enlaces */}
-          <div className="cad-panel px-3 py-1.5 rounded-lg hidden xl:flex items-center gap-2.5 text-xs bg-white border border-slate-300 text-slate-700">
-            <div className="flex items-center gap-1.5">
+          <div className="cad-panel px-2.5 py-1.5 rounded-lg hidden 2xl:flex items-center gap-2 text-xs bg-white border border-slate-300 text-slate-700">
+            <div className="flex items-center gap-1">
               <span className="w-2 h-2 rounded-full bg-[#008477]" />
               <span className="font-mono text-[11px]">
                 Át: <strong className="text-slate-900">{atomCount}</strong>
               </span>
             </div>
             <span className="text-slate-300">|</span>
-            <div className="flex items-center gap-1.5">
+            <div className="flex items-center gap-1">
               <span className="font-mono text-[11px]">
                 Enl: <strong className="text-slate-900">{bondCount}</strong>
               </span>
@@ -263,11 +263,11 @@ export const TopBar: React.FC = () => {
           <button
             id="btn-topbar-bibliography"
             onClick={() => setView('bibliography')}
-            className="cad-panel px-2.5 py-1.5 rounded-lg text-slate-700 hover:text-slate-900 hover:border-[#008477] transition-all text-xs font-mono font-bold flex items-center gap-1.5 shadow-md active:scale-95 bg-white border border-slate-300"
+            className="cad-panel p-2 sm:px-2.5 sm:py-1.5 rounded-lg text-slate-700 hover:text-slate-900 hover:border-[#008477] transition-all text-xs font-mono font-bold flex items-center gap-1.5 shadow-md active:scale-95 bg-white border border-slate-300"
             title="Bibliografía Académica, Arquitectura y Créditos"
           >
             <BookOpen className="w-3.5 h-3.5 text-[#008477]" />
-            <span className="hidden lg:inline text-[11px]">Bibliografía</span>
+            <span className="hidden xl:inline text-[11px]">Bibliografía</span>
           </button>
 
           {/* Botón de Ayuda / Atajos */}
@@ -284,11 +284,11 @@ export const TopBar: React.FC = () => {
           <button
             id="btn-catalytic-reactor"
             onClick={() => setShowReactorModal(true)}
-            className="flex items-center gap-1.5 px-3 py-1.5 rounded-lg bg-[#D97706] hover:bg-[#B45309] text-white font-mono font-bold text-xs transition-all shadow-md active:scale-95"
+            className="flex items-center gap-1.5 px-2.5 sm:px-3 py-1.5 rounded-lg bg-[#D97706] hover:bg-[#B45309] text-white font-mono font-bold text-xs transition-all shadow-md active:scale-95 shrink-0"
             title="Abrir Centro Activo / Reactor Catalítico para acoplar holoenzimas y cofactores"
           >
             <Zap className="w-4 h-4 fill-current" />
-            <span className="hidden sm:inline">⚡ Reactor Catalítico</span>
+            <span className="hidden md:inline">Reactor</span>
           </button>
 
           {/* Botón Evaluar Estructura y Estereoquímica */}
@@ -296,7 +296,7 @@ export const TopBar: React.FC = () => {
             id="btn-verify-structure"
             onClick={handleVerify}
             disabled={isVerifying}
-            className={`flex items-center gap-1.5 px-3.5 py-1.5 rounded-lg font-mono font-bold text-xs transition-all shadow-md ${
+            className={`flex items-center gap-1.5 px-3 sm:px-3.5 py-1.5 rounded-lg font-mono font-bold text-xs transition-all shadow-md shrink-0 ${
               isVerifying
                 ? 'bg-slate-300 text-slate-500 cursor-wait'
                 : 'bg-[#008477] hover:bg-[#006D62] text-white hover:scale-[1.02] active:scale-95'
@@ -306,7 +306,7 @@ export const TopBar: React.FC = () => {
             {isVerifying ? (
               <>
                 <Loader2 className="w-4 h-4 animate-spin text-white" />
-                <span>Evaluando...</span>
+                <span className="hidden sm:inline">Evaluando...</span>
               </>
             ) : (
               <>

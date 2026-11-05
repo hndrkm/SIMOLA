@@ -84,6 +84,7 @@ export const AtomShape: React.FC<AtomShapeProps> = React.memo(({ atom, bondOrder
   };
 
   const handleMouseDown = (e: any) => {
+    if (e.evt && e.evt.button !== 0) return; // Ignorar clic derecho para no iniciar enlaces accidentales
     if (isBondTool) {
       e.cancelBubble = true;
       startPendingBond(atom.id, { x: atom.x, y: atom.y });
@@ -95,6 +96,23 @@ export const AtomShape: React.FC<AtomShapeProps> = React.memo(({ atom, bondOrder
       e.cancelBubble = true;
       finishPendingBond(atom.id);
     }
+  };
+
+  const handleContextMenu = (e: any) => {
+    if (e.evt) {
+      e.evt.preventDefault();
+      e.evt.stopPropagation();
+    }
+    e.cancelBubble = true;
+
+    const clientX = e.evt?.clientX ?? window.innerWidth / 2;
+    const clientY = e.evt?.clientY ?? window.innerHeight / 2;
+
+    setContextMenuAtom({
+      atomId: atom.id,
+      clientX,
+      clientY,
+    });
   };
 
   // Cálculo O(1) de hidrógenos satélite
@@ -191,15 +209,7 @@ export const AtomShape: React.FC<AtomShapeProps> = React.memo(({ atom, bondOrder
       onTap={handleClick}
       onMouseDown={handleMouseDown}
       onMouseUp={handleMouseUp}
-      onContextMenu={(e: any) => {
-        e.evt.preventDefault();
-        e.cancelBubble = true;
-        setContextMenuAtom({
-          atomId: atom.id,
-          clientX: e.evt.clientX,
-          clientY: e.evt.clientY,
-        });
-      }}
+      onContextMenu={handleContextMenu}
       onMouseEnter={(e) => {
         setHoveredAtom(atom.id);
         const stage = e.target.getStage();
@@ -301,6 +311,7 @@ export const AtomShape: React.FC<AtomShapeProps> = React.memo(({ atom, bondOrder
         strokeWidth={2}
         listening={true}
         perfectDrawEnabled={false}
+        onContextMenu={handleContextMenu}
       />
 
       {/* 8. Satélites de Hidrógeno Implícito (Nodos orbitales de trazo fino 1px sobre fondo claro) */}
