@@ -108,18 +108,24 @@ export const HomeView: React.FC = () => {
       {/* 1. HERO HEADER */}
       <main className="max-w-6xl w-full px-6 lg:px-12 py-10 flex flex-col gap-10">
         <header className="flex flex-col items-center text-center space-y-3">
-          <div className="w-14 h-14 rounded-2xl bg-white border border-slate-300 shadow-md flex items-center justify-center text-[#008477]">
-            <Atom className="w-8 h-8" />
-          </div>
+
 
           <h1 className="text-3xl sm:text-4xl md:text-5xl font-black text-slate-900 tracking-tight">
-            SIMOLA
+            <div className="bg-white px-2 py-0.5 rounded-2xl shadow-md border border-slate-200 flex items-center justify-center">
+              <img
+                src={`${import.meta.env.BASE_URL}logo.png`}
+                alt="SIMOLA"
+                className="h-40 w-auto object-contain"
+              />
+            </div>
           </h1>
 
           <div className="inline-flex items-center gap-2 px-3 py-1 rounded-full bg-[#008477]/10 border border-[#008477]/30 text-[#008477] text-xs font-mono font-bold mt-2 shadow-xs">
-            SIMOLA v2.0 • Blueprint CAD Edition
+            SIMOLA v2.0
           </div>
-
+          <div className="w-14 h-14 rounded-2xl bg-white border border-slate-300 shadow-md flex items-center justify-center text-[#008477]">
+            <Atom className="w-8 h-8" />
+          </div>
           <p className="text-xs sm:text-sm text-slate-600 max-w-xl leading-relaxed font-sans">
             Simulador Molecular y Rutas Metabólicas Interactivas con Precisión Quimioinformática y Enzimología RDKit.
           </p>
@@ -272,11 +278,10 @@ export const HomeView: React.FC = () => {
                           <button
                             key={m.id}
                             onClick={() => loadMission(m.id)}
-                            className={`p-2.5 rounded-lg text-left text-xs font-mono transition-all border flex items-center justify-between gap-2 group shadow-xs ${
-                              done
-                                ? 'bg-emerald-50 border-emerald-200 text-emerald-900 hover:bg-emerald-100'
-                                : 'bg-white border-slate-200 text-slate-700 hover:border-[#008477] hover:bg-slate-50'
-                            }`}
+                            className={`p-2.5 rounded-lg text-left text-xs font-mono transition-all border flex items-center justify-between gap-2 group shadow-xs ${done
+                              ? 'bg-emerald-50 border-emerald-200 text-emerald-900 hover:bg-emerald-100'
+                              : 'bg-white border-slate-200 text-slate-700 hover:border-[#008477] hover:bg-slate-50'
+                              }`}
                             title={`Ingresar a: ${m.title}`}
                           >
                             <div className="flex items-center gap-2 min-w-0">
@@ -329,7 +334,7 @@ export const HomeView: React.FC = () => {
           </div>
 
           <p className="text-xs sm:text-sm text-slate-600 leading-relaxed font-sans">
-            <strong>SIMOLA</strong> integra dibujo molecular en tiempo real optimizado a 60 FPS mediante <strong>Konva 2D</strong> con el motor quimioinformático profesional <strong>RDKit.js WebAssembly</strong>. Permite a los estudiantes resolver mecanismos enzimáticos paso a paso, ionizar grupos carboxilato y amino a pH 7.4, modelar estados de transición con holoenzimas clasificadas según la <em>IUBMB</em> y balancear estequiométricamente cofactores celulares de alta energía (ATP, NADH, TPP, CoA-SH).
+            <strong>SIMOLA</strong> integra dibujo molecular en tiempo real mediante <strong>Konva 2D</strong> con el motor quimioinformático profesional <strong>RDKit.js WebAssembly</strong>. Permite a los estudiantes resolver mecanismos enzimáticos paso a paso, ionizar grupos carboxilato y amino a pH 7.4, modelar estados de transición con holoenzimas clasificadas según la <em>IUBMB</em> y balancear estequiométricamente cofactores celulares de alta energía (ATP, NADH, TPP, CoA-SH).
           </p>
 
           {/* Métricas Técnicas */}
