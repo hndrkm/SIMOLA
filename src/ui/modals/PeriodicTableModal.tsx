@@ -74,21 +74,21 @@ export const PeriodicTableModal: React.FC<PeriodicTableModalProps> = ({ isOpen, 
 
   return (
     <div className="fixed inset-0 z-50 flex items-center justify-center p-4 bg-slate-950/80 backdrop-blur-md select-none animate-fadeIn">
-      <div className="glass-panel w-full max-w-6xl max-h-[92vh] flex flex-col rounded-3xl border border-white/15 shadow-2xl overflow-hidden bg-[#1B2A4A]/95">
+      <div className="cad-panel cad-corners-full w-full max-w-6xl max-h-[92vh] flex flex-col rounded-xl border border-[#00A896]/40 shadow-2xl overflow-hidden bg-[#1B2A4A] font-mono">
         {/* Cabecera del Modal */}
-        <div className="px-6 py-4 border-b border-white/10 flex items-center justify-between bg-[#1B2A4A]/60">
+        <div className="px-5 py-3.5 border-b border-[#00A896]/30 flex items-center justify-between bg-[#16233e]">
           <div className="flex items-center gap-3">
-            <div className="w-10 h-10 rounded-2xl bg-[#00A896]/20 border border-[#00A896]/40 flex items-center justify-center text-[#00A896]">
-              <Atom className="w-5 h-5 animate-spin-slow" />
+            <div className="w-9 h-9 rounded-lg bg-[#00A896]/20 border border-[#00A896]/40 flex items-center justify-center text-[#00A896]">
+              <Atom className="w-5 h-5" />
             </div>
             <div>
-              <h2 className="text-lg font-bold text-slate-100 flex items-center gap-2">
+              <h2 className="text-sm sm:text-base font-bold text-slate-100 flex items-center gap-2">
                 Tabla Periódica Completa
-                <span className="text-xs px-2 py-0.5 rounded-full bg-slate-800 text-[#00c7b2] border border-[#00A896]/30 font-mono">
+                <span className="text-[10px] px-2 py-0.5 rounded bg-slate-800 text-[#00c7b2] border border-[#00A896]/30 font-mono">
                   118 Elementos
                 </span>
               </h2>
-              <p className="text-xs text-slate-400">
+              <p className="text-xs text-slate-400 font-sans">
                 Selecciona cualquier elemento químico o isótopo para incorporarlo al editor molecular
               </p>
             </div>
@@ -96,7 +96,7 @@ export const PeriodicTableModal: React.FC<PeriodicTableModalProps> = ({ isOpen, 
 
           <button
             onClick={onClose}
-            className="p-2 rounded-xl text-slate-400 hover:text-white hover:bg-white/10 transition-colors"
+            className="p-1 rounded text-slate-400 hover:text-white hover:bg-white/10 transition-colors"
             title="Cerrar (Esc)"
           >
             <X className="w-5 h-5" />

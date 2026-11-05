@@ -153,7 +153,7 @@ export const MolecularCanvas: React.FC = () => {
   return (
     <div
       ref={containerRef}
-      className="w-full h-full relative overflow-hidden blueprint-grid select-none"
+      className="w-full h-full relative overflow-hidden bg-[#0B132B] select-none"
     >
       <Stage
         ref={stageRef}

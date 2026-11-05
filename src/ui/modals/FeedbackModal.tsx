@@ -97,10 +97,10 @@ export const FeedbackModal: React.FC<FeedbackModalProps> = ({
 
   return (
     <div className="fixed inset-0 z-50 flex items-center justify-center p-4 bg-slate-950/85 backdrop-blur-md animate-fadeIn">
-      <div className="relative w-full max-w-2xl max-h-[90vh] flex flex-col rounded-3xl bg-[#131d31] border border-white/15 shadow-2xl text-slate-100 overflow-hidden">
+      <div className="cad-panel cad-corners-full relative w-full max-w-2xl max-h-[90vh] flex flex-col rounded-xl bg-[#1B2A4A] border border-[#00A896]/40 shadow-2xl text-slate-100 overflow-hidden font-mono">
         {/* Header con gradiente contextual */}
         <div
-          className={`px-6 py-4.5 flex items-center justify-between border-b ${
+          className={`px-5 py-3.5 flex items-center justify-between border-b ${
             isSuccess
               ? 'bg-emerald-950/40 border-emerald-500/30'
               : isLayer1Error
@@ -110,7 +110,7 @@ export const FeedbackModal: React.FC<FeedbackModalProps> = ({
         >
           <div className="flex items-center gap-3">
             <div
-              className={`p-2.5 rounded-2xl flex items-center justify-center ${
+              className={`p-2 rounded-lg flex items-center justify-center ${
                 isSuccess
                   ? 'bg-emerald-500/20 text-emerald-300 border border-emerald-500/40'
                   : isLayer1Error
@@ -119,9 +119,9 @@ export const FeedbackModal: React.FC<FeedbackModalProps> = ({
               }`}
             >
               {isSuccess ? (
-                <Sparkles className="w-5 h-5 text-emerald-400 animate-bounce" />
+                <Sparkles className="w-5 h-5 text-emerald-400" />
               ) : isLayer1Error ? (
-                <AlertTriangle className="w-5 h-5 text-rose-400 animate-pulse" />
+                <AlertTriangle className="w-5 h-5 text-rose-400" />
               ) : (
                 <FlaskConical className="w-5 h-5 text-[#ff941a]" />
               )}
@@ -129,7 +129,7 @@ export const FeedbackModal: React.FC<FeedbackModalProps> = ({
 
             <div>
               <div className="flex items-center gap-2">
-                <h3 className="text-base font-extrabold tracking-tight text-white">
+                <h3 className="text-sm sm:text-base font-bold tracking-tight text-white">
                   {isSuccess
                     ? '¡Reacción Bioquímica Exitosa!'
                     : isLayer1Error
@@ -137,7 +137,7 @@ export const FeedbackModal: React.FC<FeedbackModalProps> = ({
                     : 'Diagnóstico Enzimático y Estructural'}
                 </h3>
                 <span
-                  className={`text-[10px] uppercase font-bold tracking-wider px-2.5 py-0.5 rounded-full border ${
+                  className={`text-[10px] uppercase font-bold tracking-wider px-2 py-0.5 rounded border ${
                     isSuccess
                       ? 'bg-emerald-500/20 text-emerald-300 border-emerald-500/40'
                       : isLayer1Error
@@ -145,10 +145,10 @@ export const FeedbackModal: React.FC<FeedbackModalProps> = ({
                       : 'bg-[#F77F00]/20 text-[#ff941a] border-[#F77F00]/40'
                   }`}
                 >
-                  {isSuccess ? 'Validado ✓' : isLayer1Error ? 'Capa 1: Físico' : 'Capa 2: RDKit'}
+                  {isSuccess ? 'Validado ✓' : isLayer1Error ? 'Físico' : 'RDKit'}
                 </span>
               </div>
-              <p className="text-xs text-slate-400 font-medium">
+              <p className="text-xs text-slate-300 font-medium">
                 {mission?.enzymeName || mission?.title || moduleName}
               </p>
             </div>
@@ -156,7 +156,7 @@ export const FeedbackModal: React.FC<FeedbackModalProps> = ({
 
           <button
             onClick={handleDismiss}
-            className="p-1.5 rounded-xl hover:bg-white/10 text-slate-400 hover:text-white transition-colors"
+            className="p-1 rounded hover:bg-white/10 text-slate-400 hover:text-white transition-colors"
             title="Cerrar ventana"
           >
             <X className="w-5 h-5" />
@@ -387,12 +387,12 @@ export const FeedbackModal: React.FC<FeedbackModalProps> = ({
         </div>
 
         {/* Footer con Acciones */}
-        <div className="px-6 py-4 bg-slate-950/70 border-t border-white/10 flex items-center justify-between gap-3">
+        <div className="px-5 py-3.5 bg-[#16233e] border-t border-[#00A896]/30 flex items-center justify-between gap-3">
           {isSuccess ? (
             <>
               <button
                 onClick={handleDismiss}
-                className="px-4 py-2.5 rounded-xl text-xs font-semibold text-slate-300 hover:text-white hover:bg-white/10 transition-colors"
+                className="px-3.5 py-1.5 rounded-lg text-xs font-bold text-slate-300 hover:text-white hover:bg-white/10 border border-white/10 transition-colors"
               >
                 Permanecer en el Lienzo
               </button>
@@ -404,7 +404,7 @@ export const FeedbackModal: React.FC<FeedbackModalProps> = ({
                     onNextMission();
                     onClose();
                   }}
-                  className="flex items-center gap-2 px-5 py-2.5 rounded-xl bg-[#00A896] hover:bg-[#00c7b2] text-slate-950 font-black text-xs transition-all shadow-lg shadow-[#00A896]/30 hover:scale-[1.03] active:scale-95 glow-teal"
+                  className="flex items-center gap-1.5 px-4 py-2 rounded-lg bg-[#00A896] hover:bg-[#00c7b2] text-slate-950 font-bold text-xs transition-all shadow-md active:scale-95"
                 >
                   <span>Siguiente Misión</span>
                   <ArrowRight className="w-4 h-4" />
@@ -412,7 +412,7 @@ export const FeedbackModal: React.FC<FeedbackModalProps> = ({
               ) : (
                 <button
                   onClick={handleDismiss}
-                  className="flex items-center gap-2 px-5 py-2.5 rounded-xl bg-[#F77F00] hover:bg-[#ff941a] text-slate-950 font-black text-xs transition-all shadow-lg shadow-[#F77F00]/30 hover:scale-[1.03] active:scale-95 glow-amber"
+                  className="flex items-center gap-1.5 px-4 py-2 rounded-lg bg-[#F77F00] hover:bg-[#ff941a] text-slate-950 font-bold text-xs transition-all shadow-md active:scale-95"
                 >
                   <Sparkles className="w-4 h-4 fill-current" />
                   <span>¡Ruta Completada con Éxito!</span>
@@ -424,19 +424,19 @@ export const FeedbackModal: React.FC<FeedbackModalProps> = ({
               {isLayer1Error ? (
                 <button
                   onClick={handleClearErrorsAndClose}
-                  className="px-4 py-2 rounded-xl text-xs font-semibold text-slate-400 hover:text-white hover:bg-white/10 transition-colors"
+                  className="px-3.5 py-1.5 rounded-lg text-xs font-bold text-slate-400 hover:text-white hover:bg-white/10 border border-white/10 transition-colors"
                 >
                   Apagar halos de error
                 </button>
               ) : (
-                <span className="text-[11px] text-slate-400 font-medium">
+                <span className="text-[11px] text-slate-400 font-mono">
                   Modifica los enlaces o átomos para cumplir la reacción.
                 </span>
               )}
 
               <button
                 onClick={handleDismiss}
-                className="px-5 py-2.5 rounded-xl bg-slate-800 hover:bg-slate-700 text-white font-bold text-xs transition-all border border-white/15 shadow-md active:scale-95 flex items-center gap-1.5"
+                className="px-4 py-2 rounded-lg bg-slate-800 hover:bg-slate-700 text-white font-bold text-xs transition-all border border-white/15 shadow-md active:scale-95 flex items-center gap-1.5"
               >
                 <RotateCcw className="w-3.5 h-3.5" />
                 <span>Reintentar en el Lienzo</span>

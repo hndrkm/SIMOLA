@@ -26,7 +26,6 @@ export const AtomShape: React.FC<AtomShapeProps> = React.memo(({ atom, bondOrder
   const moveAtom = useCanvasStore((state) => state.moveAtom);
   const removeAtom = useCanvasStore((state) => state.removeAtom);
   const transmuteAtom = useCanvasStore((state) => state.transmuteAtom);
-  const modifyAtomFormalCharge = useCanvasStore((state) => state.modifyAtomFormalCharge);
   const sproutRing = useCanvasStore((state) => state.sproutRing);
   const sproutTemplateAt = useCanvasStore((state) => state.sproutTemplateAt);
   const startPendingBond = useCanvasStore((state) => state.startPendingBond);
@@ -291,7 +290,7 @@ export const AtomShape: React.FC<AtomShapeProps> = React.memo(({ atom, bondOrder
       {satellitePositions.map((sat, idx) => (
         <Group key={`sat_h_${idx}`} x={sat.x} y={sat.y} listening={false}>
           <Circle
-            radius={7}
+            radius={6}
             fill="#0B132B"
             stroke="#94a3b8"
             strokeWidth={1}
@@ -300,14 +299,14 @@ export const AtomShape: React.FC<AtomShapeProps> = React.memo(({ atom, bondOrder
           />
           <Text
             text="H"
-            fontSize={8}
+            fontSize={7}
             fontStyle="bold"
             fontFamily="monospace"
             fill="#94a3b8"
             align="center"
             verticalAlign="middle"
-            offsetX={3.2}
-            offsetY={4.5}
+            offsetX={3}
+            offsetY={4}
             listening={false}
             perfectDrawEnabled={false}
           />
@@ -317,14 +316,14 @@ export const AtomShape: React.FC<AtomShapeProps> = React.memo(({ atom, bondOrder
       {/* 9. Símbolo químico del elemento */}
       <Text
         text={displaySymbol}
-        fontSize={atom.element.length > 1 || atom.isotope ? 13 : 15}
+        fontSize={atom.element.length > 1 || atom.isotope ? 11 : 13}
         fontStyle="bold"
         fontFamily="monospace"
         fill={textColor}
         align="center"
         verticalAlign="middle"
-        offsetX={displaySymbol.length * 4}
-        offsetY={7}
+        offsetX={displaySymbol.length * 3.5}
+        offsetY={6}
         listening={false}
         perfectDrawEnabled={false}
       />
@@ -333,7 +332,7 @@ export const AtomShape: React.FC<AtomShapeProps> = React.memo(({ atom, bondOrder
       {chargeStr !== '' && (
         <Text
           text={chargeStr}
-          fontSize={11}
+          fontSize={10}
           fontStyle="bold"
           fontFamily="monospace"
           fill={atom.formalCharge > 0 ? '#38bdf8' : '#f87171'}
@@ -342,77 +341,6 @@ export const AtomShape: React.FC<AtomShapeProps> = React.memo(({ atom, bondOrder
           listening={false}
           perfectDrawEnabled={false}
         />
-      )}
-
-      {/* 11. Controles Rápidos de Carga Formal (+ / -) al hacer Hover */}
-      {isHovered && !atom.isLocked && !isEraserTool && (
-        <Group x={radius + 12} y={0}>
-          {/* Botón Incrementar Carga (+) */}
-          <Group
-            y={-10}
-            onClick={(e) => {
-              e.cancelBubble = true;
-              modifyAtomFormalCharge(atom.id, 1);
-            }}
-            onTap={(e) => {
-              e.cancelBubble = true;
-              modifyAtomFormalCharge(atom.id, 1);
-            }}
-          >
-            <Circle
-              radius={8}
-              fill="#0B132B"
-              stroke="#00A896"
-              strokeWidth={1.5}
-            />
-            <Text
-              text="+"
-              fontSize={11}
-              fontStyle="bold"
-              fontFamily="monospace"
-              fill="#00A896"
-              align="center"
-              verticalAlign="middle"
-              offsetX={3.5}
-              offsetY={5}
-              listening={false}
-              perfectDrawEnabled={false}
-            />
-          </Group>
-
-          {/* Botón Decrementar Carga (-) */}
-          <Group
-            y={10}
-            onClick={(e) => {
-              e.cancelBubble = true;
-              modifyAtomFormalCharge(atom.id, -1);
-            }}
-            onTap={(e) => {
-              e.cancelBubble = true;
-              modifyAtomFormalCharge(atom.id, -1);
-            }}
-          >
-            <Circle
-              radius={8}
-              fill="#0B132B"
-              stroke="#fb7185"
-              strokeWidth={1.5}
-            />
-            <Text
-              text="−"
-              fontSize={11}
-              fontStyle="bold"
-              fontFamily="monospace"
-              fill="#fb7185"
-              align="center"
-              verticalAlign="middle"
-              offsetX={4}
-              offsetY={5}
-              listening={false}
-              perfectDrawEnabled={false}
-            />
-          </Group>
-        </Group>
       )}
     </Group>
   );

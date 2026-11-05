@@ -74,7 +74,7 @@ export const PERIODIC_TABLE: ElementData[] = [
     atomicMass: 1.008,
     cpkColor: '#f8fafc',
     textColor: '#0f172a',
-    radius: 18,
+    radius: 14,
     allowedValences: [1],
     keyIsotopes: [
       { massNumber: 1, symbol: '¹H', name: 'Protio', abundance: '99.98%', description: 'Isótopo más abundante del universo' },
@@ -158,7 +158,7 @@ export const PERIODIC_TABLE: ElementData[] = [
     atomicMass: 12.011,
     cpkColor: '#334155',
     textColor: '#f8fafc',
-    radius: 22,
+    radius: 17,
     allowedValences: [4],
     keyIsotopes: [
       { massNumber: 12, symbol: '¹²C', name: 'Carbono-12', abundance: '98.93%', description: 'Base del peso atómico estándar' },
@@ -176,7 +176,7 @@ export const PERIODIC_TABLE: ElementData[] = [
     atomicMass: 14.007,
     cpkColor: '#3b82f6',
     textColor: '#ffffff',
-    radius: 22,
+    radius: 17,
     allowedValences: [3, 4, 5],
     keyIsotopes: [
       { massNumber: 14, symbol: '¹⁴N', name: 'Nitrógeno-14', abundance: '99.63%' },
@@ -193,7 +193,7 @@ export const PERIODIC_TABLE: ElementData[] = [
     atomicMass: 15.999,
     cpkColor: '#ef4444',
     textColor: '#ffffff',
-    radius: 22,
+    radius: 17,
     allowedValences: [2, 1, 3],
     keyIsotopes: [
       { massNumber: 16, symbol: '¹⁶O', name: 'Oxígeno-16', abundance: '99.76%' },
@@ -211,7 +211,7 @@ export const PERIODIC_TABLE: ElementData[] = [
     atomicMass: 18.998,
     cpkColor: '#90e0ef',
     textColor: '#0f172a',
-    radius: 20,
+    radius: 16,
     allowedValences: [1],
     keyIsotopes: [
       { massNumber: 19, symbol: '¹⁹F', name: 'Flúor-19', abundance: '100%', description: 'RMN ¹⁹F en diseño de fármacos' },
@@ -308,7 +308,7 @@ export const PERIODIC_TABLE: ElementData[] = [
     atomicMass: 30.974,
     cpkColor: '#f97316',
     textColor: '#ffffff',
-    radius: 25,
+    radius: 19,
     allowedValences: [3, 5],
     keyIsotopes: [
       { massNumber: 31, symbol: '³¹P', name: 'Fósforo-31', abundance: '100%', description: 'Isótopo natural para RMN de ATP y ADN' },
@@ -326,7 +326,7 @@ export const PERIODIC_TABLE: ElementData[] = [
     atomicMass: 32.06,
     cpkColor: '#eab308',
     textColor: '#0f172a',
-    radius: 25,
+    radius: 19,
     allowedValences: [2, 4, 6],
     keyIsotopes: [
       { massNumber: 32, symbol: '³²S', name: 'Azufre-32', abundance: '94.99%' },
@@ -344,7 +344,7 @@ export const PERIODIC_TABLE: ElementData[] = [
     atomicMass: 35.45,
     cpkColor: '#10b981',
     textColor: '#ffffff',
-    radius: 24,
+    radius: 19,
     allowedValences: [1, 3, 5, 7],
     keyIsotopes: [
       { massNumber: 35, symbol: '³⁵Cl', name: 'Cloro-35', abundance: '75.78%' },

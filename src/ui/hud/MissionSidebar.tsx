@@ -9,7 +9,6 @@ import {
   Activity,
   Layers,
   FlaskConical,
-  X,
   Sparkles,
   ToggleLeft,
   ToggleRight,
@@ -59,44 +58,40 @@ export const MissionSidebar: React.FC = () => {
   };
 
   // =========================================================================
-  // ESTADO CONTRAÍDO
+  // ESTADO CONTRAÍDO (Pestaña Lateral Derecha)
   // =========================================================================
   if (!isExpanded) {
     return (
-      <div className="fixed top-20 right-4 z-30 select-none animate-fadeIn">
+      <div className="fixed top-24 right-0 z-30 select-none animate-fadeIn">
         <button
           id="btn-sidebar-expand"
           onClick={() => setIsExpanded(true)}
-          className="cad-panel cad-corners text-white px-3.5 py-2 rounded-lg shadow-xl hover:shadow-[#00A896]/20 transition-all flex items-center gap-2.5 active:scale-95 group text-xs font-mono font-bold"
-          title="Expandir panel de misión y fundamentación bioquímica"
+          className="cad-panel text-white pl-3.5 pr-2.5 py-2.5 rounded-l-lg border-r-0 border-[#00A896]/40 shadow-2xl hover:shadow-[#00A896]/20 transition-all flex items-center gap-2 active:scale-95 group text-xs font-mono font-bold bg-[#16233e]"
+          title="Expandir panel lateral de misión y descripción bioquímica"
         >
           <ChevronLeft className="w-4 h-4 text-[#00A896] group-hover:-translate-x-0.5 transition-transform" />
-          <div className="flex items-center gap-1.5">
-            <span className="text-[#00c7b2]">
-              🔬 Etapa {stepNumber}/{totalSteps}
+          <div className="flex flex-col text-left">
+            <span className="text-[10px] text-[#00c7b2]">
+              🔬 ETAPA {stepNumber}/{totalSteps}
             </span>
-            <span className="text-slate-400 font-normal hidden sm:inline">—</span>
-            <span className="text-slate-200 hidden sm:inline truncate max-w-[160px]">
+            <span className="text-[11px] text-slate-200 truncate max-w-[140px]">
               {mission.title}
             </span>
           </div>
-          <span className="text-[10px] text-slate-300 bg-slate-800 px-2 py-0.5 rounded border border-white/10">
-            Panel CAD
-          </span>
         </button>
       </div>
     );
   }
 
   // =========================================================================
-  // ESTADO EXPANDIDO
+  // ESTADO EXPANDIDO (Panel Lateral Completo)
   // =========================================================================
   return (
     <aside
       id="mission-sidebar"
-      className="fixed top-20 right-4 z-30 w-80 sm:w-96 max-w-[90vw] max-h-[calc(100vh-6.5rem)] flex flex-col rounded-lg shadow-2xl cad-panel cad-corners select-none text-slate-100 overflow-hidden animate-fadeIn"
+      className="fixed top-0 right-0 bottom-0 h-screen w-80 sm:w-96 max-w-[90vw] z-30 flex flex-col cad-panel border-l border-[#00A896]/40 select-none text-slate-100 overflow-hidden shadow-2xl backdrop-blur-md animate-fadeIn"
     >
-      {/* 1. Encabezado del Módulo y Switch de Asistencia Guiada */}
+      {/* 1. Encabezado del Módulo y Controles de Panel */}
       <div className="p-3.5 border-b border-[#00A896]/30 bg-[#16233e] shrink-0">
         <div className="flex items-center justify-between gap-2 mb-1.5">
           <span className="text-[10px] font-mono font-black uppercase tracking-wider text-[#00A896] flex items-center gap-1.5 truncate">
@@ -112,9 +107,9 @@ export const MissionSidebar: React.FC = () => {
               id="btn-sidebar-collapse"
               onClick={() => setIsExpanded(false)}
               className="p-1 rounded text-slate-400 hover:text-white hover:bg-white/10 transition-colors"
-              title="Ocultar panel para tener el lienzo despejado"
+              title="Ocultar panel lateral para despejar el lienzo"
             >
-              <X className="w-4 h-4" />
+              <ChevronRight className="w-4 h-4" />
             </button>
           </div>
         </div>
@@ -171,7 +166,18 @@ export const MissionSidebar: React.FC = () => {
       </div>
 
       {/* 2. Cuerpo del Panel con Desplazamiento Fluido */}
-      <div className="flex-1 overflow-y-auto p-3.5 space-y-3 text-xs">
+      <div className="flex-1 overflow-y-auto p-3.5 space-y-3.5 text-xs">
+        {/* DESCRIPCIÓN Y OBJETIVO DE LA MISIÓN (Destacado y claramente visible) */}
+        <div className="cad-panel p-3.5 rounded-lg border border-[#00A896]/40 space-y-1.5 bg-[#16233e]/80">
+          <div className="flex items-center gap-1.5 text-[#00c7b2] font-mono font-bold text-xs uppercase tracking-wider">
+            <Activity className="w-4 h-4 text-[#F77F00]" />
+            <span>DESCRIPCIÓN DE LA MISIÓN:</span>
+          </div>
+          <p className="text-slate-100 leading-relaxed font-sans text-xs sm:text-[13px]">
+            {mission.objectiveDescription}
+          </p>
+        </div>
+
         {/* Guía de Asistencia Guiada y Botón de Auto-Construcción */}
         {assistedMode && (
           <div className="p-3 rounded-md bg-[#00A896]/15 border border-[#00A896]/50 space-y-2 animate-fadeIn">
@@ -205,17 +211,6 @@ export const MissionSidebar: React.FC = () => {
             )}
           </div>
         )}
-
-        {/* Objetivo Académico */}
-        <div className="bg-slate-900/80 p-3 rounded-md border border-[#00A896]/20 space-y-1">
-          <div className="flex items-center gap-1.5 text-slate-300 font-mono font-bold text-[11px]">
-            <Activity className="w-3.5 h-3.5 text-[#F77F00]" />
-            <span>OBJETIVO BIOQUÍMICO:</span>
-          </div>
-          <p className="text-slate-200 leading-relaxed font-sans text-xs">
-            {mission.objectiveDescription}
-          </p>
-        </div>
 
         {/* Sección Desplegable: Fundamento Mecanístico (IUPAC / EC) */}
         <div className="bg-slate-900/80 rounded-md border border-[#00A896]/20 overflow-hidden transition-all">

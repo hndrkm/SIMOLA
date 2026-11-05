@@ -99,21 +99,21 @@ export const FunctionalGroupsModal: React.FC<FunctionalGroupsModalProps> = ({
 
   return (
     <div className="fixed inset-0 z-50 flex items-center justify-center p-4 bg-slate-950/80 backdrop-blur-md select-none animate-fadeIn">
-      <div className="glass-panel w-full max-w-5xl max-h-[90vh] flex flex-col rounded-3xl border border-white/15 shadow-2xl overflow-hidden bg-[#1B2A4A]/95">
+      <div className="cad-panel cad-corners-full w-full max-w-5xl max-h-[90vh] flex flex-col rounded-xl border border-[#00A896]/40 shadow-2xl overflow-hidden bg-[#1B2A4A] font-mono">
         {/* Cabecera del Modal */}
-        <div className="px-6 py-4 border-b border-white/10 flex items-center justify-between bg-[#1B2A4A]/60">
+        <div className="px-5 py-3.5 border-b border-[#00A896]/30 flex items-center justify-between bg-[#16233e]">
           <div className="flex items-center gap-3">
-            <div className="w-10 h-10 rounded-2xl bg-[#F77F00]/20 border border-[#F77F00]/40 flex items-center justify-center text-[#F77F00]">
+            <div className="w-9 h-9 rounded-lg bg-[#F77F00]/20 border border-[#F77F00]/40 flex items-center justify-center text-[#F77F00]">
               <Boxes className="w-5 h-5" />
             </div>
             <div>
-              <h2 className="text-lg font-bold text-slate-100 flex items-center gap-2">
+              <h2 className="text-sm sm:text-base font-bold text-slate-100 flex items-center gap-2">
                 Catálogo de Plantillas Bioquímicas
-                <span className="text-xs px-2 py-0.5 rounded-full bg-slate-800 text-[#ff941a] border border-[#F77F00]/30 font-mono">
+                <span className="text-[10px] px-2 py-0.5 rounded bg-slate-800 text-[#ff941a] border border-[#F77F00]/30 font-mono">
                   {TEMPLATES.length} Plantillas
                 </span>
               </h2>
-              <p className="text-xs text-slate-400">
+              <p className="text-xs text-slate-400 font-sans">
                 Estampa esqueletos moleculares completos o acóplalos (Sprout) directamente a átomos existentes
               </p>
             </div>
@@ -121,7 +121,7 @@ export const FunctionalGroupsModal: React.FC<FunctionalGroupsModalProps> = ({
 
           <button
             onClick={onClose}
-            className="p-2 rounded-xl text-slate-400 hover:text-white hover:bg-white/10 transition-colors"
+            className="p-1 rounded text-slate-400 hover:text-white hover:bg-white/10 transition-colors"
             title="Cerrar (Esc)"
           >
             <X className="w-5 h-5" />
@@ -129,9 +129,9 @@ export const FunctionalGroupsModal: React.FC<FunctionalGroupsModalProps> = ({
         </div>
 
         {/* Pestañas de Navegación y Buscador */}
-        <div className="px-6 py-3 border-b border-white/10 flex flex-wrap items-center justify-between gap-3 bg-slate-950/40">
+        <div className="px-5 py-2.5 border-b border-white/10 flex flex-wrap items-center justify-between gap-3 bg-[#0B132B]/80">
           {/* Tabs */}
-          <div className="flex items-center gap-2">
+          <div className="flex items-center gap-1.5">
             {tabs.map((tab) => {
               const isActive = activeTab === tab.id;
               return (
@@ -143,17 +143,17 @@ export const FunctionalGroupsModal: React.FC<FunctionalGroupsModalProps> = ({
                     const firstOfTab = TEMPLATES.find((t) => t.category === tab.id);
                     if (firstOfTab) setSelectedTemplate(firstOfTab);
                   }}
-                  className={`flex items-center gap-2 px-3 py-1.5 rounded-xl text-xs font-semibold transition-all ${
+                  className={`flex items-center gap-1.5 px-3 py-1 rounded-lg text-xs font-mono font-bold transition-all border ${
                     isActive
-                      ? 'bg-[#00A896] text-slate-950 font-bold shadow-md shadow-[#00A896]/30 scale-[1.02]'
-                      : 'bg-slate-800/60 text-slate-400 hover:bg-slate-800 hover:text-slate-200'
+                      ? 'bg-[#00A896] text-slate-950 border-[#00c7b2] shadow-sm'
+                      : 'bg-[#16233e] text-slate-400 hover:text-white border-white/10'
                   }`}
                 >
                   {tab.icon}
                   <span>{tab.label}</span>
                   <span
-                    className={`text-[10px] px-1.5 py-0.2 rounded-full ${
-                      isActive ? 'bg-sky-600 text-white' : 'bg-slate-700 text-slate-300'
+                    className={`text-[10px] px-1.5 py-0.2 rounded ${
+                      isActive ? 'bg-slate-900 text-[#00c7b2]' : 'bg-slate-800 text-slate-400'
                     }`}
                   >
                     {tab.count}
@@ -164,14 +164,14 @@ export const FunctionalGroupsModal: React.FC<FunctionalGroupsModalProps> = ({
           </div>
 
           {/* Buscador */}
-          <div className="relative min-w-[220px]">
-            <Search className="w-4 h-4 absolute left-3 top-1/2 -translate-y-1/2 text-slate-400" />
+          <div className="relative min-w-[200px]">
+            <Search className="w-3.5 h-3.5 absolute left-2.5 top-1/2 -translate-y-1/2 text-slate-400" />
             <input
               type="text"
               value={searchQuery}
               onChange={(e) => setSearchQuery(e.target.value)}
-              placeholder="Buscar plantilla o función..."
-              className="w-full bg-slate-900 border border-slate-700/80 rounded-xl pl-9 pr-3 py-1.5 text-xs text-slate-200 placeholder-slate-500 focus:outline-none focus:border-sky-400/60 transition-colors"
+              placeholder="Buscar plantilla..."
+              className="w-full bg-[#0B132B] border border-white/10 rounded-lg pl-8 pr-3 py-1 text-xs text-slate-200 placeholder-slate-500 focus:outline-none focus:border-[#00A896] transition-colors font-mono"
             />
           </div>
         </div>

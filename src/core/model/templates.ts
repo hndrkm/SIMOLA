@@ -47,9 +47,9 @@ export const TEMPLATES: MolecularTemplate[] = [
     attachmentAtomTempId: 'P',
     atoms: [
       { tempId: 'P', element: 'P', x: 0, y: 0, formalCharge: 0 },
-      { tempId: 'O_dbl', element: 'O', x: 0, y: -45, formalCharge: 0 },
-      { tempId: 'O_neg1', element: 'O', x: 42, y: 22, formalCharge: -1 },
-      { tempId: 'O_neg2', element: 'O', x: -42, y: 22, formalCharge: -1 },
+      { tempId: 'O_dbl', element: 'O', x: 0, y: -56, formalCharge: 0 },
+      { tempId: 'O_neg1', element: 'O', x: 50, y: 26, formalCharge: -1 },
+      { tempId: 'O_neg2', element: 'O', x: -50, y: 26, formalCharge: -1 },
     ],
     bonds: [
       { sourceTempId: 'P', targetTempId: 'O_dbl', order: 2 },
@@ -367,9 +367,9 @@ export const TEMPLATES: MolecularTemplate[] = [
     attachmentAtomTempId: 'P',
     atoms: [
       { tempId: 'P', element: 'P', x: 0, y: 0, formalCharge: 0 },
-      { tempId: 'O_dbl', element: 'O', x: 0, y: -45, formalCharge: 0 },
-      { tempId: 'O_neg1', element: 'O', x: 42, y: 22, formalCharge: -1 },
-      { tempId: 'O_neg2', element: 'O', x: -42, y: 22, formalCharge: -1 },
+      { tempId: 'O_dbl', element: 'O', x: 0, y: -56, formalCharge: 0 },
+      { tempId: 'O_neg1', element: 'O', x: 50, y: 26, formalCharge: -1 },
+      { tempId: 'O_neg2', element: 'O', x: -50, y: 26, formalCharge: -1 },
     ],
     bonds: [
       { sourceTempId: 'P', targetTempId: 'O_dbl', order: 2 },

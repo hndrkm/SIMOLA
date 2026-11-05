@@ -92,17 +92,17 @@ export const AtomContextMenu: React.FC = () => {
     <div
       ref={menuRef}
       style={{ left: posX, top: posY }}
-      className="fixed z-50 w-72 glass-panel p-4 rounded-3xl bg-[#1B2A4A]/98 border-2 border-[#00A896]/60 shadow-2xl backdrop-blur-xl select-none animate-fadeIn text-slate-100"
+      className="fixed z-50 w-72 cad-panel cad-corners p-4 rounded-xl bg-[#1B2A4A] border border-[#00A896]/50 shadow-2xl backdrop-blur-xl select-none animate-fadeIn text-slate-100 font-mono"
       onContextMenu={(e) => e.preventDefault()}
     >
       {/* Cabecera del Popover */}
-      <div className="flex items-center justify-between pb-3 border-b border-white/10 mb-3">
+      <div className="flex items-center justify-between pb-3 border-b border-[#00A896]/30 mb-3">
         <div className="flex items-center gap-2">
-          <div className="w-7 h-7 rounded-xl bg-[#00A896]/20 border border-[#00A896]/40 flex items-center justify-center text-[#00A896]">
+          <div className="w-7 h-7 rounded-lg bg-[#00A896]/20 border border-[#00A896]/40 flex items-center justify-center text-[#00A896]">
             <Atom className="w-4 h-4" />
           </div>
           <div>
-            <h3 className="text-xs font-black text-white flex items-center gap-1.5">
+            <h3 className="text-xs font-bold text-white flex items-center gap-1.5">
               Átomo de {atom.element}
               {atom.isotope && (
                 <span className="font-mono text-[10px] text-[#00c7b2] bg-[#00A896]/20 px-1.5 py-0.2 rounded">

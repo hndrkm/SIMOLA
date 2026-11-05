@@ -214,21 +214,19 @@ export const BibliographyView: React.FC = () => {
           <span className="text-slate-400 font-bold hidden sm:inline mr-1 text-[11px]">Estilo:</span>
           <button
             onClick={() => setSelectedFormat('apa')}
-            className={`px-2.5 py-1 rounded font-bold text-[11px] transition-all ${
-              selectedFormat === 'apa'
+            className={`px-2.5 py-1 rounded font-bold text-[11px] transition-all ${selectedFormat === 'apa'
                 ? 'bg-[#00A896] text-slate-950 shadow-sm'
                 : 'text-slate-400 hover:text-white'
-            }`}
+              }`}
           >
             APA 7.ª Ed.
           </button>
           <button
             onClick={() => setSelectedFormat('ieee')}
-            className={`px-2.5 py-1 rounded font-bold text-[11px] transition-all ${
-              selectedFormat === 'ieee'
+            className={`px-2.5 py-1 rounded font-bold text-[11px] transition-all ${selectedFormat === 'ieee'
                 ? 'bg-[#00A896] text-slate-950 shadow-sm'
                 : 'text-slate-400 hover:text-white'
-            }`}
+              }`}
           >
             IEEE
           </button>
@@ -249,7 +247,7 @@ export const BibliographyView: React.FC = () => {
               </div>
 
               <h2 className="text-2xl sm:text-3xl font-black text-white tracking-tight">
-                Hendrik Michael Ramos Suarez
+                Frak Abel
               </h2>
 
               <div className="flex flex-col sm:flex-row sm:items-center gap-2 sm:gap-4 text-xs font-mono text-slate-300">
@@ -313,11 +311,10 @@ export const BibliographyView: React.FC = () => {
             <button
               key={cat.id}
               onClick={() => setActiveCategory(cat.id)}
-              className={`px-3 py-1.5 rounded-lg text-xs font-mono font-bold transition-all border ${
-                activeCategory === cat.id
+              className={`px-3 py-1.5 rounded-lg text-xs font-mono font-bold transition-all border ${activeCategory === cat.id
                   ? 'bg-[#00A896] text-slate-950 border-[#00c7b2] shadow-sm'
                   : 'cad-panel text-slate-300 hover:text-white border-white/10 hover:border-[#00A896]/50'
-              }`}
+                }`}
             >
               {cat.label}
             </button>
@@ -361,11 +358,10 @@ export const BibliographyView: React.FC = () => {
                     )}
                     <button
                       onClick={() => handleCopyCitation(ref.id, citationText)}
-                      className={`flex items-center gap-1.5 px-2.5 py-1 rounded text-[11px] font-mono font-bold transition-all border ${
-                        isCopied
+                      className={`flex items-center gap-1.5 px-2.5 py-1 rounded text-[11px] font-mono font-bold transition-all border ${isCopied
                           ? 'bg-emerald-500/20 text-emerald-300 border-emerald-500/40'
                           : 'bg-slate-900/60 hover:bg-slate-800 text-slate-300 hover:text-white border-white/10'
-                      }`}
+                        }`}
                       title="Copiar cita formal al portapapeles"
                     >
                       {isCopied ? (
@@ -414,3 +410,4 @@ export const BibliographyView: React.FC = () => {
 };
 
 export default BibliographyView;
+
