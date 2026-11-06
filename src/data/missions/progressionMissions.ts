@@ -52,9 +52,9 @@ export const PROGRESSION_MISSIONS: MissionConfig[] = [
     stepNumber: 2,
     totalSteps: 4,
     objectiveDescription:
-      'Configura el estado de ionización del grupo carboxilo a pH fisiológico 7.4 (-COO⁻, carga -1) y aplica marcaje isotópico con Carbono-14 (¹⁴C) en el carbono metilo usando el menú de clic derecho.',
+      'Configura el estado de ionización del grupo carboxilo a pH fisiológico 7.4 (-COO⁻, carga -1) y aplica marcaje isotópico con Carbono-14 (¹⁴C) en el carbono metilo seleccionando los átomos y configurando su Carga e Isótopo en la barra inferior.',
     pedagogicalHint:
-      'Haz clic derecho sobre el oxígeno libre para asignar su carga formal a -1 (formando el anión carboxilato). Luego haz clic derecho sobre el carbono C2 para asignar su isótopo a 14C.',
+      'Selecciona el oxígeno libre (o haz clic en él) para asignar su carga formal a -1 en la barra inferior (formando el carboxilato). Luego selecciona el carbono metilo para asignar su isótopo a ¹⁴C.',
     biochemicalContext:
       'A pH fisiológico (7.4), los ácidos carboxílicos se encuentran desprotonados como carboxilatos (-COO⁻). En bioenergética y vías metabólicas, el marcaje con el radioisótopo ¹⁴C es el estándar histórico para rastrear el destino del carbono en ciclos como Krebs y Calvin.',
     allowedElements: ['C', 'H', 'O'],
@@ -1096,7 +1096,7 @@ export const PROGRESSION_MISSIONS: MissionConfig[] = [
     objectiveDescription:
       'Transfiere el fosfato acilo en C1 del 1,3-BPG al ADP para generar la 1ª molécula de ATP y 3-Fosfoglicerato (3-PG). Selecciona el acil-fosfato de C1, activa PGK y ADP en el Reactor, y asigna Carga Formal -1 al carboxilato fisiológico resultante (pH 7.4).',
     pedagogicalHint:
-      'El reactor transfiere el fosfato C1 al ADP produciendo ATP y deja el oxígeno carboxílico (O1) resaltado con carga neutra (0). Usa Clic Derecho sobre O1 para asignarle su carga formal fisiológica (-1) correspondiente al carboxilato.',
+      'El reactor transfiere el fosfato C1 al ADP produciendo ATP y deja el oxígeno carboxílico (O1) resaltado con carga neutra (0). Selecciona O1 para asignarle su carga formal fisiológica (-1) en la barra inferior.',
     biochemicalContext:
       'Esta reacción acoplada compensa termodinámicamente el paso endergónico previo de la GAPDH, logrando un balance neto de regeneración de ATP en la vía.',
     allowedElements: ['C', 'H', 'O', 'P'],
@@ -1104,7 +1104,7 @@ export const PROGRESSION_MISSIONS: MissionConfig[] = [
     guidedInstructions: [
       '1. Selecciona el fósforo P1 (o enlace acil-fosfato C1-O) en el 1,3-Bisfosfoglicerato.',
       '2. En el ⚡ Reactor Catalítico, selecciona Fosfoglicerato Quinasa (PGK, EC 2.7.2.3) y añade el cofactor ADP para liberar ATP.',
-      '3. Haz clic derecho sobre el oxígeno carboxílico resaltado (O1) y asigna Carga Formal -1 para formar el carboxilato fisiológico de 3-PG (pH 7.4).'
+      '3. Selecciona el oxígeno carboxílico resaltado (O1) y asigna Carga Formal -1 en la barra inferior para formar el carboxilato fisiológico de 3-PG (pH 7.4).'
     ],
     initialGraph: {
       nodes: {

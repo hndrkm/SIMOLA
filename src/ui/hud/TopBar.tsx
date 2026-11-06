@@ -364,7 +364,7 @@ export const TopBar: React.FC = () => {
               <div className="bg-slate-900/60 p-3 rounded-2xl border border-white/10 space-y-2">
                 <p className="font-semibold text-[#00c7b2]">Mecánicas del Modelado:</p>
                 <ul className="space-y-1 list-disc list-inside text-slate-300 text-[11px]">
-                  <li><strong>Clic Derecho en Átomo:</strong> Abre el menú contextual de Carga Formal (-2 a +2) y Marcaje Isotópico.</li>
+                  <li><strong>Seleccionar Átomo:</strong> Haz clic en un átomo para ajustar su Carga Formal (-2 a +2) y Marcaje Isotópico en la barra inferior.</li>
                   <li><strong>Hidrógenos Satélite:</strong> Se calculan según la valencia y disminuyen automáticamente al conectar enlaces.</li>
                   <li><strong>Guías Angulares:</strong> Selecciona 30°, 45°, 90° (Haworth axial) o Libre en la barra superior.</li>
                   <li><strong>⚡ Reactor Catalítico:</strong> Configura sustrato, enzima y cofactores para avanzar etapas metabólicas.</li>

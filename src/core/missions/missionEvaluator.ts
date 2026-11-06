@@ -52,7 +52,7 @@ const COMMON_MISTAKES_BY_MISSION: Record<string, CommonMistake[]> = {
     {
       name: 'Carboxilato no ionizado a pH 7.4',
       smarts: '[#6](=O)[OX2H]',
-      message: 'Diagnóstico pedagógico: El grupo carboxilo en C1 del 3-Fosfoglicerato debe encontrarse desprotonado (-COO⁻ con carga formal -1) a pH fisiológico 7.4. Usa Clic Derecho sobre el oxígeno para asignarle carga formal -1.',
+      message: 'Diagnóstico pedagógico: El grupo carboxilo en C1 del 3-Fosfoglicerato debe encontrarse desprotonado (-COO⁻ con carga formal -1) a pH fisiológico 7.4. Selecciona el oxígeno y asígnale carga formal -1 en la barra inferior.',
     },
   ],
   m2_step9_enolase: [

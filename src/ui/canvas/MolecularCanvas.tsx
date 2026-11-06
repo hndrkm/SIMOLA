@@ -5,7 +5,6 @@ import { useCanvasStore } from '../../store/useCanvasStore';
 import { ATOM_RADII } from '../../core/model/constants';
 import { AtomShape } from './AtomShape';
 import { BondShape } from './BondShape';
-import { AtomContextMenu } from './AtomContextMenu';
 
 export const MolecularCanvas: React.FC = () => {
   const containerRef = useRef<HTMLDivElement>(null);
@@ -31,7 +30,6 @@ export const MolecularCanvas: React.FC = () => {
   const cancelPendingBond = useCanvasStore((state) => state.cancelPendingBond);
   const setSelectedAtom = useCanvasStore((state) => state.setSelectedAtom);
   const setSelectedBond = useCanvasStore((state) => state.setSelectedBond);
-  const setContextMenuAtom = useCanvasStore((state) => state.setContextMenuAtom);
 
   // ResizeObserver para dimensiones reactivas
   useEffect(() => {
@@ -187,13 +185,8 @@ export const MolecularCanvas: React.FC = () => {
     if (closestAtom) {
       setSelectedAtom(closestAtom.id);
       setSelectedBond(null);
-      setContextMenuAtom({
-        atomId: closestAtom.id,
-        clientX,
-        clientY,
-      });
     } else {
-      setContextMenuAtom(null);
+      setSelectedAtom(null);
     }
   };
 
@@ -280,12 +273,6 @@ export const MolecularCanvas: React.FC = () => {
           ))}
         </Layer>
       </Stage>
-
-      {/* Popover Menú Contextual de Clic Derecho encima del Canvas */}
-      <AtomContextMenu
-        canvasWidth={dimensions.width}
-        canvasHeight={dimensions.height}
-      />
     </div>
   );
 };

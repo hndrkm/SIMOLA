@@ -21,7 +21,6 @@ export const AtomShape: React.FC<AtomShapeProps> = React.memo(({ atom, bondOrder
   const selectedAtomId = useCanvasStore((state) => state.selectedAtomId);
   const contextMenuAtom = useCanvasStore((state) => state.contextMenuAtom);
   const pendingBondSourceId = useCanvasStore((state) => state.pendingBondSourceId);
-  const setContextMenuAtom = useCanvasStore((state) => state.setContextMenuAtom);
 
   const startAtomMove = useCanvasStore((state) => state.startAtomMove);
   const moveAtom = useCanvasStore((state) => state.moveAtom);
@@ -106,16 +105,8 @@ export const AtomShape: React.FC<AtomShapeProps> = React.memo(({ atom, bondOrder
     }
     e.cancelBubble = true;
 
-    const clientX = e.evt?.clientX ?? window.innerWidth / 2;
-    const clientY = e.evt?.clientY ?? window.innerHeight / 2;
-
     setSelectedAtom(atom.id);
     setSelectedBond(null);
-    setContextMenuAtom({
-      atomId: atom.id,
-      clientX,
-      clientY,
-    });
   };
 
   const handleDblClick = (e: any) => {
@@ -124,16 +115,8 @@ export const AtomShape: React.FC<AtomShapeProps> = React.memo(({ atom, bondOrder
     }
     e.cancelBubble = true;
 
-    const clientX = e.evt?.clientX ?? window.innerWidth / 2;
-    const clientY = e.evt?.clientY ?? window.innerHeight / 2;
-
     setSelectedAtom(atom.id);
     setSelectedBond(null);
-    setContextMenuAtom({
-      atomId: atom.id,
-      clientX,
-      clientY,
-    });
   };
 
   // Cálculo O(1) de hidrógenos satélite
@@ -252,8 +235,8 @@ export const AtomShape: React.FC<AtomShapeProps> = React.memo(({ atom, bondOrder
         }
       }}
     >
-      {/* 0. Marcado Activo CAD de Clic Derecho (Mira Telescópica y Retícula de Destino) */}
-      {isContextMenuTarget && (
+      {/* 0. Marcado Activo CAD de Átomo Seleccionado (Mira Telescópica y Retícula de Destino) */}
+      {(isContextMenuTarget || isSelected) && (
         <Group listening={false}>
           {/* Anillo exterior segmentado */}
           <Circle
